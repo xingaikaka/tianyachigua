@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.AdStatisticsMapper">
+    
+    <resultMap type="AdStatistics" id="AdStatisticsResult">
+        <id     property="id"                   column="id"                   />
+        <result property="adId"                column="ad_id"                />
+        <result property="adTitle"             column="ad_title"             />
+        <result property="adType"              column="ad_type"              />
+        <result property="position"            column="position"             />
+        <result property="statDate"            column="stat_date"            />
+        <result property="clickCount"          column="click_count"          />
+        <result property="createdAt"           column="created_at"           />
+        <result property="updatedAt"           column="updated_at"           />
+    </resultMap>
+
+    <sql id="selectAdStatisticsVo">
+        select id, ad_id, ad_title, ad_type, position, stat_date, click_count, created_at, updated_at
+        from ad_statistics
+    </sql>
+
+    <select id="selectAdStatisticsList" parameterType="com.ruoyi.chigua.domain.query.AdStatisticsQuery" resultMap="AdStatisticsResult">
+        <include refid="selectAdStatisticsVo"/>
+        <where>  
+            <if test="startDate != null and endDate != null"> 
+                and stat_date between #{startDate} and #{endDate}
+            </if>
+            <if test="adTitle != null and adTitle != ''"> 
+                and ad_title = #{adTitle}
+            </if>
+            <if test="adType != null and adType != ''"> 
+                and ad_type = #{adType}
+            </if>
+            <if test="position != null and position != ''"> 
+                and position = #{position}
+            </if>
+            <if test="adId != null"> 
+                and ad_id = #{adId}
+            </if>
+        </where>
+        order by stat_date desc, ad_id asc
+    </select>
+    
+    <select id="selectAdStatisticsById" parameterType="Long" resultMap="AdStatisticsResult">
+        <include refid="selectAdStatisticsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByAdIdAndDate" resultMap="AdStatisticsResult">
+        <include refid="selectAdStatisticsVo"/>
+        where ad_id = #{adId} and stat_date = #{statDate}
+    </select>
+
+    <select id="selectDistinctUsers" resultType="String">
+        select distinct ad_title 
+        from ad_statistics 
+        where stat_date between #{startDate} and #{endDate}
+        order by ad_title
+    </select>
+
+    <select id="selectStatisticsSummary" parameterType="com.ruoyi.chigua.domain.query.AdStatisticsQuery" resultMap="AdStatisticsResult">
+        select 
+            ad_id,
+            max(ad_title) as ad_title,
+            max(ad_type) as ad_type,
+            max(position) as position,
+            sum(click_count) as click_count
+        from ad_statistics
+        <where>  
+            <if test="startDate != null and endDate != null"> 
+                and stat_date between #{startDate} and #{endDate}
+            </if>
+            <if test="adTitle != null and adTitle != ''"> 
+                and ad_title = #{adTitle}
+            </if>
+            <if test="adType != null and adType != ''"> 
+                and ad_type = #{adType}
+            </if>
+            <if test="position != null and position != ''"> 
+                and position = #{position}
+            </if>
+        </where>
+        group by ad_id
+        <!-- 让分页发生在“最终排序序列”上，避免 Java 层再次重排导致分页错位 -->
+        order by click_count desc, ad_id asc
+    </select>
+
+    <select id="selectUserClickDetails" resultMap="AdStatisticsResult">
+        <include refid="selectAdStatisticsVo"/>
+        where ad_id = #{adId} 
+        and stat_date between #{startDate} and #{endDate}
+        order by stat_date desc, ad_title
+    </select>
+        
+    <insert id="insertAdStatistics" parameterType="AdStatistics" useGeneratedKeys="true" keyProperty="id">
+        insert into ad_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="adId != null">ad_id,</if>
+            <if test="adTitle != null and adTitle != ''">ad_title,</if>
+            <if test="adType != null">ad_type,</if>
+            <if test="position != null">position,</if>
+            <if test="statDate != null">stat_date,</if>
+            <if test="clickCount != null">click_count,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="adId != null">#{adId},</if>
+            <if test="adTitle != null and adTitle != ''">#{adTitle},</if>
+            <if test="adType != null">#{adType},</if>
+            <if test="position != null">#{position},</if>
+            <if test="statDate != null">#{statDate},</if>
+            <if test="clickCount != null">#{clickCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAdStatistics" parameterType="AdStatistics">
+        update ad_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adId != null">ad_id = #{adId},</if>
+            <if test="adTitle != null and adTitle != ''">ad_title = #{adTitle},</if>
+            <if test="adType != null">ad_type = #{adType},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="statDate != null">stat_date = #{statDate},</if>
+            <if test="clickCount != null">click_count = #{clickCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdStatisticsById" parameterType="Long">
+        delete from ad_statistics where id = #{id}
+    </delete>
+
+    <delete id="deleteAdStatisticsByIds" parameterType="String">
+        delete from ad_statistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 插入或更新广告点击统计（处理并发问题） -->
+    <insert id="insertOrUpdateStatistics">
+        INSERT INTO ad_statistics (ad_id, ad_title, ad_type, position, stat_date, click_count)
+        VALUES (#{adId}, #{adTitle}, #{adType}, #{position}, #{statDate}, 1)
+        ON DUPLICATE KEY UPDATE 
+            click_count = click_count + 1,
+            ad_title = VALUES(ad_title),
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 插入或更新广告曝光统计（处理并发问题） -->
+    <insert id="insertOrUpdateImpression">
+        INSERT INTO ad_statistics (ad_id, ad_title, ad_type, position, stat_date, impression_count)
+        VALUES (#{adId}, #{adTitle}, #{adType}, #{position}, #{statDate}, 1)
+        ON DUPLICATE KEY UPDATE
+            impression_count = impression_count + 1,
+            ad_title = VALUES(ad_title),
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 图表：每日点击/曝光趋势 -->
+    <select id="selectDailyTrend" resultType="java.util.LinkedHashMap">
+        SELECT
+            DATE_FORMAT(stat_date, '%Y-%m-%d') AS statDate,
+            SUM(click_count)      AS clickCount,
+            SUM(impression_count) AS impressionCount
+        FROM ad_statistics
+        WHERE stat_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY stat_date
+        ORDER BY stat_date ASC
+    </select>
+
+    <!-- 图表：按广告类型聚合点击量 -->
+    <select id="selectClicksByType" resultType="java.util.LinkedHashMap">
+        SELECT
+            ad_type   AS adType,
+            SUM(click_count) AS clickCount
+        FROM ad_statistics
+        WHERE stat_date BETWEEN #{startDate} AND #{endDate}
+          AND ad_type IS NOT NULL
+        GROUP BY ad_type
+        ORDER BY clickCount DESC
+    </select>
+
+    <!-- 图表：按广告位置聚合点击量 -->
+    <select id="selectClicksByPosition" resultType="java.util.LinkedHashMap">
+        SELECT
+            position AS position,
+            SUM(click_count) AS clickCount
+        FROM ad_statistics
+        WHERE stat_date BETWEEN #{startDate} AND #{endDate}
+          AND position IS NOT NULL
+        GROUP BY position
+        ORDER BY clickCount DESC
+    </select>
+
+    <!-- 图表：Top N 广告点击排行 -->
+    <select id="selectTopAds" resultType="java.util.LinkedHashMap">
+        SELECT
+            ad_id             AS adId,
+            MAX(ad_title)     AS adTitle,
+            SUM(click_count)  AS clickCount
+        FROM ad_statistics
+        WHERE stat_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY ad_id
+        ORDER BY clickCount DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 获取时间段内有记录的广告名列表（用于筛选下拉） -->
+    <select id="selectDistinctAdNames" resultType="String">
+        SELECT DISTINCT ad_title
+        FROM ad_statistics
+        WHERE stat_date BETWEEN #{startDate} AND #{endDate}
+          AND ad_title IS NOT NULL
+        ORDER BY ad_title
+    </select>
+
+</mapper>

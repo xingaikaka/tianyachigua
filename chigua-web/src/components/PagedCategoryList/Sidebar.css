@@ -1,0 +1,106 @@
+/* 侧边栏样式 */
+.paged-sidebar {
+  position: fixed;
+  top: 80px;
+  width: 200px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  background: transparent;
+  padding: 16px;
+  z-index: 100;
+}
+
+.paged-sidebar-left {
+  left: 20px;
+}
+
+.paged-sidebar-right {
+  right: 20px;
+}
+
+.paged-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.paged-sidebar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paged-sidebar-item {
+  padding: 10px 14px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.paged-sidebar-item:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateX(4px);
+}
+
+.paged-sidebar-item.active {
+  color: #fff;
+  font-weight: 500;
+}
+
+.paged-sidebar-item.active:hover {
+  color: #fff;
+  transform: translateX(4px);
+}
+
+.paged-sidebar-loading,
+.paged-sidebar-empty {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+/* 滚动条样式 */
+.paged-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.paged-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.paged-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.paged-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 1400px) {
+  .paged-sidebar {
+    width: 160px;
+    padding: 12px;
+  }
+  
+  .paged-sidebar-item {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .paged-sidebar {
+    display: none; /* 在小屏幕上隐藏侧边栏 */
+  }
+}
+

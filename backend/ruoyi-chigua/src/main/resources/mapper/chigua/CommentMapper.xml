@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.CommentMapper">
+    
+    <resultMap type="Comment" id="CommentResult">
+        <id     property="id"               column="id"               />
+        <result property="videoId"          column="video_id"         />
+        <result property="commentType"      column="comment_type"     />
+        <result property="parentId"         column="parent_id"        />
+        <result property="username"         column="username"         />
+        <result property="email"            column="email"            />
+        <result property="content"          column="content"          />
+        <result property="ipAddress"        column="ip_address"       />
+        <result property="userAgent"        column="user_agent"       />
+        <result property="status"           column="status"           />
+        <result property="replyCount"       column="reply_count"      />
+        <result property="likeCount"        column="like_count"       />
+        <result property="isSticky"         column="is_sticky"        />
+        <result property="auditUserId"      column="audit_user_id"    />
+        <result property="auditTime"        column="audit_time"       />
+        <result property="auditRemark"      column="audit_remark"     />
+        <result property="createTime"       column="create_time"      />
+        <result property="updateTime"       column="update_time"      />
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        select id, video_id, comment_type, parent_id, username, email, content, ip_address, user_agent, 
+               status, reply_count, like_count, is_sticky, audit_user_id, audit_time, 
+               audit_remark, create_time, update_time from comments
+    </sql>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>  
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="commentType != null and commentType != ''"> and comment_type = #{commentType}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="ipAddress != null  and ipAddress != ''"> and ip_address = #{ipAddress}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isSticky != null "> and is_sticky = #{isSticky}</if>
+            <if test="auditUserId != null "> and audit_user_id = #{auditUserId}</if>
+        </where>
+        order by is_sticky desc, create_time desc
+    </select>
+    
+    <select id="selectPendingCommentList" parameterType="Comment" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        <where>
+            status = 0
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+        </where>
+        order by create_time asc
+    </select>
+    
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectCommentsByVideoId" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where video_id = #{videoId} and status = #{status}
+        order by is_sticky desc, create_time desc
+    </select>
+
+    <select id="selectCommentStatistics" parameterType="Comment" resultMap="CommentResult">
+        select 
+            count(*) as id,
+            sum(case when status = 0 then 1 else 0 end) as video_id,
+            sum(case when status = 1 then 1 else 0 end) as parent_id,
+            sum(case when status = 2 then 1 else 0 end) as reply_count
+        from comments
+        <where>  
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isSticky != null "> and is_sticky = #{isSticky}</if>
+        </where>
+    </select>
+        
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">video_id,</if>
+            <if test="commentType != null and commentType != ''">comment_type,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="email != null">email,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="ipAddress != null">ip_address,</if>
+            <if test="userAgent != null">user_agent,</if>
+            <if test="status != null">status,</if>
+            <if test="replyCount != null">reply_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="isSticky != null">is_sticky,</if>
+            <if test="auditUserId != null">audit_user_id,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="auditRemark != null">audit_remark,</if>
+            create_time
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">#{videoId},</if>
+            <if test="commentType != null and commentType != ''">#{commentType},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="email != null">#{email},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="ipAddress != null">#{ipAddress},</if>
+            <if test="userAgent != null">#{userAgent},</if>
+            <if test="status != null">#{status},</if>
+            <if test="replyCount != null">#{replyCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="isSticky != null">#{isSticky},</if>
+            <if test="auditUserId != null">#{auditUserId},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="auditRemark != null">#{auditRemark},</if>
+            now()
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update comments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="commentType != null and commentType != ''">comment_type = #{commentType},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="ipAddress != null">ip_address = #{ipAddress},</if>
+            <if test="userAgent != null">user_agent = #{userAgent},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="replyCount != null">reply_count = #{replyCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="isSticky != null">is_sticky = #{isSticky},</if>
+            <if test="auditUserId != null">audit_user_id = #{auditUserId},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            update_time = now()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="batchAuditComments">
+        update comments set 
+            status = #{status},
+            audit_user_id = #{auditUserId},
+            audit_time = now(),
+            audit_remark = #{auditRemark},
+            update_time = now()
+        where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateReplyCount">
+        update comments set 
+            reply_count = reply_count + #{increment},
+            update_time = now()
+        where id = #{parentId}
+    </update>
+
+    <delete id="deleteCommentById" parameterType="Long">
+        delete from comments where id = #{id}
+    </delete>
+
+    <delete id="deleteCommentByIds" parameterType="String">
+        delete from comments where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCommentCountByIpAndTime" resultType="int">
+        select count(*) from comments 
+        where ip_address = #{ipAddress} 
+        and create_time >= DATE_SUB(NOW(), INTERVAL #{minutes} MINUTE)
+    </select>
+
+</mapper> 

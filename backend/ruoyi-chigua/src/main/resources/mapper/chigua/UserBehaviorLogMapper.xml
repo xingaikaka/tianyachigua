@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.UserBehaviorLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.chigua.domain.UserBehaviorLog">
+        <id     property="id"           column="id"           />
+        <result property="eventTime"    column="event_time"   />
+        <result property="eventDate"    column="event_date"   />
+        <result property="eventType"    column="event_type"   />
+        <result property="eventTarget"  column="event_target" />
+        <result property="keyword"      column="keyword"      />
+        <result property="pagePath"     column="page_path"    />
+        <result property="referrer"     column="referrer"     />
+        <result property="ip"           column="ip"           />
+        <result property="ipRegion"     column="ip_region"    />
+        <result property="isChina"      column="is_china"     />
+        <result property="fingerprint"  column="fingerprint"  />
+        <result property="anonymousId"  column="anonymous_id" />
+        <result property="sessionId"    column="session_id"   />
+        <result property="userAgent"    column="user_agent"   />
+        <result property="deviceType"   column="device_type"  />
+        <result property="browser"      column="browser"      />
+        <result property="os"           column="os"           />
+        <result property="durationMs"   column="duration_ms"  />
+        <result property="extra"        column="extra"        />
+    </resultMap>
+
+    <sql id="Base_Cols">
+        id, event_time, event_date, event_type, event_target, keyword, page_path, referrer,
+        ip, ip_region, is_china, fingerprint, anonymous_id, session_id,
+        user_agent, device_type, browser, os, duration_ms, extra
+    </sql>
+
+    <insert id="insert" parameterType="com.ruoyi.chigua.domain.UserBehaviorLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_behavior_log (
+            event_time, event_date, event_type, event_target, keyword, page_path, referrer,
+            ip, ip_region, is_china, fingerprint, anonymous_id, session_id,
+            user_agent, device_type, browser, os, duration_ms, extra
+        ) VALUES (
+            #{eventTime}, #{eventDate}, #{eventType}, #{eventTarget}, #{keyword}, #{pagePath}, #{referrer},
+            #{ip}, #{ipRegion}, #{isChina}, #{fingerprint}, #{anonymousId}, #{sessionId},
+            #{userAgent}, #{deviceType}, #{browser}, #{os}, #{durationMs}, #{extra}
+        )
+    </insert>
+
+    <insert id="batchInsert">
+        INSERT INTO user_behavior_log (
+            event_time, event_date, event_type, event_target, keyword, page_path, referrer,
+            ip, ip_region, is_china, fingerprint, anonymous_id, session_id,
+            user_agent, device_type, browser, os, duration_ms, extra
+        ) VALUES
+        <foreach collection="list" item="it" separator=",">
+            (
+              #{it.eventTime}, #{it.eventDate}, #{it.eventType}, #{it.eventTarget}, #{it.keyword},
+              #{it.pagePath}, #{it.referrer},
+              #{it.ip}, #{it.ipRegion}, #{it.isChina}, #{it.fingerprint}, #{it.anonymousId}, #{it.sessionId},
+              #{it.userAgent}, #{it.deviceType}, #{it.browser}, #{it.os}, #{it.durationMs}, #{it.extra}
+            )
+        </foreach>
+    </insert>
+
+    <sql id="EventListWhere">
+        <where>
+            <if test="q.startTime != null"> AND event_time &gt;= #{q.startTime} </if>
+            <if test="q.endTime   != null"> AND event_time &lt;= #{q.endTime}   </if>
+            <if test="q.startDate != null"> AND event_date &gt;= #{q.startDate} </if>
+            <if test="q.endDate   != null"> AND event_date &lt;= #{q.endDate}   </if>
+            <if test="q.eventType != null and q.eventType != ''"> AND event_type = #{q.eventType} </if>
+            <if test="q.ip        != null and q.ip != ''">         AND ip = #{q.ip} </if>
+            <if test="q.fingerprint != null and q.fingerprint != ''"> AND fingerprint = #{q.fingerprint} </if>
+            <if test="q.anonymousId != null and q.anonymousId != ''"> AND anonymous_id = #{q.anonymousId} </if>
+            <if test="q.keyword   != null and q.keyword != ''">    AND keyword LIKE CONCAT('%', #{q.keyword}, '%') </if>
+            <if test="q.pagePath  != null and q.pagePath != ''">   AND page_path LIKE CONCAT(#{q.pagePath}, '%') </if>
+            <if test="q.eventTarget != null and q.eventTarget != ''"> AND event_target = #{q.eventTarget} </if>
+            <if test="q.isChina != null">                          AND is_china = #{q.isChina} </if>
+            <if test="q.deviceType != null and q.deviceType != ''"> AND device_type = #{q.deviceType} </if>
+            <if test="q.ipRegion != null and q.ipRegion != ''">    AND ip_region LIKE CONCAT('%', #{q.ipRegion}, '%') </if>
+        </where>
+    </sql>
+
+    <select id="selectEventList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Cols"/>
+        FROM user_behavior_log
+        <include refid="EventListWhere"/>
+        ORDER BY event_time DESC, id DESC
+        <if test="q.limit != null"> LIMIT #{q.offset}, #{q.limit} </if>
+    </select>
+
+    <select id="countEventList" resultType="long">
+        SELECT COUNT(*) FROM user_behavior_log
+        <include refid="EventListWhere"/>
+    </select>
+
+    <select id="selectIpSummary" resultType="java.util.LinkedHashMap">
+        SELECT
+            ip,
+            MAX(ip_region) AS ipRegion,
+            MAX(is_china)  AS isChina,
+            MIN(event_time) AS firstSeen,
+            MAX(event_time) AS lastSeen,
+            COUNT(*)        AS eventCount,
+            COUNT(DISTINCT page_path) AS pageCount,
+            COUNT(DISTINCT DATE(event_time)) AS activeDays,
+            COUNT(DISTINCT anonymous_id)     AS anonCount,
+            SUM(event_type = 'page_view')      AS pvCount,
+            SUM(event_type = 'search_submit')  AS searchCount,
+            SUM(event_type = 'video_play')     AS playCount,
+            SUM(event_type = 'category_click') AS catClickCount,
+            MAX(device_type) AS deviceType,
+            MAX(browser)     AS browser,
+            MAX(os)          AS os
+        FROM user_behavior_log
+        <include refid="EventListWhere"/>
+        GROUP BY ip
+        ORDER BY lastSeen DESC, eventCount DESC
+        <if test="q.limit != null"> LIMIT #{q.offset}, #{q.limit} </if>
+    </select>
+
+    <select id="countIpSummary" resultType="long">
+        SELECT COUNT(*) FROM (
+            SELECT 1 FROM user_behavior_log
+            <include refid="EventListWhere"/>
+            GROUP BY ip
+        ) t
+    </select>
+
+    <select id="selectByIp" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Cols"/>
+        FROM user_behavior_log
+        WHERE ip = #{ip}
+        <if test="startTime != null"> AND event_time &gt;= #{startTime} </if>
+        <if test="endTime   != null"> AND event_time &lt;= #{endTime} </if>
+        ORDER BY event_time DESC, id DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectOverview" resultType="java.util.LinkedHashMap">
+        SELECT
+            COUNT(*)                          AS totalEvents,
+            COUNT(DISTINCT ip)                AS uniqueIps,
+            COUNT(DISTINCT fingerprint)       AS uniqueFingerprints,
+            COUNT(DISTINCT anonymous_id)      AS uniqueAnonIds,
+            SUM(event_type = 'page_view')     AS pvCount,
+            SUM(event_type = 'search_submit') AS searchCount,
+            SUM(event_type = 'video_play')    AS playCount,
+            SUM(is_china = 1)                 AS chinaEvents,
+            SUM(is_china = 0)                 AS overseasEvents
+        FROM user_behavior_log
+        WHERE event_date BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="selectEventTypeBreakdown" resultType="java.util.LinkedHashMap">
+        SELECT event_type AS eventType, COUNT(*) AS cnt
+        FROM user_behavior_log
+        WHERE event_date BETWEEN #{startDate} AND #{endDate}
+        GROUP BY event_type
+        ORDER BY cnt DESC
+    </select>
+
+    <delete id="deleteBeforeDate">
+        DELETE FROM user_behavior_log WHERE event_date &lt; #{beforeDate}
+    </delete>
+
+    <select id="selectVideoTitles" resultType="java.util.HashMap">
+        SELECT id, title FROM videos WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectTgPostTitles" resultType="java.util.HashMap">
+        SELECT id, SUBSTRING(REPLACE(REPLACE(IFNULL(caption,''), '\n', ' '), '\r', ' '), 1, 80) AS title
+        FROM tg_posts WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectCategoryNames" resultType="java.util.HashMap">
+        SELECT id, name FROM categories WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectRedgifsTitles" resultType="java.util.HashMap">
+        SELECT id, COALESCE(NULLIF(title,''), gif_id) AS title FROM redgifs_videos WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectCollectionTitles" resultType="java.util.HashMap">
+        SELECT id, title FROM collections WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectAdvertisementNames" resultType="java.util.HashMap">
+        SELECT id, title AS name FROM advertisements WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="selectTagNames" resultType="java.util.HashMap">
+        SELECT id, name FROM tags WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+</mapper>

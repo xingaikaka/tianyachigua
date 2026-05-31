@@ -1,0 +1,113 @@
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE文件
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+server.log
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 依赖目录
+node_modules/
+*/node_modules/
+**/node_modules/
+
+# 构建输出
+dist/
+build/
+*/dist/
+*/build/
+**/dist/
+**/build/
+
+# 前端项目特定
+# React
+**/build/
+**/dist/
+**/.cache/
+
+# Vue
+**/dist/
+**/node_modules/
+
+# 环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
+
+# 缓存
+.npm
+.yarn-integrity
+.cache/
+**/.cache/
+
+# 临时文件
+*.tmp
+*.temp
+
+# 备份文件
+*.bak
+*.backup
+
+# 数据库备份文件
+*.sql.bak
+
+# Java/Maven项目
+target/
+*/target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Cloudflare Workers
+.wrangler/
+**/.wrangler/
+
+# 打包文件
+*.zip
+*.tar.gz
+*.rar
+
+# 热重载相关
+.cache
+.temp
+
+# 配置文件（可能包含敏感信息）
+.mysql_config
+
+# Google 服务账号私钥（GSC/IndexNow），严禁提交
+chiguatg-*.json
+gsc-bot*.json
+**/secrets/
+*-service-account*.jsonbackend/ruoyi-admin-new.jar.gz
+Jenkinsfile-react-web
+jenkins-pipelines/
+jenkins-setup-summary.txt
+jenkins.json

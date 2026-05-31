@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoStatsMapper">
+    
+    <resultMap type="VideoStats" id="VideoStatsResult">
+        <result property="id"    column="id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="playCount"    column="play_count"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="shareCount"    column="share_count"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectVideoStatsVo">
+        select id, video_id, view_count, play_count, like_count, comment_count, share_count, updated_at, created_at from video_statistics
+    </sql>
+
+    <select id="selectVideoStatsList" parameterType="VideoStats" resultMap="VideoStatsResult">
+        <include refid="selectVideoStatsVo"/>
+        <where>  
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="viewCount != null "> and view_count = #{viewCount}</if>
+            <if test="playCount != null "> and play_count = #{playCount}</if>
+            <if test="likeCount != null "> and like_count = #{likeCount}</if>
+            <if test="commentCount != null "> and comment_count = #{commentCount}</if>
+            <if test="shareCount != null "> and share_count = #{shareCount}</if>
+        </where>
+    </select>
+    
+    <select id="selectVideoStatsById" parameterType="Long" resultMap="VideoStatsResult">
+        <include refid="selectVideoStatsVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectVideoStatsByVideoId" parameterType="Long" resultMap="VideoStatsResult">
+        <include refid="selectVideoStatsVo"/>
+        where video_id = #{videoId}
+    </select>
+        
+    <insert id="insertVideoStats" parameterType="VideoStats" useGeneratedKeys="true" keyProperty="id">
+        insert into video_statistics
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">video_id,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="playCount != null">play_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="shareCount != null">share_count,</if>
+            <if test="updatedAt != null">updated_at,</if>
+            <if test="createdAt != null">created_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">#{videoId},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="playCount != null">#{playCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="shareCount != null">#{shareCount},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVideoStats" parameterType="VideoStats">
+        update video_statistics
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="playCount != null">play_count = #{playCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVideoStatsById" parameterType="Long">
+        delete from video_statistics where id = #{id}
+    </delete>
+
+    <delete id="deleteVideoStatsByIds" parameterType="String">
+        delete from video_statistics where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 增加浏览量（如果记录不存在则创建） -->
+    <insert id="incrementViewCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 1, 0, 0, 0, 0)
+        ON DUPLICATE KEY UPDATE 
+        view_count = view_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 增加播放量（如果记录不存在则创建） -->
+    <insert id="incrementPlayCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 0, 1, 0, 0, 0)
+        ON DUPLICATE KEY UPDATE 
+        play_count = play_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 增加点赞数量 -->
+    <insert id="incrementLikeCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 0, 0, 1, 0, 0)
+        ON DUPLICATE KEY UPDATE 
+        like_count = like_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 减少点赞数量 -->
+    <update id="decrementLikeCount">
+        UPDATE video_statistics 
+        SET like_count = GREATEST(like_count - 1, 0),
+            updated_at = CURRENT_TIMESTAMP
+        WHERE video_id = #{videoId}
+    </update>
+
+    <!-- 增加分享次数 -->
+    <insert id="incrementShareCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 0, 0, 0, 0, 1)
+        ON DUPLICATE KEY UPDATE 
+        share_count = share_count + 1,
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 更新评论数量 -->
+    <insert id="updateCommentCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 0, 0, 0, #{commentCount}, 0)
+        ON DUPLICATE KEY UPDATE 
+        comment_count = #{commentCount},
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- Redis批量同步专用方法 -->
+    <insert id="batchIncrementViewCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, #{count}, 0, 0, 0, 0)
+        ON DUPLICATE KEY UPDATE 
+        view_count = view_count + #{count},
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <insert id="batchIncrementPlayCount">
+        INSERT INTO video_statistics (video_id, view_count, play_count, like_count, comment_count, share_count) 
+        VALUES (#{videoId}, 0, #{count}, 0, 0, 0)
+        ON DUPLICATE KEY UPDATE 
+        play_count = play_count + #{count},
+        updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+</mapper>

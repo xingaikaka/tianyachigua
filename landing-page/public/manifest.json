@@ -1,0 +1,30 @@
+{
+  "short_name": "51吃瓜",
+  "name": "51吃瓜 - 官方入口",
+  "description": "51吃瓜 - 正式开启网红吃瓜万象的长征路，福利导航 免费资源 纯净无毒",
+  "keywords": "吃瓜,51吃瓜,91吃瓜,黑料,每日吃瓜,天天吃瓜,天涯吃瓜,网红吃瓜,福利导航,免费资源",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#111827",
+  "lang": "zh-CN",
+  "scope": "/",
+  "orientation": "portrait-primary"
+}

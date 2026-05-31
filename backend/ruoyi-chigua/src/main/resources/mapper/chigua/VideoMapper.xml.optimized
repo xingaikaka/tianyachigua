@@ -1,0 +1,113 @@
+    <!-- 优化的相邻视频查询 - 获取上一个视频 -->
+    <select id="selectPreviousVideoOptimized" resultType="com.ruoyi.chigua.domain.Video">
+        SELECT v.id, v.title
+        FROM videos v
+        <if test="categoryId != null">
+            LEFT JOIN video_category_tag_relations vctr ON v.id = vctr.video_id AND vctr.relation_type = 1
+        </if>
+        WHERE v.status = 1
+        <if test="categoryId != null">
+            AND (v.category_id = #{categoryId} OR vctr.category_id = #{categoryId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (v.title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR v.subtitle LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR v.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+        AND (
+            v.published_at > (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+            OR (
+                v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at > (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at = (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+                AND v.id > #{currentVideoId}
+            )
+        )
+        ORDER BY v.published_at ASC, v.created_at ASC, v.id ASC
+        LIMIT 1
+    </select>
+
+    <!-- 优化的相邻视频查询 - 获取下一个视频 -->
+    <select id="selectNextVideoOptimized" resultType="com.ruoyi.chigua.domain.Video">
+        SELECT v.id, v.title
+        FROM videos v
+        <if test="categoryId != null">
+            LEFT JOIN video_category_tag_relations vctr ON v.id = vctr.video_id AND vctr.relation_type = 1
+        </if>
+        WHERE v.status = 1
+        <if test="categoryId != null">
+            AND (v.category_id = #{categoryId} OR vctr.category_id = #{categoryId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (v.title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR v.subtitle LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR v.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+        AND (
+            v.published_at &lt; (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+            OR (
+                v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at &lt; (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at = (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+                AND v.id &lt; #{currentVideoId}
+            )
+        )
+        ORDER BY v.published_at DESC, v.created_at DESC, v.id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 简化的视频详情查询 - 不包含统计数据 -->
+    <select id="selectVideoByIdSimple" parameterType="Long" resultMap="VideoResult">
+        SELECT v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, 
+               v.duration, v.file_size, v.author, v.category_id, v.sort_order, 
+               v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, 
+               v.thumbnails, v.output_formats, v.slug, v.meta_title, v.meta_description, 
+               v.meta_keywords, v.video_type, v.quality, v.is_featured, v.allow_comments, v.language,
+               c.name as category_name
+        FROM videos v
+        LEFT JOIN categories c ON v.category_id = c.id
+        WHERE v.id = #{id} AND v.status = 1
+    </select>
+
+    <!-- 批量获取视频统计数据 -->
+    <select id="selectVideoStatsBatch" resultType="map">
+        SELECT video_id, view_count, play_count, like_count, comment_count, share_count
+        FROM video_statistics 
+        WHERE video_id IN
+        <foreach item="id" collection="videoIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 批量获取视频图片数量 -->
+    <select id="selectVideoImageCountBatch" resultType="map">
+        SELECT video_id, COUNT(*) as image_count
+        FROM video_images 
+        WHERE video_id IN
+        <foreach item="id" collection="videoIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND status = 1
+        GROUP BY video_id
+    </select>
+
+    <!-- 批量获取视频URL数量 -->
+    <select id="selectVideoUrlCountBatch" resultType="map">
+        SELECT video_id, COUNT(*) as url_count
+        FROM video_urls 
+        WHERE video_id IN
+        <foreach item="id" collection="videoIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND status = 1
+        GROUP BY video_id
+    </select>

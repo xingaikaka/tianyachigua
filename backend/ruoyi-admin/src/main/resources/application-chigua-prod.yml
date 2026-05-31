@@ -1,0 +1,74 @@
+# Chigua模块配置 - 生产环境
+chigua:
+  # SEO配置（泛域名环境也启用Telegram站点地图，sitemap URL会跟随请求Host动态生成）
+  seo:
+    sitemap-enabled: true
+    robots-enabled: true
+
+  # R2存储配置（生产环境）
+  r2:
+    # 生产环境R2端点
+    endpoint: https://74dcb623526e1925a35e0991a0940f16.r2.cloudflarestorage.com
+    # 生产环境访问密钥
+    access-key-id: 658000187d42a249eb90c19063a7e425
+    secret-access-key: 85206d150bb2c88eca883b864f41f925e750f9eb264fc92c91e91bfac585cf7e
+    # 生产环境存储桶
+    bucket-name: 51chigua
+    # 图片加密配置（生产环境强制启用）
+    image-encryption:
+      enabled: true
+      key: DR4jiK+U+Z6QwyuVxp//Cl3Zl543bl1xiQrfH6hnLc4=
+
+  # 域名配置（顶层域名配置，由ChiguaProperties.DomainConfig读取）
+  domains:
+    # 生产环境主域名（泛域名环境，sitemap URL会跟随请求Host动态生成）
+    site: https://sigma.uoatx.cc
+    # 站点备用域名列表（泛域名环境不需要配置备用域名）
+    site-alternatives:
+      - https://sigma.uoatx.cc
+    # API域名（用于API访问，泛域名环境）
+    api-domain: https://sigma.uoatx.cc
+    # 图片资源域名（R2存储）
+    main: https://tycgimage1.org
+    # 备用域名
+    fallback: https://74dcb623526e1925a35e0991a0940f16.r2.cloudflarestorage.com
+
+  # URL服务配置（生产环境）
+  url:
+    signature-secret: VbJBrVDVrzICYlkQgDzBVyuhOoKsWpr0BSpJAERif7Y=
+    signature-enabled: true  # 生产环境强制启用签名
+    fallback-enabled: true
+    
+    # 生产环境签名URL有效期配置（更严格）
+    expires:
+      default: 3600    # 1小时
+      short: 1800      # 30分钟
+      long: 7200       # 2小时
+    
+    # 生产环境下载次数限制（更严格）
+    download-limits:
+      video: 3
+      stream: 10
+      default: 5
+    
+    # 文件类型保护配置
+    file-types:
+      protected: 
+        - mp4, webm, avi, mov, wmv, flv, webm, mkv, m3u8, ts
+      public:
+        - jpg, jpeg, png, gif, webp, svg, ico, bmp, tiff
+
+  # 资源路径配置
+  paths:
+    video-prefix: /videos
+    image-prefix: /images
+    thumbnail-prefix: /thumbnails
+
+# ppvod集成配置（生产环境）
+ppvod:
+  default:
+    domain: https://tycgimage1.org
+    pic-domain: https://tycgimage1.org
+  url:
+    check-enabled: true  # 生产环境启用检查
+    check-timeout: 3000

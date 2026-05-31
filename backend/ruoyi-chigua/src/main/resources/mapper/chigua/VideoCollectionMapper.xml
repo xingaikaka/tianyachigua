@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoCollectionMapper">
+    
+    <resultMap type="VideoCollection" id="VideoCollectionResult">
+        <result property="id"    column="id"    />
+        <result property="collectionId"    column="collection_id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createdAt"    column="created_at"    />
+    </resultMap>
+
+    <sql id="selectVideoCollectionVo">
+        select id, collection_id, video_id, sort_order, created_at from video_collections
+    </sql>
+
+    <select id="selectVideoCollectionList" parameterType="VideoCollection" resultMap="VideoCollectionResult">
+        <include refid="selectVideoCollectionVo"/>
+        <where>  
+            <if test="collectionId != null "> and collection_id = #{collectionId}</if>
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+        </where>
+        order by sort_order asc, created_at asc
+    </select>
+    
+    <select id="selectVideoCollectionById" parameterType="Long" resultMap="VideoCollectionResult">
+        <include refid="selectVideoCollectionVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectVideoCollectionByIds" resultMap="VideoCollectionResult">
+        <include refid="selectVideoCollectionVo"/>
+        where collection_id = #{collectionId} and video_id = #{videoId}
+    </select>
+
+    <select id="selectMaxSortOrderByCollectionId" parameterType="Long" resultType="Integer">
+        select IFNULL(MAX(sort_order), 0) from video_collections where collection_id = #{collectionId}
+    </select>
+        
+    <insert id="insertVideoCollection" parameterType="VideoCollection" useGeneratedKeys="true" keyProperty="id">
+        insert into video_collections
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="collectionId != null">collection_id,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            created_at
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="collectionId != null">#{collectionId},</if>
+            <if test="videoId != null">#{videoId},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            now()
+         </trim>
+    </insert>
+
+    <update id="updateVideoCollection" parameterType="VideoCollection">
+        update video_collections
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="collectionId != null">collection_id = #{collectionId},</if>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVideoCollectionById" parameterType="Long">
+        delete from video_collections where id = #{id}
+    </delete>
+
+    <delete id="deleteVideoCollectionByIds" parameterType="String">
+        delete from video_collections where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteVideoCollectionByCollectionId" parameterType="Long">
+        delete from video_collections where collection_id = #{collectionId}
+    </delete>
+
+    <delete id="deleteVideoCollectionByVideoId" parameterType="Long">
+        delete from video_collections where video_id = #{videoId}
+    </delete>
+
+    <!-- 批量插入视频合集关系 -->
+    <insert id="batchInsertVideoCollection" parameterType="java.util.List">
+        insert into video_collections (collection_id, video_id, sort_order, created_at)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.collectionId}, #{item.videoId}, #{item.sortOrder}, now())
+        </foreach>
+    </insert>
+
+    <!-- 批量更新排序 -->
+    <update id="batchUpdateSortOrder" parameterType="java.util.List">
+        update video_collections 
+        set sort_order = case id
+        <foreach collection="list" item="item">
+            when #{item.id} then #{item.sortOrder}
+        </foreach>
+        end
+        where id in 
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <!-- 调整排序（当删除某个视频时，后续视频排序前移） -->
+    <update id="adjustSortOrderAfterDelete">
+        update video_collections 
+        set sort_order = sort_order - 1
+        where collection_id = #{collectionId} 
+        and sort_order > #{sortOrder}
+    </update>
+
+</mapper> 

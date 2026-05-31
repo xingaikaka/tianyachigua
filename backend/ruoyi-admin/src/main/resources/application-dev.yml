@@ -1,0 +1,84 @@
+# 本地开发环境配置
+spring:
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # 顶层Druid配置（为DruidProperties类提供）
+    druid:
+      initialSize: 5
+      minIdle: 5
+      maxActive: 10
+      maxWait: 60000
+      connectTimeout: 30000
+      socketTimeout: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      maxEvictableIdleTimeMillis: 900000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+
+      # 本地数据库配置（请根据实际情况修改）
+      master:
+        url: jdbc:mysql://localhost:3306/chigua7?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: kakamysql!  # 请修改为你的本地MySQL密码
+      # 从库数据源（开发环境关闭）
+      slave:
+        enabled: false
+      # Druid监控配置
+      webStatFilter: 
+        enabled: true
+      statViewServlet:
+        enabled: true
+        allow:
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 2000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+
+  # Redis配置（本地）
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    password:  # 本地Redis一般无密码
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+
+# Swagger配置（开发环境开启）
+swagger:
+  enabled: true
+  pathMapping: /dev-api
+
+# 日志配置（开发环境详细日志）
+logging:
+  level:
+    com.ruoyi: debug
+    org.springframework: info
+    org.mybatis: debug
+    com.alibaba.druid: info
+    root: info
+
+# Chigua 应用配置
+chigua:
+  domains:
+    main: "localhost:3000"
+  url:
+    expires:
+      defaultExpires: 2

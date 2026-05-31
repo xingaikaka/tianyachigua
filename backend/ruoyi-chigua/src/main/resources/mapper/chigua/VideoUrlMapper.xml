@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoUrlMapper">
+    
+    <resultMap type="VideoUrl" id="VideoUrlResult">
+        <id     property="id"               column="id"               />
+        <result property="videoId"          column="video_id"         />
+        <result property="title"            column="title"            />
+        <result property="description"      column="description"      />
+        <result property="videoUrl"         column="video_url"        />
+        <result property="episodeNumber"    column="episode_number"   />
+        <result property="quality"          column="quality"          />
+        <result property="format"           column="format"           />
+        <result property="duration"         column="duration"         />
+        <result property="fileSize"         column="file_size"        />
+        <result property="bitrate"          column="bitrate"          />
+        <result property="resolution"       column="resolution"       />
+        <result property="isPrimary"        column="is_primary"       />
+        <result property="playCount"        column="play_count"       />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="status"           column="status"           />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+        <result property="videoTitle"       column="video_title"      />
+    </resultMap>
+
+    <sql id="selectVideoUrlVo">
+        select vu.id, vu.video_id, vu.title, vu.description, vu.video_url, vu.episode_number,
+               vu.quality, vu.format, vu.duration, vu.file_size, vu.bitrate, vu.resolution,
+               vu.is_primary, vu.play_count, vu.sort_order, vu.status, vu.created_at, vu.updated_at,
+               v.title as video_title
+        from video_urls vu
+        left join videos v on vu.video_id = v.id
+    </sql>
+
+    <!-- 查询视频地址列表 -->
+    <select id="selectVideoUrlList" parameterType="VideoUrl" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        <where>  
+            <if test="videoId != null"> and vu.video_id = #{videoId}</if>
+            <if test="title != null and title != ''"> and vu.title like concat('%', #{title}, '%')</if>
+            <if test="quality != null and quality != ''"> and vu.quality = #{quality}</if>
+            <if test="format != null and format != ''"> and vu.format = #{format}</if>
+            <if test="isPrimary != null"> and vu.is_primary = #{isPrimary}</if>
+            <if test="status != null"> and vu.status = #{status}</if>
+        </where>
+        order by vu.sort_order desc, vu.episode_number asc, vu.id asc
+    </select>
+
+    <!-- 根据视频ID查询地址列表 -->
+    <select id="selectVideoUrlsByVideoId" parameterType="Long" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        where vu.video_id = #{videoId}
+        order by vu.sort_order desc, vu.episode_number asc, vu.id asc
+    </select>
+    
+    <!-- 根据ID查询视频地址 -->
+    <select id="selectVideoUrlById" parameterType="Long" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        where vu.id = #{id}
+    </select>
+
+    <!-- 查询视频的主要地址 -->
+    <select id="selectPrimaryUrlByVideoId" parameterType="Long" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        where vu.video_id = #{videoId} and vu.is_primary = 1 and vu.status = 1
+        limit 1
+    </select>
+
+    <!-- 统计视频地址数量 -->
+    <select id="countUrlsByVideoId" parameterType="Long" resultType="int">
+        select count(*) from video_urls where video_id = #{videoId} and status = 1
+    </select>
+
+    <!-- 检查播放地址是否已存在 -->
+    <select id="checkVideoUrlExists" resultMap="VideoUrlResult">
+        select id, video_id, title, video_url from video_urls
+        where video_url = #{videoUrl} and video_id = #{videoId}
+        <if test="excludeId != null"> and id != #{excludeId}</if>
+        limit 1
+    </select>
+
+    <!-- 根据清晰度查询地址列表 -->
+    <select id="selectVideoUrlsByQuality" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        where vu.video_id = #{videoId} and vu.quality = #{quality} and vu.status = 1
+        order by vu.sort_order desc, vu.episode_number asc, vu.id asc
+    </select>
+
+    <!-- 根据格式查询地址列表 -->
+    <select id="selectVideoUrlsByFormat" resultMap="VideoUrlResult">
+        <include refid="selectVideoUrlVo"/>
+        where vu.video_id = #{videoId} and vu.format = #{format} and vu.status = 1
+        order by vu.sort_order desc, vu.episode_number asc, vu.id asc
+    </select>
+        
+    <!-- 新增视频地址 -->
+    <insert id="insertVideoUrl" parameterType="VideoUrl" useGeneratedKeys="true" keyProperty="id">
+        insert into video_urls
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">video_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="videoUrl != null and videoUrl != ''">video_url,</if>
+            <if test="episodeNumber != null">episode_number,</if>
+            <if test="quality != null">quality,</if>
+            <if test="format != null">format,</if>
+            <if test="duration != null">duration,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="bitrate != null">bitrate,</if>
+            <if test="resolution != null">resolution,</if>
+            <if test="isPrimary != null">is_primary,</if>
+            <if test="playCount != null">play_count,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">#{videoId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="videoUrl != null and videoUrl != ''">#{videoUrl},</if>
+            <if test="episodeNumber != null">#{episodeNumber},</if>
+            <if test="quality != null">#{quality},</if>
+            <if test="format != null">#{format},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="bitrate != null">#{bitrate},</if>
+            <if test="resolution != null">#{resolution},</if>
+            <if test="isPrimary != null">#{isPrimary},</if>
+            <if test="playCount != null">#{playCount},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <!-- 修改视频地址 -->
+    <update id="updateVideoUrl" parameterType="VideoUrl">
+        update video_urls
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="videoUrl != null and videoUrl != ''">video_url = #{videoUrl},</if>
+            <if test="episodeNumber != null">episode_number = #{episodeNumber},</if>
+            <if test="quality != null">quality = #{quality},</if>
+            <if test="format != null">format = #{format},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="bitrate != null">bitrate = #{bitrate},</if>
+            <if test="resolution != null">resolution = #{resolution},</if>
+            <if test="isPrimary != null">is_primary = #{isPrimary},</if>
+            <if test="playCount != null">play_count = #{playCount},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 设置主要地址（先取消其他主要地址状态，再设置当前地址为主要地址） -->
+    <update id="setPrimaryUrl">
+        <!-- 先取消该视频的所有主要地址状态 -->
+        update video_urls set is_primary = 0 where video_id = #{videoId};
+        <!-- 设置指定地址为主要地址 -->
+        update video_urls set is_primary = 1 where id = #{urlId} and video_id = #{videoId}
+    </update>
+
+    <!-- 取消视频的所有主要地址状态 -->
+    <update id="clearPrimaryUrls" parameterType="Long">
+        update video_urls set is_primary = 0 where video_id = #{videoId}
+    </update>
+
+    <!-- 更新播放次数 -->
+    <update id="incrementPlayCount" parameterType="Long">
+        update video_urls set play_count = play_count + 1 where id = #{id}
+    </update>
+
+    <!-- 批量更新地址排序 -->
+    <update id="batchUpdateUrlSort" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update video_urls set sort_order = #{item.sortOrder} where id = #{item.id}
+        </foreach>
+    </update>
+
+    <!-- 删除视频地址 -->
+    <delete id="deleteVideoUrlById" parameterType="Long">
+        delete from video_urls where id = #{id}
+    </delete>
+
+    <!-- 批量删除视频地址 -->
+    <delete id="deleteVideoUrlByIds" parameterType="String">
+        delete from video_urls where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据视频ID删除所有地址 -->
+    <delete id="deleteVideoUrlsByVideoId" parameterType="Long">
+        delete from video_urls where video_id = #{videoId}
+    </delete>
+
+</mapper> 

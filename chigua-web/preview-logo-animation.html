@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天涯吃瓜 Logo 动画预览</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #313030;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .preview-section {
+            background: rgba(49, 48, 48, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .section-title {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        .animated-gradient-text {
+            transition: all 0.3s ease;
+        }
+        
+        .animated-gradient-text:hover {
+            animation-duration: 1.5s !important;
+            transform: scale(1.05);
+        }
+
+        /* 桌面端样式 */
+        .desktop-logo {
+            fontSize: '32px';
+            fontFamily: '"Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif';
+            fontWeight: 'bold';
+            background: 'linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3)';
+            backgroundSize: '400% 400%';
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letterSpacing: '2px';
+            lineHeight: '1.2';
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        /* 移动端顶部样式 */
+        .mobile-top-logo {
+            fontSize: '24px';
+            fontFamily: '"Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif';
+            fontWeight: 'bold';
+            background: 'linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3)';
+            backgroundSize: '400% 400%';
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letterSpacing: '1px';
+            lineHeight: '1.2';
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        /* 移动端侧边菜单样式 */
+        .mobile-sidebar-logo {
+            fontSize: '36px';
+            fontFamily: '"Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif';
+            fontWeight: 'bold';
+            background: 'linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3)';
+            backgroundSize: '400% 400%';
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letterSpacing: '2px';
+            lineHeight: '1.2';
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .logo-text {
+            font-size: 32px;
+            font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .logo-text-mobile-top {
+            font-size: 24px;
+            font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .logo-text-mobile-sidebar {
+            font-size: 36px;
+            font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            animation: gradientShift 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .logo-text:hover,
+        .logo-text-mobile-top:hover,
+        .logo-text-mobile-sidebar:hover {
+            animation-duration: 1.5s !important;
+            transform: scale(1.05);
+        }
+
+        .info {
+            color: #ccc;
+            font-size: 14px;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #fff; text-align: center; margin-bottom: 40px;">天涯吃瓜 Logo 动画效果预览</h1>
+    
+    <div class="preview-section">
+        <div class="section-title">桌面端头部 Logo (32px)</div>
+        <span class="logo-text animated-gradient-text">天涯吃瓜</span>
+        <div class="info">鼠标悬停查看加速效果</div>
+    </div>
+
+    <div class="preview-section">
+        <div class="section-title">移动端顶部 Logo (24px)</div>
+        <span class="logo-text-mobile-top animated-gradient-text">天涯吃瓜</span>
+        <div class="info">适用于移动端顶部导航</div>
+    </div>
+
+    <div class="preview-section">
+        <div class="section-title">移动端侧边菜单 Logo (36px)</div>
+        <span class="logo-text-mobile-sidebar animated-gradient-text">天涯吃瓜</span>
+        <div class="info">适用于移动端侧边菜单</div>
+    </div>
+
+    <div class="preview-section">
+        <div class="section-title">动画特点</div>
+        <div class="info">
+            🌈 渐变色：蓝色 → 青色 → 绿青色<br>
+            ⏱️ 动画时长：3秒循环<br>
+            🎯 悬停效果：1.5秒快速循环 + 1.05倍缩放<br>
+            📱 响应式：三种尺寸适配不同场景<br>
+            🎨 渐变方向：45度对角线<br>
+            ✨ 背景尺寸：400% 实现流动效果
+        </div>
+    </div>
+</body>
+</html>

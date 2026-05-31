@@ -1,0 +1,1562 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoMapper">
+    
+    <resultMap type="Video" id="VideoResult">
+        <id     property="id"               column="id"               />
+        <result property="title"            column="title"            />
+        <result property="subtitle"         column="subtitle"         />
+        <result property="description"      column="description"      />
+        <result property="videoContent"     column="video_content"    />
+        <result property="firstVideoUrl"    column="first_video_url"  />
+        <result property="coverImage"       column="cover_image"      />
+        <result property="duration"         column="duration"         />
+        <result property="fileSize"         column="file_size"        />
+        <result property="author"           column="author"           />
+        <result property="sourceId"         column="source_id"        />
+        <result property="categoryId"       column="category_id"      />
+        <result property="viewCount"        column="view_count"       />
+        <result property="commentCount"     column="comment_count"    />
+        <result property="likeCount"        column="like_count"       />
+        <result property="shareCount"       column="share_count"      />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="isRecommended"    column="is_recommended"   />
+        <result property="isHot"            column="is_hot"           />
+        <result property="status"           column="status"           />
+        <result property="publishedAt"      column="published_at"     />
+        <result property="lastEditedAt"     column="last_edited_at"   />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+        <result property="categoryName"     column="category_name"    />
+        <result property="imageCount"       column="image_count"      />
+        <result property="urlCount"         column="url_count"        />
+        <!-- ppvod集成字段 -->
+        <result property="transcodeId"      column="transcode_id"     />
+        <result property="md5"              column="md5"              />
+        <result property="shareid"          column="shareid"          />
+        <result property="orgfile"          column="orgfile"          />
+        <result property="rpath"            column="rpath"            />
+        <result property="domain"           column="domain"           />
+        <result property="path"             column="path"             />
+        <result property="suffix"           column="suffix"           />
+        <result property="resolution"       column="resolution"       />
+        <result property="bitrate"          column="bitrate"          />
+        <result property="fps"              column="fps"              />
+        <result property="width"            column="width"            />
+        <result property="height"           column="height"           />
+        <result property="transcodeStatus"  column="transcode_status" />
+        <result property="thumbnails"       column="thumbnails"       />
+        <result property="outputFormats"    column="output_formats"   />
+        <!-- SEO字段 -->
+        <result property="slug"             column="slug"             />
+        <result property="metaTitle"        column="meta_title"       />
+        <result property="metaDescription"  column="meta_description" />
+        <result property="metaKeywords"     column="meta_keywords"    />
+        <!-- 内容管理增强字段 -->
+        <result property="videoType"        column="video_type"       />
+        <result property="quality"          column="quality"          />
+        <result property="isFeatured"       column="is_featured"      />
+        <result property="allowComments"    column="allow_comments"   />
+        <result property="language"         column="language"         />
+    </resultMap>
+
+    <!-- 列表专用ResultMap -->
+    <resultMap type="com.ruoyi.chigua.domain.vo.web.WebVideoListVO" id="WebVideoListResult">
+        <id     property="id"               column="id"               />
+        <result property="title"            column="title"            />
+        <result property="coverImageUrl"    column="cover_image"      />
+        <result property="author"           column="author"           />
+        <result property="publishedAt"      column="published_at"     />
+        <result property="categoryName"     column="category_name"    />
+        <result property="isHot"            column="is_hot"           />
+    </resultMap>
+
+    <!-- 视频结果映射（包含分类和标签） -->
+    <resultMap type="Video" id="VideoWithRelationsResult" extends="VideoResult">
+        <collection property="categories" ofType="Category">
+            <id     property="id"           column="cat_id"           />
+            <result property="name"         column="cat_name"         />
+            <result property="status"       column="cat_status"       />
+        </collection>
+        <collection property="tags" ofType="Tag">
+            <id     property="id"           column="tag_id"           />
+            <result property="name"         column="tag_name"         />
+            <result property="color"        column="tag_color"        />
+            <result property="status"       column="tag_status"       />
+        </collection>
+    </resultMap>
+
+    <!-- 分类结果映射 -->
+    <resultMap type="Category" id="CategoryResult">
+        <id     property="id"               column="id"               />
+        <result property="name"             column="name"             />
+        <result property="description"      column="description"      />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="status"           column="status"           />
+        <result property="isCollection"     column="is_collection"    />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+    </resultMap>
+
+    <!-- 标签结果映射 -->
+    <resultMap type="Tag" id="TagResult">
+        <id     property="id"               column="id"               />
+        <result property="name"             column="name"             />
+        <result property="color"            column="color"            />
+        <result property="usageCount"       column="usage_count"      />
+        <result property="status"           column="status"           />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+    </resultMap>
+
+    <!-- 视频结果映射（包含统计数据） -->
+    <resultMap type="Video" id="VideoWithStatsResult" extends="VideoResult">
+        <result property="viewCount"        column="stats_view_count"    />
+        <result property="commentCount"     column="stats_comment_count" />
+        <result property="likeCount"        column="stats_like_count"    />
+        <result property="shareCount"       column="stats_share_count"   />
+        <!-- 新增播放量字段 -->
+        <result property="playCount"        column="stats_play_count"    />
+    </resultMap>
+
+    <sql id="selectVideoVo">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size, 
+               v.author, v.source_id, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language,
+               -- 优先显示关联表中的分类，其次是直接关联的分类
+               COALESCE(
+                   (select GROUP_CONCAT(c2.name ORDER BY c2.sort_order DESC SEPARATOR ', ') 
+                    from video_category_tag_relations vctr2 
+                    inner join categories c2 on vctr2.category_id = c2.id and c2.status = 1
+                    where vctr2.video_id = v.id and vctr2.relation_type = 1),
+                   c.name
+               ) as category_name,
+               (select count(*) from video_images vi where vi.video_id = v.id and vi.status = 1) as image_count,
+               (select count(*) from video_urls vu where vu.video_id = v.id and vu.status = 1) as url_count
+        from videos v
+        left join categories c on v.category_id = c.id
+    </sql>
+
+    <!-- Web 精简版：仅基础字段 + 分类名，不统计图片/播放源数量，不关联统计表 -->
+    <sql id="selectWebVideoBasicVo">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size,
+               v.author, v.source_id, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language,
+               -- 基于关系表获取分类名称
+               (select GROUP_CONCAT(c.name ORDER BY c.sort_order DESC SEPARATOR ', ') 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id and c.status = 1
+                where vctr.video_id = v.id and vctr.relation_type = 1) as category_name
+        from videos v
+    </sql>
+
+    <!-- 列表专用：仅查询列表页必需字段 -->
+    <sql id="selectVideoListOnlyVo">
+        select v.id, v.title, v.cover_image, v.author, v.published_at, v.is_hot,
+               -- 基于关系表获取分类名称
+               (select GROUP_CONCAT(c.name ORDER BY c.sort_order DESC SEPARATOR ', ') 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id and c.status = 1
+                where vctr.video_id = v.id and vctr.relation_type = 1) as category_name
+        from videos v
+    </sql>
+
+    <!-- Web 精简版视频列表（不含统计与图片/播放源数量） -->
+    <select id="selectWebVideoListBasic" parameterType="Video" resultMap="VideoResult">
+        <include refid="selectWebVideoBasicVo"/>
+        <where>
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null">
+                and exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                )
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 创建开始时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 创建结束时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.publishBeginTime != null and params.publishBeginTime != ''"><!-- 发布开始时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &gt;= date_format(#{params.publishBeginTime},'%y%m%d')
+            </if>
+            <if test="params.publishEndTime != null and params.publishEndTime != ''"><!-- 发布结束时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &lt;= date_format(#{params.publishEndTime},'%y%m%d')
+            </if>
+            <!-- 分类筛选 -->
+            <if test="categoryIds != null and categoryIds.size() &gt; 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 
+                    and vctr.category_id in 
+                    <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                        #{categoryId}
+                    </foreach>
+                )
+            </if>
+            <!-- 标签筛选 -->
+            <if test="tagIds != null and tagIds.size() &gt; 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 2 
+                    and vctr.tag_id in 
+                    <foreach item="tagId" collection="tagIds" open="(" separator="," close=")">
+                        #{tagId}
+                    </foreach>
+                )
+            </if>
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+
+    <!-- 查询视频列表（搜索专用：固定排除短视频） → 精简为必要字段 -->
+    <select id="selectVideoListForSearch" parameterType="Video" resultMap="VideoResult">
+        select 
+            v.id,
+            v.title,
+            v.author,
+            v.cover_image,
+            v.published_at,
+            v.status,
+            v.category_id,
+            v.view_count,
+            v.like_count,
+            c.name as category_name
+        from videos v
+        left join categories c on c.id = v.category_id and c.status = 1
+        <where>  
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null"> 
+                and (v.category_id = #{categoryId} 
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                ))
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <!-- 搜索固定排除短视频分类和分页模式分类的视频（通过分类类型判断，而非video_type字段） -->
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+
+    <!-- 搜索专用：计数（固定排除短视频，确保分页总数准确） -->
+    <select id="countVideoListForSearch" parameterType="Video" resultType="long">
+        select count(distinct v.id)
+        from videos v
+        left join categories c on v.category_id = c.id
+        <where>
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null">
+                and (v.category_id = #{categoryId}
+                or exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                ))
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <!-- 搜索固定排除短视频分类和分页模式分类的视频（通过分类类型判断，而非video_type字段） -->
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </where>
+    </select>
+
+    <!-- 搜索专用：显式分页（固定排除短视频，规避分页插件差异） → 精简为必要字段 -->
+    <select id="selectVideoListForSearchPaged" resultMap="VideoResult">
+        select 
+            v.id,
+            v.title,
+            v.author,
+            v.cover_image,
+            v.published_at,
+            v.status,
+            v.category_id,
+            v.view_count,
+            v.like_count,
+            c.name as category_name
+        from videos v
+        left join categories c on c.id = v.category_id and c.status = 1
+        <where>
+            <if test="video.title != null and video.title != ''"> and v.title like concat('%', #{video.title}, '%')</if>
+            <if test="video.subtitle != null and video.subtitle != ''"> and v.subtitle like concat('%', #{video.subtitle}, '%')</if>
+            <if test="video.author != null and video.author != ''"> and v.author like concat('%', #{video.author}, '%')</if>
+            <if test="video.categoryId != null">
+                and (v.category_id = #{video.categoryId}
+                or exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{video.categoryId}
+                ))
+            </if>
+            <if test="video.status != null"> and v.status = #{video.status}</if>
+            <if test="video.isRecommended != null"> and v.is_recommended = #{video.isRecommended}</if>
+            <if test="video.isHot != null"> and v.is_hot = #{video.isHot}</if>
+            <!-- 搜索固定排除短视频分类和分页模式分类的视频（通过分类类型判断，而非video_type字段） -->
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 短视频模式：分页基础数据（含富文本）-->
+    <select id="selectShortVideoPage" resultType="com.ruoyi.chigua.domain.Video">
+        select v.id, v.title, v.video_content, v.first_video_url, v.first_frame_url, v.cover_image, v.published_at, 
+               v.is_recommended, v.is_hot, v.sort_order, v.created_at
+        from videos v
+        where v.status = 1
+        <!-- 只有短视频或分页模式分类才需要过滤 first_video_url -->
+        and (
+            (v.first_video_url is not null and v.first_video_url != '')
+            OR NOT exists (
+                select 1 from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        )
+        <if test="categoryId != null">
+            and exists (
+                select 1 from video_category_tag_relations vctr
+                where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+            )
+        </if>
+        <!-- 首页查询（categoryId为空）：排除短视频分类和分页模式分类的视频 -->
+        <if test="categoryId == null">
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </if>
+        <!-- 标题模糊查询 -->
+        <if test="title != null and title != ''">
+            and v.title like concat('%', #{title}, '%')
+        </if>
+        <!-- 单个标签ID（兼容旧接口） -->
+        <if test="tagId != null and (tagIds == null or tagIds.size() == 0)">
+            and exists (
+                select 1 from video_category_tag_relations vtr
+                where vtr.video_id = v.id and vtr.relation_type = 2 and vtr.tag_id = #{tagId}
+            )
+        </if>
+        <!-- 多个标签ID（OR关系：视频包含任意一个选中的标签） -->
+        <if test="tagIds != null and tagIds.size() > 0">
+            and exists (
+                select 1 from video_category_tag_relations vtr
+                where vtr.video_id = v.id and vtr.relation_type = 2 and vtr.tag_id in
+                <foreach collection="tagIds" item="tid" open="(" separator="," close=")">
+                    #{tid}
+                </foreach>
+            )
+        </if>
+        <!-- 单个作者（兼容旧接口） -->
+        <if test="author != null and author != '' and (authors == null or authors.size() == 0)">
+            and v.author = #{author}
+        </if>
+        <!-- 多个作者（OR关系：视频作者是任意一个选中的作者） -->
+        <if test="authors != null and authors.size() > 0">
+            and v.author in
+            <foreach collection="authors" item="auth" open="(" separator="," close=")">
+                #{auth}
+            </foreach>
+        </if>
+        order by v.is_recommended desc, v.is_hot desc, v.sort_order desc, v.published_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 短视频模式：计数 -->
+    <!-- 普通分类和首页：查询视频列表（只包含 first_video_url 非空的视频，保证 total 与实际可显示数量一致，避免分页空数据） -->
+    <select id="selectCategoryVideoPage" resultType="com.ruoyi.chigua.domain.Video">
+        select v.id, v.title, v.video_content, v.first_video_url, v.cover_image, v.published_at, 
+               v.is_recommended, v.is_hot, v.sort_order, v.created_at
+        from videos v
+        where v.status = 1
+        and v.first_video_url is not null and v.first_video_url != ''
+        <if test="categoryId != null">
+            and exists (
+                select 1 from video_category_tag_relations vctr
+                where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+            )
+        </if>
+        <!-- 首页查询（categoryId为空）：排除短视频和分页模式分类的视频 -->
+        <if test="categoryId == null">
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </if>
+        order by v.is_recommended desc, v.is_hot desc, v.sort_order desc, v.published_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 普通分类和首页：统计视频总数（只统计 first_video_url 非空的视频，与 selectCategoryVideoPage 过滤条件保持一致） -->
+    <select id="countCategoryVideoPage" resultType="long">
+        select count(1)
+        from videos v
+        where v.status = 1
+        and v.first_video_url is not null and v.first_video_url != ''
+        <if test="categoryId != null">
+            and exists (
+                select 1 from video_category_tag_relations vctr
+                where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+            )
+        </if>
+        <!-- 首页查询（categoryId为空）：排除短视频和分页模式分类的视频 -->
+        <if test="categoryId == null">
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </if>
+    </select>
+
+    <select id="countShortVideoPage" resultType="long">
+        select count(1)
+        from videos v
+        where v.status = 1
+        <!-- 只有短视频或分页模式分类才需要过滤 first_video_url -->
+        and (
+            (v.first_video_url is not null and v.first_video_url != '')
+            OR NOT exists (
+                select 1 from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        )
+        <if test="categoryId != null">
+            and exists (
+                select 1 from video_category_tag_relations vctr
+                where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+            )
+        </if>
+        <!-- 首页查询（categoryId为空）：排除短视频分类和分页模式分类的视频 -->
+        <if test="categoryId == null">
+            and NOT exists (
+                select 1 
+                from video_category_tag_relations vctr 
+                inner join categories c on vctr.category_id = c.id
+                where vctr.video_id = v.id 
+                  and vctr.relation_type = 1
+                  and (c.is_short = 1 OR c.is_pagination = 1)
+            )
+        </if>
+        <!-- 标题模糊查询 -->
+        <if test="title != null and title != ''">
+            and v.title like concat('%', #{title}, '%')
+        </if>
+        <!-- 单个标签ID（兼容旧接口） -->
+        <if test="tagId != null and (tagIds == null or tagIds.size() == 0)">
+            and exists (
+                select 1 from video_category_tag_relations vtr
+                where vtr.video_id = v.id and vtr.relation_type = 2 and vtr.tag_id = #{tagId}
+            )
+        </if>
+        <!-- 多个标签ID（OR关系：视频包含任意一个选中的标签） -->
+        <if test="tagIds != null and tagIds.size() > 0">
+            and exists (
+                select 1 from video_category_tag_relations vtr
+                where vtr.video_id = v.id and vtr.relation_type = 2 and vtr.tag_id in
+                <foreach collection="tagIds" item="tid" open="(" separator="," close=")">
+                    #{tid}
+                </foreach>
+            )
+        </if>
+        <!-- 单个作者（兼容旧接口） -->
+        <if test="author != null and author != '' and (authors == null or authors.size() == 0)">
+            and v.author = #{author}
+        </if>
+        <!-- 多个作者（OR关系：视频作者是任意一个选中的作者） -->
+        <if test="authors != null and authors.size() > 0">
+            and v.author in
+            <foreach collection="authors" item="auth" open="(" separator="," close=")">
+                #{auth}
+            </foreach>
+        </if>
+    </select>
+
+    <!-- Web 精简版分页（显示指定 offset/limit，规避插件差异） -->
+    <select id="selectWebVideoListBasicPaged" resultMap="VideoResult">
+        <include refid="selectWebVideoBasicVo"/>
+        <where>
+            <if test="video.title != null and video.title != ''"> and v.title like concat('%', #{video.title}, '%')</if>
+            <if test="video.subtitle != null and video.subtitle != ''"> and v.subtitle like concat('%', #{video.subtitle}, '%')</if>
+            <if test="video.author != null and video.author != ''"> and v.author like concat('%', #{video.author}, '%')</if>
+            <if test="video.categoryId != null">
+                and exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{video.categoryId}
+                )
+            </if>
+            <!-- 首页查询（categoryId为空）：排除短视频分类和分页模式分类的视频 -->
+            <if test="video.categoryId == null">
+                and NOT exists (
+                    select 1 
+                    from video_category_tag_relations vctr 
+                    inner join categories c on vctr.category_id = c.id
+                    where vctr.video_id = v.id 
+                      and vctr.relation_type = 1
+                      and (c.is_short = 1 OR c.is_pagination = 1)
+                )
+            </if>
+            <if test="video.status != null"> and v.status = #{video.status}</if>
+            <if test="video.isRecommended != null"> and v.is_recommended = #{video.isRecommended}</if>
+            <if test="video.isHot != null"> and v.is_hot = #{video.isHot}</if>
+        </where>
+        order by v.is_recommended desc, v.is_hot desc, v.sort_order desc, v.published_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 根据标题模糊查询视频列表（用于转码回调匹配） -->
+    <select id="selectVideoListByTitleLike" parameterType="Video" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        <where>
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="status != null"> and v.status = #{status}</if>
+        </where>
+        order by v.created_at desc
+        limit 10
+    </select>
+
+    <!-- 根据标题精确查询视频列表（用于回调更新，避免"鬼父 Re-born 2"匹配到"鬼父 Re-born 1"） -->
+    <select id="selectVideoListByTitleExact" parameterType="Video" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        <where>
+            <if test="title != null and title != ''"> and v.title = #{title}</if>
+            <if test="status != null"> and v.status = #{status}</if>
+        </where>
+        order by v.created_at desc
+        limit 10
+    </select>
+
+    <!-- 根据source_id列表批量查询视频 -->
+    <select id="selectVideosBySourceIds" resultMap="VideoResult">
+        select v.id, v.title, v.source_id
+        from videos v
+        where v.source_id in
+        <foreach collection="sourceIds" item="sourceId" open="(" separator="," close=")">
+            #{sourceId}
+        </foreach>
+    </select>
+
+    <select id="selectVideosByTitles" resultMap="VideoResult">
+        select v.id, v.title, v.source_id
+        from videos v
+        where v.title in
+        <foreach collection="titles" item="title" open="(" separator="," close=")">
+            #{title}
+        </foreach>
+    </select>
+
+    <!-- Web 精简版视频列表计数（用于准确分页总数） -->
+    <select id="countWebVideoListBasic" parameterType="Video" resultType="long">
+        select count(distinct v.id)
+        from videos v
+        <where>
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null">
+                and exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                )
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <!-- 分类筛选 -->
+            <if test="categoryIds != null and categoryIds.size() &gt; 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 
+                    and vctr.category_id in 
+                    <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                        #{categoryId}
+                    </foreach>
+                )
+            </if>
+            <!-- 标签筛选 -->
+            <if test="tagIds != null and tagIds.size() &gt; 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 2 
+                    and vctr.tag_id in 
+                    <foreach item="tagId" collection="tagIds" open="(" separator="," close=")">
+                        #{tagId}
+                    </foreach>
+                )
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询视频列表 -->
+    <select id="selectVideoList" parameterType="Video" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        <where>  
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="sourceId != null and sourceId != ''"> and v.source_id = #{sourceId}</if>
+            <if test="categoryId != null"> 
+                and (v.category_id = #{categoryId} 
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                ))
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 创建开始时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 创建结束时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.publishBeginTime != null and params.publishBeginTime != ''"><!-- 发布开始时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &gt;= date_format(#{params.publishBeginTime},'%y%m%d')
+            </if>
+            <if test="params.publishEndTime != null and params.publishEndTime != ''"><!-- 发布结束时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &lt;= date_format(#{params.publishEndTime},'%y%m%d')
+            </if>
+            <!-- 优化：直接使用video_type字段排除短视频，避免复杂的关联查询 -->
+            <if test="params.excludeShortCategories != null and params.excludeShortCategories == true">
+                and v.video_type != 'short'
+            </if>
+            <!-- 分类筛选 -->
+            <if test="categoryIds != null and categoryIds.size() > 0">
+                and (v.category_id in 
+                <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                    #{categoryId}
+                </foreach>
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 
+                    and vctr.category_id in 
+                    <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                        #{categoryId}
+                    </foreach>
+                ))
+            </if>
+            <!-- 标签筛选 -->
+            <if test="tagIds != null and tagIds.size() > 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 2 
+                    and vctr.tag_id in 
+                    <foreach item="tagId" collection="tagIds" open="(" separator="," close=")">
+                        #{tagId}
+                    </foreach>
+                )
+            </if>
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+
+    <!-- 查询视频列表（包含统计数据） -->
+    <select id="selectVideoListWithStats" parameterType="Video" resultMap="VideoWithStatsResult">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size, 
+               v.author, v.category_id, v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language,
+               -- 优先显示关联表中的分类，其次是直接关联的分类
+               COALESCE(
+                   (select GROUP_CONCAT(c2.name ORDER BY c2.sort_order DESC SEPARATOR ', ') 
+                    from video_category_tag_relations vctr2 
+                    inner join categories c2 on vctr2.category_id = c2.id and c2.status = 1
+                    where vctr2.video_id = v.id and vctr2.relation_type = 1),
+                   c.name
+               ) as category_name,
+               (select count(*) from video_images vi where vi.video_id = v.id and vi.status = 1) as image_count,
+               (select count(*) from video_urls vu where vu.video_id = v.id and vu.status = 1) as url_count,
+               -- 关联统计数据
+               COALESCE(vs.view_count, 0) as stats_view_count,
+               COALESCE(vs.play_count, 0) as stats_play_count,
+               COALESCE(vs.like_count, 0) as stats_like_count,
+               COALESCE(vs.comment_count, 0) as stats_comment_count,
+               COALESCE(vs.share_count, 0) as stats_share_count
+        from videos v
+        left join categories c on v.category_id = c.id
+        left join video_statistics vs on v.id = vs.video_id
+        <where>  
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null"> 
+                and (v.category_id = #{categoryId} 
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                ))
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 创建开始时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 创建结束时间检索 -->
+                and date_format(v.created_at,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="params.publishBeginTime != null and params.publishBeginTime != ''"><!-- 发布开始时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &gt;= date_format(#{params.publishBeginTime},'%y%m%d')
+            </if>
+            <if test="params.publishEndTime != null and params.publishEndTime != ''"><!-- 发布结束时间检索 -->
+                and date_format(v.published_at,'%y%m%d') &lt;= date_format(#{params.publishEndTime},'%y%m%d')
+            </if>
+            <!-- 分类筛选 -->
+            <if test="categoryIds != null and categoryIds.size() > 0">
+                and (v.category_id in 
+                <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                    #{categoryId}
+                </foreach>
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 
+                    and vctr.category_id in 
+                    <foreach item="categoryId" collection="categoryIds" open="(" separator="," close=")">
+                        #{categoryId}
+                    </foreach>
+                ))
+            </if>
+            <!-- 标签筛选 -->
+            <if test="tagIds != null and tagIds.size() > 0">
+                and exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 2 
+                    and vctr.tag_id in 
+                    <foreach item="tagId" collection="tagIds" open="(" separator="," close=")">
+                        #{tagId}
+                    </foreach>
+                )
+            </if>
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+
+    <!-- 查询视频列表（包含分类和标签信息） -->
+    <select id="selectVideoListWithRelations" parameterType="Video" resultMap="VideoWithRelationsResult">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size, 
+               v.author, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               c.name as category_name,
+               (select count(*) from video_images vi where vi.video_id = v.id and vi.status = 1) as image_count,
+               (select count(*) from video_urls vu where vu.video_id = v.id and vu.status = 1) as url_count,
+               cat.id as cat_id, cat.name as cat_name, cat.status as cat_status,
+               tag.id as tag_id, tag.name as tag_name, tag.color as tag_color, tag.status as tag_status
+        from videos v
+        left join categories c on v.category_id = c.id
+        left join video_category_tag_relations vctr_cat on v.id = vctr_cat.video_id and vctr_cat.relation_type = 1
+        left join categories cat on vctr_cat.category_id = cat.id
+        left join video_category_tag_relations vctr_tag on v.id = vctr_tag.video_id and vctr_tag.relation_type = 2
+        left join tags tag on vctr_tag.tag_id = tag.id
+        <where>  
+            <if test="title != null and title != ''"> and v.title like concat('%', #{title}, '%')</if>
+            <if test="subtitle != null and subtitle != ''"> and v.subtitle like concat('%', #{subtitle}, '%')</if>
+            <if test="author != null and author != ''"> and v.author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null"> 
+                and (v.category_id = #{categoryId} 
+                or exists (
+                    select 1 from video_category_tag_relations vctr 
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+                ))
+            </if>
+            <if test="status != null"> and v.status = #{status}</if>
+            <if test="isRecommended != null"> and v.is_recommended = #{isRecommended}</if>
+            <if test="isHot != null"> and v.is_hot = #{isHot}</if>
+        </where>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+
+    <!-- 查询分类下可用于排序的视频列表（排除已排序的视频） -->
+    <select id="selectAvailableVideosForSort" resultType="com.ruoyi.chigua.domain.Video">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size,
+               v.author, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language
+        from videos v
+        inner join video_category_tag_relations vctr on v.id = vctr.video_id
+        where vctr.relation_type = 1 
+        and vctr.category_id = #{categoryId}
+        and v.status = 1
+        <if test="title != null and title != ''">
+            and v.title like concat('%', #{title}, '%')
+        </if>
+        <if test="excludeVideoIds != null and excludeVideoIds.size() > 0">
+            and v.id not in
+            <foreach item="videoId" collection="excludeVideoIds" open="(" separator="," close=")">
+                #{videoId}
+            </foreach>
+        </if>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+    
+    <!-- 根据ID查询视频 -->
+    <select id="selectVideoById" parameterType="Long" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        where v.id = #{id}
+    </select>
+
+    <!-- 查询视频的分类列表 -->
+    <select id="selectCategoriesByVideoId" parameterType="Long" resultMap="CategoryResult">
+        select c.id, c.name, c.description, c.sort_order, c.status, c.is_collection, c.created_at, c.updated_at
+        from categories c
+        inner join video_category_tag_relations vctr on c.id = vctr.category_id
+        where vctr.video_id = #{videoId} and vctr.relation_type = 1
+        order by c.sort_order desc, c.id asc
+    </select>
+
+    <!-- 查询视频的标签列表 -->
+    <select id="selectTagsByVideoId" parameterType="Long" resultMap="TagResult">
+        select t.id, t.name, t.color, t.usage_count, t.status, t.created_at, t.updated_at
+        from tags t
+        inner join video_category_tag_relations vctr on t.id = vctr.tag_id
+        where vctr.video_id = #{videoId} and vctr.relation_type = 2
+        order by t.created_at desc, t.id desc
+    </select>
+
+
+    <!-- 查询所有分类列表 -->
+    <select id="selectAllCategories" resultMap="CategoryResult">
+        select id, name, description, sort_order, status, is_collection, created_at, updated_at
+        from categories
+        where status = 1 and (is_collection is null or is_collection = 0)
+        order by sort_order desc, id asc
+    </select>
+
+    <!-- 查询所有标签列表 -->
+    <select id="selectAllTags" resultMap="TagResult">
+        select id, name, color, usage_count, status, created_at, updated_at
+        from tags
+        where status = 1
+        order by usage_count desc, id desc
+    </select>
+
+    <!-- 分页查询标签列表 -->
+    <select id="selectTagsPage" parameterType="Tag" resultMap="TagResult">
+        select id, name, color, usage_count, status, created_at, updated_at
+        from tags
+        <where>
+            status = 1
+            <if test="name != null and name != ''">
+                AND name like concat('%', #{name}, '%')
+            </if>
+        </where>
+        order by usage_count desc, id desc
+    </select>
+
+    <!-- 根据ID列表查询标签信息 -->
+    <select id="selectTagsByIds" resultMap="TagResult">
+        select id, name, color, usage_count, status, created_at, updated_at
+        from tags
+        where status = 1
+        <if test="tagIds != null and tagIds.size() > 0">
+            and id in
+            <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+        </if>
+        order by usage_count desc, id desc
+    </select>
+
+    <!-- 搜索标签 -->
+    <select id="searchTags" parameterType="String" resultMap="TagResult">
+        select id, name, color, usage_count, status, created_at, updated_at
+        from tags
+        where status = 1 and name like concat('%', #{keyword}, '%')
+        order by usage_count desc, created_at desc, id desc
+        limit 20
+    </select>
+
+    <!-- 根据已选标签推荐相关标签 -->
+    <select id="selectRecommendedTags" resultMap="TagResult">
+        select t.id, t.name, t.color, t.usage_count, t.status, t.created_at, t.updated_at,
+               count(*) as co_occurrence_count
+        from tags t
+        inner join video_category_tag_relations vctr1 on t.id = vctr1.tag_id and vctr1.relation_type = 2
+        inner join video_category_tag_relations vctr2 on vctr1.video_id = vctr2.video_id and vctr2.relation_type = 2
+        where t.status = 1
+          and t.id not in 
+          <foreach item="tagId" collection="selectedTagIds" open="(" separator="," close=")">
+              #{tagId}
+          </foreach>
+          and vctr2.tag_id in 
+          <foreach item="tagId" collection="selectedTagIds" open="(" separator="," close=")">
+              #{tagId}
+          </foreach>
+        group by t.id, t.name, t.color, t.usage_count, t.status, t.created_at, t.updated_at
+        order by co_occurrence_count desc, t.usage_count desc, t.created_at desc
+        limit 50
+    </select>
+
+    <!-- 基于分词模糊匹配推荐相关标签 -->
+    <select id="selectTagsByWordSegmentation" resultMap="TagResult">
+        select distinct t.id, t.name, t.color, t.usage_count, t.status, t.created_at, t.updated_at
+        from tags t
+        where t.status = 1
+          and t.id not in 
+          <foreach item="tagId" collection="selectedTagIds" open="(" separator="," close=")">
+              #{tagId}
+          </foreach>
+          and (
+          <foreach item="keyword" collection="keywords" separator=" or ">
+              t.name like concat('%', #{keyword}, '%')
+          </foreach>
+          )
+        order by t.usage_count desc, t.created_at desc
+        limit 50
+    </select>
+
+    <!-- 获取热门标签作为备选推荐（排除已选标签） -->
+    <select id="selectHotTagsExcluding" resultMap="TagResult">
+        select t.id, t.name, t.color, t.usage_count, t.status, t.created_at, t.updated_at
+        from tags t
+        where t.status = 1
+          <if test="selectedTagIds != null and selectedTagIds.size() > 0">
+          and t.id not in 
+          <foreach item="tagId" collection="selectedTagIds" open="(" separator="," close=")">
+              #{tagId}
+          </foreach>
+          </if>
+        order by t.usage_count desc, t.created_at desc
+        limit 50
+    </select>
+
+    <!-- 新增标签 -->
+    <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true" keyProperty="id">
+        insert into tags
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="color != null">color,</if>
+            <if test="usageCount != null">usage_count,</if>
+            <if test="status != null">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="color != null">#{color},</if>
+            <if test="usageCount != null">#{usageCount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+        </trim>
+    </insert>
+
+    <!-- 统计分类下的视频数量 -->
+    <select id="countVideosByCategoryId" parameterType="Long" resultType="int">
+        select count(*)
+        from videos v
+        where v.category_id = #{categoryId}
+           or exists (
+               select 1 from video_category_tag_relations vctr 
+               where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{categoryId}
+           )
+    </select>
+
+    <!-- 统计标签下的视频数量 -->
+    <select id="countVideosByTagId" parameterType="Long" resultType="int">
+        select count(*)
+        from video_category_tag_relations vctr
+        where vctr.tag_id = #{tagId} and vctr.relation_type = 2
+    </select>
+
+    <!-- 根据标签ID查询视频列表 -->
+    <select id="selectVideosByTagId" parameterType="Long" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        where v.id in (
+            select vctr.video_id
+            from video_category_tag_relations vctr
+            where vctr.tag_id = #{tagId} and vctr.relation_type = 2
+        )
+        and v.status = 1
+        <!-- 排除短视频分类 -->
+        and not exists (
+            select 1 from categories c_short
+            where c_short.id = v.category_id and c_short.is_short = 1
+        )
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+    </select>
+        
+    <!-- 新增视频 -->
+    <insert id="insertVideo" parameterType="Video" useGeneratedKeys="true" keyProperty="id">
+        insert into videos
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="subtitle != null">subtitle,</if>
+            <if test="description != null">description,</if>
+            <if test="videoContent != null">video_content,</if>
+            <if test="coverImage != null">cover_image,</if>
+            <if test="duration != null">duration,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="author != null">author,</if>
+            <if test="sourceId != null">source_id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="shareCount != null">share_count,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="isRecommended != null">is_recommended,</if>
+            <if test="isHot != null">is_hot,</if>
+            <if test="status != null">status,</if>
+            <if test="publishedAt != null">published_at,</if>
+            <if test="lastEditedAt != null">last_edited_at,</if>
+            <if test="transcodeId != null and transcodeId != ''">transcode_id,</if>
+            <if test="firstVideoUrl != null">first_video_url,</if>
+            <if test="firstFrameUrl != null">first_frame_url,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="subtitle != null">#{subtitle},</if>
+            <if test="description != null">#{description},</if>
+            <if test="videoContent != null">#{videoContent},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="author != null">#{author},</if>
+            <if test="sourceId != null">#{sourceId},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="shareCount != null">#{shareCount},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="isRecommended != null">#{isRecommended},</if>
+            <if test="isHot != null">#{isHot},</if>
+            <if test="status != null">#{status},</if>
+            <if test="publishedAt != null">#{publishedAt},</if>
+            <if test="lastEditedAt != null">#{lastEditedAt},</if>
+            <if test="transcodeId != null and transcodeId != ''">#{transcodeId},</if>
+            <if test="firstVideoUrl != null">#{firstVideoUrl},</if>
+            <if test="firstFrameUrl != null">#{firstFrameUrl},</if>
+         </trim>
+    </insert>
+
+    <!-- 修改视频 -->
+    <update id="updateVideo" parameterType="Video">
+        update videos
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="subtitle != null">subtitle = #{subtitle},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="videoContent != null">video_content = #{videoContent},</if>
+            <if test="coverImage != null">cover_image = #{coverImage},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="sourceId != null">source_id = #{sourceId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="isRecommended != null">is_recommended = #{isRecommended},</if>
+            <if test="isHot != null">is_hot = #{isHot},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="publishedAt != null">published_at = #{publishedAt},</if>
+            <if test="lastEditedAt != null">last_edited_at = #{lastEditedAt},</if>
+            <if test="transcodeId != null">transcode_id = #{transcodeId},</if>
+            <if test="firstVideoUrl != null">first_video_url = #{firstVideoUrl},</if>
+            <if test="firstFrameUrl != null">first_frame_url = #{firstFrameUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 更新视频统计数据 -->
+    <update id="updateVideoStatistics" parameterType="Video">
+        update videos
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 删除视频 -->
+    <delete id="deleteVideoById" parameterType="Long">
+        delete from videos where id = #{id}
+    </delete>
+
+    <!-- 批量删除视频 -->
+    <delete id="deleteVideoByIds" parameterType="String">
+        delete from videos where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 插入视频分类关系 -->
+    <insert id="insertVideoCategoryRelation">
+        insert into video_category_tag_relations(video_id, category_id, relation_type)
+        values(#{videoId}, #{categoryId}, 1)
+    </insert>
+
+    <!-- 插入视频标签关系 -->
+    <insert id="insertVideoTagRelation">
+        insert into video_category_tag_relations(video_id, tag_id, relation_type)
+        values(#{videoId}, #{tagId}, 2)
+    </insert>
+
+    <!-- 批量插入视频分类关系 -->
+    <insert id="batchInsertVideoCategoryRelations">
+        insert into video_category_tag_relations(video_id, category_id, relation_type)
+        values
+        <foreach collection="categoryIds" item="categoryId" separator=",">
+            (#{videoId}, #{categoryId}, 1)
+        </foreach>
+    </insert>
+
+    <!-- 批量插入视频标签关系 -->
+    <insert id="batchInsertVideoTagRelations">
+        insert into video_category_tag_relations(video_id, tag_id, relation_type)
+        values
+        <foreach collection="tagIds" item="tagId" separator=",">
+            (#{videoId}, #{tagId}, 2)
+        </foreach>
+    </insert>
+
+    <!-- 删除视频分类关系 -->
+    <delete id="deleteVideoCategoryRelations" parameterType="Long">
+        delete from video_category_tag_relations 
+        where video_id = #{videoId} and relation_type = 1
+    </delete>
+
+    <!-- 删除视频标签关系 -->
+    <delete id="deleteVideoTagRelations" parameterType="Long">
+        delete from video_category_tag_relations 
+        where video_id = #{videoId} and relation_type = 2
+    </delete>
+
+    <!-- 删除视频的所有标签关系（批量替换标签时使用） -->
+    <delete id="deleteVideoTagRelationsByVideoId" parameterType="Long">
+        delete from video_category_tag_relations 
+        where video_id = #{videoId} and relation_type = 2
+    </delete>
+
+    <!-- 批量更新视频主分类 -->
+    <update id="batchUpdateVideoPrimaryCategory">
+        update videos 
+        set category_id = #{categoryId}
+        where id in
+        <foreach item="videoId" collection="videoIds" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+    </update>
+
+    <!-- 批量删除视频标签关系 -->
+    <delete id="batchDeleteVideoTagRelations">
+        delete from video_category_tag_relations 
+        where relation_type = 2 and video_id in
+        <foreach item="videoId" collection="videoIds" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+    </delete>
+
+    <!-- 批量删除视频分类关系 -->
+    <delete id="batchDeleteVideoCategoryRelations">
+        delete from video_category_tag_relations 
+        where relation_type = 1 and video_id in
+        <foreach item="videoId" collection="videoIds" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+    </delete>
+
+    <!-- 检查视频分类关系是否存在 -->
+    <select id="checkVideoCategoryRelationExists" resultType="boolean">
+        select count(*) > 0
+        from video_category_tag_relations 
+        where video_id = #{videoId} 
+          and category_id = #{categoryId} 
+          and relation_type = 1
+    </select>
+
+    <!-- 检查视频标签关系是否存在 -->
+    <select id="checkVideoTagRelationExists" resultType="boolean">
+        select count(*) > 0
+        from video_category_tag_relations 
+        where video_id = #{videoId} 
+          and tag_id = #{tagId} 
+          and relation_type = 2
+    </select>
+
+    <!-- 根据转码ID查找视频 -->
+    <select id="findByTranscodeId" parameterType="String" resultMap="VideoResult">
+        <include refid="selectVideoVo"/>
+        where v.transcode_id = #{transcodeId}
+        limit 1
+    </select>
+    <!-- 查询视频关联的标签ID列表 -->
+    <select id="selectTagIdsByVideoId" parameterType="Long" resultType="Long">
+        select tag_id
+        from video_category_tag_relations
+        where video_id = #{videoId} and relation_type = 2
+    </select>
+
+    <!-- 优化的相邻视频查询 - 获取上一个视频 -->
+    <select id="selectPreviousVideoOptimized" resultType="com.ruoyi.chigua.domain.Video">
+        SELECT v.id, v.title
+        FROM videos v
+        <if test="categoryId != null">
+            LEFT JOIN video_category_tag_relations vctr ON v.id = vctr.video_id AND vctr.relation_type = 1
+        </if>
+        WHERE v.status = 1
+        <!-- 排除短视频分类 -->
+        AND NOT EXISTS (
+            SELECT 1 FROM categories c_short
+            WHERE c_short.id = v.category_id AND c_short.is_short = 1
+        )
+        AND NOT EXISTS (
+            SELECT 1
+            FROM video_category_tag_relations vctr_short
+            JOIN categories c_short_rel ON c_short_rel.id = vctr_short.category_id
+            WHERE vctr_short.video_id = v.id
+              AND vctr_short.relation_type = 1
+              AND c_short_rel.is_short = 1
+        )
+        <if test="categoryId != null">
+            AND (v.category_id = #{categoryId} OR vctr.category_id = #{categoryId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (v.title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR v.subtitle LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR v.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+        AND (
+            (v.sort_order > (SELECT sort_order FROM videos WHERE id = #{currentVideoId}))
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at > (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at > (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at = (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+                AND v.id > #{currentVideoId}
+            )
+        )
+        ORDER BY v.sort_order ASC, v.published_at ASC, v.created_at ASC, v.id ASC
+        LIMIT 1
+    </select>
+
+    <!-- 优化的相邻视频查询 - 获取下一个视频 -->
+    <select id="selectNextVideoOptimized" resultType="com.ruoyi.chigua.domain.Video">
+        SELECT v.id, v.title
+        FROM videos v
+        <if test="categoryId != null">
+            LEFT JOIN video_category_tag_relations vctr ON v.id = vctr.video_id AND vctr.relation_type = 1
+        </if>
+        WHERE v.status = 1
+        <!-- 排除短视频分类 -->
+        AND NOT EXISTS (
+            SELECT 1 FROM categories c_short
+            WHERE c_short.id = v.category_id AND c_short.is_short = 1
+        )
+        AND NOT EXISTS (
+            SELECT 1
+            FROM video_category_tag_relations vctr_short
+            JOIN categories c_short_rel ON c_short_rel.id = vctr_short.category_id
+            WHERE vctr_short.video_id = v.id
+              AND vctr_short.relation_type = 1
+              AND c_short_rel.is_short = 1
+        )
+        <if test="categoryId != null">
+            AND (v.category_id = #{categoryId} OR vctr.category_id = #{categoryId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (v.title LIKE CONCAT('%', #{searchKeyword}, '%') 
+                 OR v.subtitle LIKE CONCAT('%', #{searchKeyword}, '%')
+                 OR v.description LIKE CONCAT('%', #{searchKeyword}, '%'))
+        </if>
+        AND (
+            (v.sort_order &lt; (SELECT sort_order FROM videos WHERE id = #{currentVideoId}))
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at &lt; (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at &lt; (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+            )
+            OR (
+                v.sort_order = (SELECT sort_order FROM videos WHERE id = #{currentVideoId})
+                AND v.published_at = (SELECT published_at FROM videos WHERE id = #{currentVideoId})
+                AND v.created_at = (SELECT created_at FROM videos WHERE id = #{currentVideoId})
+                AND v.id &lt; #{currentVideoId}
+            )
+        )
+        ORDER BY v.sort_order DESC, v.published_at DESC, v.created_at DESC, v.id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 列表专用：分页查询（仅必需字段） -->
+    <select id="selectVideoListOnlyPaged" resultMap="WebVideoListResult">
+        <include refid="selectVideoListOnlyVo"/>
+        <where>
+            <if test="video.title != null and video.title != ''"> and v.title like concat('%', #{video.title}, '%')</if>
+            <if test="video.author != null and video.author != ''"> and v.author like concat('%', #{video.author}, '%')</if>
+            <if test="video.categoryId != null">
+                and exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{video.categoryId}
+                )
+            </if>
+            <if test="video.status != null"> and v.status = #{video.status}</if>
+            <if test="video.isRecommended != null"> and v.is_recommended = #{video.isRecommended}</if>
+            <if test="video.isHot != null"> and v.is_hot = #{video.isHot}</if>
+            <!-- 优化：全部视频且需要排除短视频时，直接使用video_type字段 -->
+            <if test="video.categoryId == null and excludeShort == true">
+                and v.video_type != 'short'
+            </if>
+        </where>
+        order by v.is_recommended desc, v.is_hot desc, v.sort_order desc, v.published_at desc, v.created_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 列表专用：计数查询 -->
+    <select id="countVideoListOnly" resultType="long">
+        select count(1) from videos v
+        <where>
+            <if test="video.title != null and video.title != ''"> and v.title like concat('%', #{video.title}, '%')</if>
+            <if test="video.author != null and video.author != ''"> and v.author like concat('%', #{video.author}, '%')</if>
+            <if test="video.categoryId != null">
+                and exists (
+                    select 1 from video_category_tag_relations vctr
+                    where vctr.video_id = v.id and vctr.relation_type = 1 and vctr.category_id = #{video.categoryId}
+                )
+            </if>
+            <if test="video.status != null"> and v.status = #{video.status}</if>
+            <if test="video.isRecommended != null"> and v.is_recommended = #{video.isRecommended}</if>
+            <if test="video.isHot != null"> and v.is_hot = #{video.isHot}</if>
+            <!-- 优化：排除短视频时，直接使用video_type字段 -->
+            <if test="video.categoryId == null and excludeShort == true">
+                and v.video_type != 'short'
+            </if>
+        </where>
+    </select>
+
+    <!-- 站点地图专用：分页查询视频（仅普通分类，排除短视频和分页模式分类） -->
+    <select id="selectVideoListForSitemap" resultMap="VideoResult">
+        select v.id, v.title, v.description, v.cover_image, v.duration, v.published_at, v.updated_at
+        from videos v
+        where v.status = 1
+        and NOT exists (
+            select 1 from video_category_tag_relations vctr
+            inner join categories c on vctr.category_id = c.id
+            where vctr.video_id = v.id and vctr.relation_type = 1
+            and (c.is_short = 1 OR c.is_pagination = 1)
+        )
+        order by v.published_at desc, v.created_at desc
+        limit #{offset}, #{pageSize}
+    </select>
+
+    <!-- 站点地图专用：统计普通分类视频总数 -->
+    <select id="countVideoListForSitemap" resultType="long">
+        select count(1) from videos v
+        where v.status = 1
+        and NOT exists (
+            select 1 from video_category_tag_relations vctr
+            inner join categories c on vctr.category_id = c.id
+            where vctr.video_id = v.id and vctr.relation_type = 1
+            and (c.is_short = 1 OR c.is_pagination = 1)
+        )
+    </select>
+
+    <!-- 批量查询视频的标签信息（解决N+1问题） -->
+    <select id="selectTagsByVideoIdsBatch" parameterType="map" resultType="map">
+        SELECT 
+            vctr.video_id as videoId,
+            t.id as tagId,
+            t.name as tagName,
+            t.color as tagColor,
+            t.is_hot as isHot
+        FROM video_category_tag_relations vctr
+        INNER JOIN tags t ON vctr.tag_id = t.id AND t.status = 1
+        WHERE vctr.video_id IN 
+        <foreach item="videoId" collection="videoIds" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+        AND vctr.relation_type = 2
+        ORDER BY vctr.video_id, t.id DESC
+    </select>
+
+    <!-- 批量查询视频的分类信息（解决N+1问题） -->
+    <select id="selectCategoriesByVideoIdsBatch" parameterType="map" resultType="map">
+        SELECT 
+            vctr.video_id as videoId,
+            c.id as categoryId,
+            c.name as categoryName,
+            c.sort_order as sortOrder
+        FROM video_category_tag_relations vctr
+        INNER JOIN categories c ON vctr.category_id = c.id AND c.status = 1
+        WHERE vctr.video_id IN 
+        <foreach item="videoId" collection="videoIds" open="(" separator="," close=")">
+            #{videoId}
+        </foreach>
+        AND vctr.relation_type = 1
+        ORDER BY vctr.video_id, c.sort_order DESC, c.id DESC
+    </select>
+
+    <!-- 获取分类下所有去重的标签 -->
+    <select id="selectDistinctTagsByCategory" resultType="com.ruoyi.chigua.domain.Tag">
+        SELECT DISTINCT t.id, t.name, t.color, t.usage_count, t.status, t.is_hot, t.created_at, t.updated_at
+        FROM tags t
+        INNER JOIN video_category_tag_relations vctr ON t.id = vctr.tag_id AND vctr.relation_type = 2
+        INNER JOIN videos v ON vctr.video_id = v.id
+        INNER JOIN video_category_tag_relations vctr2 ON v.id = vctr2.video_id AND vctr2.relation_type = 1
+        WHERE v.status = 1
+        AND t.status = 1
+        AND vctr2.category_id = #{categoryId}
+        AND (v.first_video_url IS NOT NULL AND v.first_video_url != '')
+        ORDER BY t.usage_count DESC, t.name ASC
+    </select>
+
+    <!-- 获取分类下所有去重的作者 -->
+    <select id="selectDistinctAuthorsByCategory" resultType="string">
+        SELECT DISTINCT v.author
+        FROM videos v
+        INNER JOIN video_category_tag_relations vctr ON v.id = vctr.video_id AND vctr.relation_type = 1
+        WHERE v.status = 1
+        AND vctr.category_id = #{categoryId}
+        AND (v.first_video_url IS NOT NULL AND v.first_video_url != '')
+        AND v.author IS NOT NULL
+        AND v.author != ''
+        ORDER BY v.author ASC
+    </select>
+
+    <!-- ========== SEO关键词模块专用查询 ========== -->
+    
+    <!-- 根据关键词搜索视频（精确匹配） -->
+    <select id="searchByKeyword" resultMap="VideoResult" parameterType="map">
+        SELECT v.* 
+        FROM videos v
+        WHERE v.status = 1
+        AND (v.title LIKE CONCAT('%', #{keyword}, '%') 
+             OR v.description LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY v.view_count DESC, v.created_at DESC
+        LIMIT #{pageNum}, #{pageSize}
+    </select>
+
+    <!-- 统计关键词匹配的视频数量 -->
+    <select id="countByKeyword" resultType="int" parameterType="string">
+        SELECT COUNT(*) 
+        FROM videos v
+        WHERE v.status = 1
+        AND (v.title LIKE CONCAT('%', #{keyword}, '%') 
+             OR v.description LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+
+    <!-- 根据多个关键词搜索视频（模糊匹配，OR条件） -->
+    <select id="searchByKeywords" resultMap="VideoResult" parameterType="map">
+        SELECT DISTINCT v.* 
+        FROM videos v
+        WHERE v.status = 1
+        AND (
+            <foreach collection="keywords" item="kw" separator=" OR ">
+                v.title LIKE CONCAT('%', #{kw}, '%') 
+                OR v.description LIKE CONCAT('%', #{kw}, '%')
+            </foreach>
+        )
+        ORDER BY v.view_count DESC, v.created_at DESC
+        LIMIT #{pageNum}, #{pageSize}
+    </select>
+
+    <!-- 统计多关键词匹配的视频数量 -->
+    <select id="countByKeywords" resultType="int" parameterType="list">
+        SELECT COUNT(DISTINCT v.id) 
+        FROM videos v
+        WHERE v.status = 1
+        AND (
+            <foreach collection="list" item="kw" separator=" OR ">
+                v.title LIKE CONCAT('%', #{kw}, '%') 
+                OR v.description LIKE CONCAT('%', #{kw}, '%')
+            </foreach>
+        )
+    </select>
+
+    <!-- 查询随机视频（用于兜底推荐） -->
+    <select id="selectHotVideos" resultMap="VideoResult" parameterType="int">
+        SELECT v.* 
+        FROM videos v
+        WHERE v.status = 1
+        ORDER BY RAND()
+        LIMIT #{limit}
+    </select>
+
+</mapper> 

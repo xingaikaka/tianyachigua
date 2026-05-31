@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.TgPostMapper">
+
+    <resultMap type="com.ruoyi.chigua.domain.TgPost" id="TgPostResult">
+        <id     property="id"          column="id"          />
+        <result property="categoryId"  column="category_id" />
+        <result property="sourceId"    column="source_id"   />
+        <result property="caption"     column="caption"     />
+        <result property="postDate"    column="post_date"   />
+        <result property="mediaCount"  column="media_count" />
+        <result property="photoCount"  column="photo_count" />
+        <result property="videoCount"  column="video_count" />
+        <result property="views"       column="views"       />
+        <result property="sortOrder"   column="sort_order"  />
+        <result property="status"      column="status"      />
+        <result property="isTop"       column="is_top"      />
+        <result property="createdAt"   column="created_at"  />
+        <result property="updatedAt"   column="updated_at"  />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.chigua.domain.TgMedia" id="TgMediaResult">
+        <id     property="id"                column="id"                 />
+        <result property="postId"            column="post_id"            />
+        <result property="mediaType"         column="media_type"         />
+        <result property="localPath"         column="local_path"         />
+        <result property="localUrl"          column="local_url"          />
+        <result property="width"             column="width"              />
+        <result property="height"            column="height"             />
+        <result property="fileSize"          column="file_size"          />
+        <result property="mimeType"          column="mime_type"          />
+        <result property="duration"          column="duration"           />
+        <result property="supportsStreaming" column="supports_streaming" />
+        <result property="thumbUrl"          column="thumb_url"          />
+        <result property="thumbWidth"        column="thumb_width"        />
+        <result property="thumbHeight"       column="thumb_height"       />
+        <result property="firstFrameUrl"     column="first_frame_url"    />
+        <result property="sortOrder"         column="sort_order"         />
+        <result property="isRecommend"       column="is_recommend"       />
+        <result property="createdAt"         column="created_at"         />
+    </resultMap>
+
+    <!-- ═══════════════════════ Web 展示查询 ═══════════════════════ -->
+
+    <sql id="selectTgPostVo">
+        select id, category_id, source_id, caption,
+               post_date, media_count, photo_count, video_count,
+               views, sort_order, status, is_top, created_at, updated_at
+        from tg_posts
+    </sql>
+
+    <select id="selectTgPostListByCategoryId" resultMap="TgPostResult">
+        <include refid="selectTgPostVo"/>
+        where category_id = #{categoryId} and status = 1
+        <if test="caption != null and caption != ''">
+            and caption like concat('%', #{caption}, '%')
+        </if>
+        order by is_top desc, sort_order desc, post_date desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="countTgPostsByCategoryId" resultType="int">
+        select count(*) from tg_posts
+        where category_id = #{categoryId} and status = 1
+        <if test="caption != null and caption != ''">
+            and caption like concat('%', #{caption}, '%')
+        </if>
+    </select>
+
+    <select id="selectTgPostById" resultMap="TgPostResult">
+        <include refid="selectTgPostVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectTgMediaByPostIds" resultMap="TgMediaResult">
+        select id, post_id, media_type,
+               local_path, local_url,
+               width, height, file_size, mime_type,
+               duration, supports_streaming,
+               thumb_url, thumb_width, thumb_height,
+               first_frame_url,
+               sort_order, is_recommend, created_at
+        from tg_media
+        where post_id in
+        <foreach collection="postIds" item="pid" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+        order by post_id asc, sort_order asc
+    </select>
+
+    <select id="selectTgMediaByPostId" resultMap="TgMediaResult">
+        select id, post_id, media_type,
+               local_path, local_url,
+               width, height, file_size, mime_type,
+               duration, supports_streaming,
+               thumb_url, thumb_width, thumb_height,
+               first_frame_url,
+               sort_order, is_recommend, created_at
+        from tg_media
+        where post_id = #{postId}
+        order by sort_order asc
+    </select>
+
+    <update id="incrementViews">
+        update tg_posts set views = views + 1 where id = #{id}
+    </update>
+
+    <!-- ═══════════════════════ 站点地图（SEO） ═══════════════════════ -->
+
+    <!-- 仅统计 status=1 且分类启用+是 Telegram 模式的帖子 -->
+    <select id="countTgPostsForSitemap" resultType="long">
+        select count(*)
+        from tg_posts p
+        inner join categories c on c.id = p.category_id
+        where p.status = 1
+          and c.status = 1
+          and c.is_telegram = 1
+    </select>
+
+    <!-- 分页查询：仅取 SEO 必需字段，按 id 升序保证分页稳定 -->
+    <select id="selectTgPostsForSitemap" resultMap="TgPostResult">
+        select p.id, p.category_id, p.caption, p.post_date,
+               p.media_count, p.photo_count, p.video_count,
+               p.status, p.updated_at
+        from tg_posts p
+        inner join categories c on c.id = p.category_id
+        where p.status = 1
+          and c.status = 1
+          and c.is_telegram = 1
+        order by p.id asc
+        limit #{offset}, #{limit}
+    </select>
+
+    <!-- 所有启用的 Telegram 分类 -->
+    <resultMap type="com.ruoyi.chigua.domain.Category" id="TgCategoryResult">
+        <id     property="id"          column="id"          />
+        <result property="name"        column="name"        />
+        <result property="description" column="description" />
+        <result property="sortOrder"   column="sort_order"  />
+        <result property="status"      column="status"      />
+        <result property="isTelegram"  column="is_telegram" />
+        <result property="updatedAt"   column="updated_at"  />
+    </resultMap>
+
+    <select id="selectTgCategoriesForSitemap" resultMap="TgCategoryResult">
+        select id, name, description, sort_order, status, is_telegram, updated_at
+        from categories
+        where status = 1 and is_telegram = 1
+        order by sort_order desc, id desc
+    </select>
+
+    <!-- ═══════════════════════ 后台管理 ═══════════════════════ -->
+
+    <select id="selectTgPostList" parameterType="com.ruoyi.chigua.domain.TgPost" resultMap="TgPostResult">
+        <include refid="selectTgPostVo"/>
+        <where>
+            <if test="id != null">and id = #{id}</if>
+            <if test="categoryId != null">and category_id = #{categoryId}</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="sourceId != null and sourceId != ''">and source_id like concat('%', #{sourceId}, '%')</if>
+            <if test="caption != null and caption != ''">and caption like concat('%', #{caption}, '%')</if>
+            <if test="params != null and params.beginDate != null and params.beginDate != ''">
+                and post_date &gt;= concat(#{params.beginDate}, ' 00:00:00')
+            </if>
+            <if test="params != null and params.endDate != null and params.endDate != ''">
+                and post_date &lt;= concat(#{params.endDate}, ' 23:59:59')
+            </if>
+            <if test="params != null and params.beginCreatedAt != null and params.beginCreatedAt != ''">
+                and created_at &gt;= concat(#{params.beginCreatedAt}, ' 00:00:00')
+            </if>
+            <if test="params != null and params.endCreatedAt != null and params.endCreatedAt != ''">
+                and created_at &lt;= concat(#{params.endCreatedAt}, ' 23:59:59')
+            </if>
+        </where>
+        order by post_date desc
+    </select>
+
+    <update id="updateTgPost" parameterType="com.ruoyi.chigua.domain.TgPost">
+        update tg_posts
+        <set>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isTop != null">is_top = #{isTop},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="caption != null">caption = #{caption},</if>
+            <if test="postDate != null">post_date = #{postDate},</if>
+            updated_at = NOW()
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateTgMediaRecommend">
+        update tg_media set is_recommend = #{isRecommend} where id = #{id}
+    </update>
+
+    <delete id="deleteTgPostById">delete from tg_posts where id = #{id}</delete>
+
+    <delete id="deleteTgPostByIds">
+        delete from tg_posts where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteTgMediaByPostId">delete from tg_media where post_id = #{postId}</delete>
+
+    <delete id="deleteTgMediaByPostIds">
+        delete from tg_media where post_id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteTgMediaById">delete from tg_media where id = #{id}</delete>
+
+    <!-- ═══════════════════════ 同步工具专用 ═══════════════════════ -->
+
+    <!-- 根据 source_id 查询帖子 ID（用于去重） -->
+    <select id="selectIdBySourceId" resultType="java.lang.Long">
+        select id from tg_posts where source_id = #{sourceId} limit 1
+    </select>
+
+    <!-- 插入帖子，自动回填 id -->
+    <insert id="insertTgPost" parameterType="com.ruoyi.chigua.domain.TgPost"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into tg_posts (
+            category_id, source_id, caption, post_date,
+            media_count, photo_count, video_count,
+            sort_order, status, created_at, updated_at
+        ) values (
+            #{categoryId}, #{sourceId}, #{caption}, #{postDate},
+            #{mediaCount}, #{photoCount}, #{videoCount},
+            #{sortOrder, jdbcType=INTEGER}, #{status, jdbcType=INTEGER},
+            NOW(), NOW()
+        )
+    </insert>
+
+    <!-- 批量插入媒体 -->
+    <insert id="insertTgMediaBatch" parameterType="java.util.List">
+        insert into tg_media (
+            post_id, media_type,
+            local_path, local_url,
+            width, height, file_size, mime_type,
+            duration, supports_streaming,
+            thumb_url, thumb_width, thumb_height,
+            first_frame_url,
+            sort_order, created_at
+        ) values
+        <foreach collection="list" item="m" separator=",">
+        (
+            #{m.postId}, #{m.mediaType},
+            #{m.localPath, jdbcType=VARCHAR}, #{m.localUrl, jdbcType=VARCHAR},
+            #{m.width, jdbcType=INTEGER}, #{m.height, jdbcType=INTEGER},
+            #{m.fileSize, jdbcType=BIGINT}, #{m.mimeType, jdbcType=VARCHAR},
+            #{m.duration, jdbcType=DECIMAL}, #{m.supportsStreaming, jdbcType=INTEGER},
+            #{m.thumbUrl, jdbcType=VARCHAR},
+            #{m.thumbWidth, jdbcType=INTEGER}, #{m.thumbHeight, jdbcType=INTEGER},
+            #{m.firstFrameUrl, jdbcType=VARCHAR},
+            #{m.sortOrder}, NOW()
+        )
+        </foreach>
+    </insert>
+
+</mapper>

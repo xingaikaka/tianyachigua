@@ -1,0 +1,114 @@
+# 生产环境配置
+spring:
+  # 配置文件引入
+  config:
+    import:
+      - classpath:application-chigua-prod.yml
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # 顶层Druid配置（为DruidProperties类提供）
+    druid:
+      initialSize: 10
+      minIdle: 20
+      maxActive: 50
+      maxWait: 60000
+      connectTimeout: 30000
+      socketTimeout: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      maxEvictableIdleTimeMillis: 900000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+
+      # 生产数据库配置
+      master:
+        url: jdbc:mysql://hk-cdb-e8w1o5ur.sql.tencentcdb.com:23484/chigua?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai
+        username: root
+        password: chigua001
+      # 从库数据源（生产环境可开启）
+      slave:
+        enabled: false
+        url: 
+        username: 
+        password: 
+      # Druid监控配置（生产环境限制访问）
+      webStatFilter: 
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 只允许内网访问
+        allow: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+        url-pattern: /druid/*
+        login-username: ruoyi
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+
+  # Redis配置（生产环境 - 使用本地Redis）
+  redis:
+    host: r-3ns6i6633io9etyhqopd.redis.rds.aliyuncs.com
+    port: 26379
+    database: 0
+    username: r-3ns6i6633io9etyhqo
+    password: "!gS6fQxWivi7mw7"
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 5
+        max-idle: 20
+        max-active: 50
+        max-wait: -1ms
+
+  # 统一序列化时区为东八区，避免前后端展示偏差
+  jackson:
+    time-zone: Asia/Shanghai
+
+# 服务器配置（生产环境）
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 2000
+    threads:
+      max: 1000
+      min-spare: 200
+
+# 日志配置（生产环境，减少日志输出）
+logging:
+  level:
+    com.ruoyi: info
+    org.springframework: warn
+    org.mybatis: warn
+    com.alibaba.druid: warn
+    root: info
+  file:
+    path: ./logs
+
+# Swagger配置（生产环境关闭）
+swagger:
+  enabled: false
+
+# 项目配置（生产环境）
+ruoyi:
+  profile: ./uploadPath
+  addressEnabled: false
+  captchaType: math
+
+# Token配置（生产环境）
+token:
+  header: Authorization
+  secret: abcdefghijklmnopqrstuvwxyz
+  expireTime: 30

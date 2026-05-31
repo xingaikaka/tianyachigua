@@ -1,0 +1,345 @@
+/* 全局样式重置 */
+body {
+  margin: 0;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #111827;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+html {
+  background-color: #111827;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* 主容器 - 统一布局 */
+.main-container {
+  min-height: 100vh;
+  background-color: #111827;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+/* 内容容器 */
+.content-wrapper {
+  width: 100%;
+  max-width: 24rem; /* 与各区块 max-w-sm 保持一致，避免视觉偏移 */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 保证内容块在移动端始终水平居中 */
+.content-wrapper > * {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 渐变动画 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.animated-gradient-text:hover {
+  transform: scale(1.05);
+  animation-duration: 1.5s !important;
+}
+
+/* 悬停效果 */
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+}
+
+/* 背景渐变 */
+.bg-gradient-primary {
+  background: linear-gradient(45deg, #4A90E2, #7ED4E6, #50C9C3, #4A90E2, #7ED4E6, #50C9C3);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, #4A90E2 0%, #7ED4E6 50%, #50C9C3 100%);
+}
+
+/* 毛玻璃效果 */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 阴影效果 */
+.drop-shadow {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* ================================
+   移动端适配 (< 768px)
+   ================================ */
+@media screen and (max-width: 767px) {
+  .main-container {
+    padding: 1.5rem 0;
+    min-height: 100vh;
+    min-height: 100dvh; /* 现代浏览器支持 */
+  }
+  
+  .content-wrapper {
+    max-width: 24rem; /* 与整体保持一致 */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+  }
+  
+  /* 移动端字体调整 */
+  .animated-gradient-text {
+    font-size: inherit !important;
+  }
+  
+  /* 移动端触摸目标 */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 移动端文本处理 */
+  .text-nowrap-mobile {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ================================
+   小屏手机适配 (< 375px)
+   ================================ */
+@media screen and (max-width: 374px) {
+  .main-container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .content-wrapper {
+    padding: 0 0.25rem;
+  }
+}
+
+/* ================================
+   平板适配 (768px - 1023px)
+   ================================ */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .main-container {
+    padding: 2.5rem 2rem;
+  }
+  
+  .content-wrapper {
+    max-width: 32rem;
+  }
+}
+
+/* ================================
+   PC端适配 (>= 1024px)
+   ================================ */
+@media screen and (min-width: 1024px) {
+  .main-container {
+    padding: 0 2rem; /* 左右保留 */
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 70px; /* 固定顶部 70px */
+    padding-bottom: 120px; /* 固定底部 120px */
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .content-wrapper {
+    max-width: 36rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.5rem; /* 进一步缩小内容间距 */
+    width: 100%;
+  }
+  
+  /* 统一控制每个区块的“上下间距”，优先于嵌套的 mb-* 工具类 */
+  .content-wrapper > * { margin-bottom: 0.5rem; }
+  .content-wrapper > *:last-child { margin-bottom: 0; }
+  
+  /* 覆盖 Tailwind 在 PC 端的较大外边距（使用转义选择器）*/
+  .content-wrapper .mb-6 { margin-bottom: 0.5rem !important; }
+  .content-wrapper .sm\:mb-6 { margin-bottom: 0.5rem !important; }
+  .content-wrapper .sm\:mb-8 { margin-bottom: 0.5rem !important; }
+  
+  /* 缩小三条“线路卡片”的上下内边距与最小高度 */
+  .content-wrapper a.block { padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; min-height: auto !important; }
+  
+  /* 缩小按钮区块与邮箱区块间距 */
+  .content-wrapper .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem; }
+  .content-wrapper .mb-4 { margin-bottom: 0.5rem !important; }
+  
+  /* PC端特殊优化：确保底部内容显示 */
+  .content-wrapper > *:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* ================================
+   大屏PC适配 (>= 1280px)
+   ================================ */
+@media screen and (min-width: 1280px) {
+  .main-container {
+    padding: 0 2rem;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 70px; /* 与 PC 统一 */
+    padding-bottom: 120px;
+  }
+  
+  .content-wrapper {
+    max-width: 40rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem; /* 稍微紧凑 */
+  }
+}
+
+/* ================================
+   超大屏适配 (>= 1536px)
+   ================================ */
+@media screen and (min-width: 1536px) {
+  .main-container {
+    padding: 0 2rem;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 70px;
+    padding-bottom: 120px;
+  }
+  
+  .content-wrapper {
+    max-width: 42rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.75rem; /* 稍微紧凑 */
+  }
+}
+
+/* ================================
+   iOS Safari 特殊处理
+   ================================ */
+@supports (-webkit-touch-callout: none) {
+  .main-container {
+    min-height: -webkit-fill-available;
+  }
+  
+  body, html {
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* ================================
+   Android Chrome 特殊处理
+   ================================ */
+@media screen and (max-width: 767px) {
+  @supports (height: 100dvh) {
+    .main-container {
+      min-height: 100dvh !important;
+    }
+    
+    body, html {
+      min-height: 100dvh !important;
+    }
+  }
+}
+
+/* ================================
+   横屏适配
+   ================================ */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .main-container {
+    padding: 1rem;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+}
+
+/* ================================
+   高分辨率屏幕优化
+   ================================ */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .animated-gradient-text {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ================================
+   打印样式
+   ================================ */
+@media print {
+  .main-container {
+    background: white !important;
+    color: black !important;
+    padding: 1rem;
+  }
+  
+  .animated-gradient-text {
+    -webkit-text-fill-color: black !important;
+    background: none !important;
+  }
+}
+
+/* ================================
+   无障碍支持
+   ================================ */
+@media (prefers-reduced-motion: reduce) {
+  .animated-gradient-text {
+    animation: none;
+  }
+  
+  .bg-gradient-primary {
+    animation: none;
+  }
+}
+
+/* ================================
+   暗色模式支持
+   ================================ */
+@media (prefers-color-scheme: dark) {
+  body, html {
+    background-color: #111827;
+  }
+}

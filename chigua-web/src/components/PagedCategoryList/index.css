@@ -1,0 +1,301 @@
+/* 分页模式分类列表样式 */
+
+.paged-category-list {
+  width: 100%;
+  padding: 0;
+  /* 优化滚动性能 */
+  overflow-anchor: auto;
+  /* 启用平滑滚动但不影响性能 */
+  scroll-behavior: auto;
+}
+
+/* 加载状态 */
+.paged-category-list-loading {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 0;
+}
+
+.loading-spinner {
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #BCBCBC;
+  font-size: 16px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+/* 内容区域 */
+.paged-category-list-content {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0;
+  /* 优化内容渲染 */
+  contain: layout style;
+  /* 减少重绘区域 */
+  isolation: isolate;
+}
+
+/* 瀑布流网格布局 */
+.masonry-grid {
+  --cell: 260px;
+  --gap: 16px;
+  max-width: calc(6 * var(--cell) + 5 * var(--gap));
+  padding-left: 20px;
+  padding-right: 20px; /* 左右对称 */
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  align-items: start;
+  justify-content: center;
+  /* 优化滚动性能 */
+  contain: layout;
+  /* 启用硬件加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ✅ 分页模式专用：移动端单列布局 */
+@media (max-width: 767px) {
+  .masonry-grid {
+    grid-template-columns: 1fr; /* 手机端显示1列 */
+    gap: 12px; /* 卡片之间的间距 */
+    padding-left: 16px; /* 两侧边距 */
+    padding-right: 16px; /* 两侧边距 */
+  }
+}
+
+@media (min-width: 768px) {
+  .masonry-grid {
+    grid-template-columns: repeat(2, var(--cell));
+    gap: 14px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .masonry-grid {
+    grid-template-columns: repeat(4, var(--cell));
+    gap: var(--gap);
+  }
+}
+
+.masonry-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  /* 优化渲染性能 */
+  contain: layout style paint;
+  /* 启用硬件加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* 广告卡片占用两个视频卡片的宽度 */
+.masonry-item-ad {
+  grid-column: span 2;
+  /* 优化广告渲染性能 */
+  contain: layout style paint;
+  content-visibility: auto;
+  /* 启用硬件加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+@media (min-width: 1280px) {
+  .masonry-item-ad {
+    grid-column: span 2; /* 桌面端占用2列 */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .masonry-item-ad {
+    grid-column: span 2; /* 平板端占用2列 */
+  }
+}
+
+/* 广告卡片容器样式 - 确保与视频卡片对齐 */
+.masonry-item > div {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 扁平模式广告网格容器 - 确保与视频卡片宽度和样式一致 */
+.masonry-item .paged-ad-wrapper {
+  width: 100%;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-sizing: border-box;
+  /* 与视频卡片保持一致的外观 */
+  transition: box-shadow 0.3s ease;
+}
+
+.masonry-item:hover .paged-ad-wrapper {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 视频卡片样式 */
+.paged-video-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  /* 优化渲染性能 */
+  contain: layout style paint;
+  content-visibility: auto;
+  /* 启用硬件加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* 移除 transition，避免滚动时的性能损耗 */
+}
+
+.paged-video-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.paged-video-card-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* PC端和手机端统一使用16:9比例 */
+  object-fit: contain; /* ✅ 完整显示，不裁剪 */
+  display: block;
+  background-color: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  /* 防止图片加载时的布局抖动 */
+  min-height: 146px; /* 260px * 9/16 */
+  /* 启用硬件加速 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  /* 图片解码优化 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.paged-video-card-info {
+  padding: 12px;
+}
+
+.paged-video-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.paged-video-card-tag {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.paged-video-card-tag:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.paged-video-card-title {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+/* ✅ 移动端：突出标题显示 */
+@media (max-width: 767px) {
+  .paged-video-card-title {
+    font-size: 16px !important; /* ✅ 增大字体，更突出 */
+    line-height: 1.5 !important; /* 增加行高，更易读 */
+    min-height: 48px !important; /* 增加最小高度，确保显示完整 */
+    font-weight: 600 !important; /* 加粗，更突出 */
+    color: #fff !important; /* 确保白色文字 */
+    letter-spacing: 0.02em !important; /* 增加字间距，提升可读性 */
+    margin-bottom: 4px !important; /* 增加底部间距 */
+  }
+  
+  /* 增强标题区域的对比度和可读性 */
+  .paged-video-card-info {
+    padding: 10px 8px !important; /* 增加上下内边距 */
+    background: rgba(0, 0, 0, 0.7) !important; /* 深色背景，增强对比度 */
+  }
+}
+
+/* 空状态 */
+.empty-state {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.empty-text {
+  color: #BCBCBC;
+  font-size: 16px;
+}
+
+/* 加载更多状态 */
+.loading-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.loading-spinner-small {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(148, 163, 255, 0.35);
+  border-top-color: #60A5FA;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-text-small {
+  color: #C5D0FF;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+/* 分页按钮区域 */
+.paged-category-list-pagination {
+  margin-top: 24px; /* 缩小与视频列表的距离 */
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 移动端：进一步优化间距 */
+@media (max-width: 767px) {
+  .paged-category-list-pagination {
+    margin-top: 16px; /* 手机端更紧凑 */
+    margin-bottom: 24px;
+  }
+}
+
+

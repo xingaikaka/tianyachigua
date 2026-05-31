@@ -1,0 +1,64 @@
+/* 页面过渡动画样式 - 暂时禁用动画以消除滚动效果 */
+.page-transition {
+  /* transition: opacity 0.3s ease-in-out; */
+}
+
+.page-transition.fadeIn {
+  opacity: 1;
+  /* animation: fadeIn 0.3s ease-in-out; */
+}
+
+.page-transition.fadeOut {
+  opacity: 0;
+  /* animation: fadeOut 0.2s ease-in-out; */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 针对视频详情页的特殊优化 */
+.video-detail-transition {
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-detail-transition.entering {
+  opacity: 0;
+}
+
+.video-detail-transition.entered {
+  opacity: 1;
+}
+
+.video-detail-transition.exiting {
+  opacity: 1;
+}
+
+.video-detail-transition.exited {
+  opacity: 0;
+}
+
+/* 减少路由切换时的布局跳跃 */
+.route-container {
+  min-height: 100vh;
+  position: relative;
+}
+
+.route-content {
+  position: relative;
+  z-index: 1;
+}

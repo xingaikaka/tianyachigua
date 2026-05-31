@@ -1,0 +1,24 @@
+/* 抖音加载图标容器 */
+.tiktok-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+/* SVG图标样式 */
+.tiktok-icon {
+  display: block;
+  background: transparent;
+  /* 确保SVG渲染优化 */
+  shape-rendering: geometricPrecision;
+  /* 防止选中 */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* 深色模式适配（目前与默认样式相同，保留以备将来扩展） */
+.tiktok-loading-container.dark {
+  background: transparent;
+}
+

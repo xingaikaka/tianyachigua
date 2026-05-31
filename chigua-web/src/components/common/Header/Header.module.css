@@ -1,0 +1,96 @@
+/* Header 样式 */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: rgb(17 24 39); /* gray-900 */
+}
+
+/* 移动端菜单动画 */
+.mobileMenu {
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobileMenuEnter {
+  transform: translateX(-100%);
+}
+
+.mobileMenuEnterActive {
+  transform: translateX(0);
+}
+
+.mobileMenuExit {
+  transform: translateX(0);
+}
+
+.mobileMenuExitActive {
+  transform: translateX(-100%);
+}
+
+/* 搜索框样式增强 */
+.searchInput {
+  transition: all 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+  box-shadow: 0 0 0 2px rgba(156, 163, 175, 0.5);
+}
+
+/* 导航链接hover效果 */
+.navLink {
+  position: relative;
+  transition: color 0.2s ease-in-out;
+}
+
+.navLink:hover {
+  color: white;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ec4899; /* pink-500 */
+  transition: width 0.2s ease-in-out;
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* 移动端菜单项样式 */
+.mobileNavItem {
+  transition: all 0.2s ease-in-out;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.5);
+}
+
+.mobileNavItem:hover {
+  background-color: rgba(75, 85, 99, 0.3);
+  padding-left: 1.5rem;
+}
+
+/* 社交图标hover效果 */
+.socialIcon {
+  transition: all 0.2s ease-in-out;
+}
+
+.socialIcon:hover {
+  background-color: rgba(75, 85, 99, 0.8);
+  transform: scale(1.1);
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0.5rem 0;
+  }
+}
+
+/* 模糊遮罩 */
+.overlay {
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+} 

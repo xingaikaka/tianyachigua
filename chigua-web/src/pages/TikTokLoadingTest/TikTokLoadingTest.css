@@ -1,0 +1,144 @@
+.tiktok-loading-test {
+  padding: 40px;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.tiktok-loading-test h1 {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.test-section {
+  margin-bottom: 60px;
+}
+
+.test-section h2 {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 18px;
+}
+
+.test-note {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.test-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 30px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.test-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.test-item.dark-bg {
+  background: #000;
+}
+
+.test-item.dark-bg p {
+  color: #fff;
+}
+
+.test-item.light-bg {
+  background: #fff;
+}
+
+.test-item.video-bg {
+  background: #000;
+  padding: 60px;
+  min-height: 300px;
+  justify-content: center;
+}
+
+.test-item.video-bg p {
+  color: #fff;
+  font-size: 16px;
+}
+
+.test-item.video-bg-small {
+  background: #000;
+  padding: 40px;
+  min-height: 200px;
+  justify-content: center;
+}
+
+.test-item.video-bg-small p {
+  color: #fff;
+  font-size: 14px;
+}
+
+.test-item.transparent-bg {
+  background: transparent;
+  border: 2px dashed #ccc;
+}
+
+.test-item.transparent-bg p {
+  color: #666;
+}
+
+.test-item.colored-bg {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.test-item.colored-bg p {
+  color: #fff;
+}
+
+.test-item.striped-bg {
+  background: repeating-linear-gradient(
+    45deg,
+    #f0f0f0,
+    #f0f0f0 10px,
+    #e0e0e0 10px,
+    #e0e0e0 20px
+  );
+}
+
+.test-item.striped-bg p {
+  color: #333;
+}
+
+.test-info {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.test-info p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.test-info p strong {
+  color: #333;
+  font-weight: 600;
+}
+

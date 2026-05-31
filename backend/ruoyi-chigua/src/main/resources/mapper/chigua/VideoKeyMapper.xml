@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ruoyi.chigua.mapper.VideoKeyMapper">
+
+    <resultMap id="VideoKeyResult" type="com.ruoyi.chigua.domain.VideoKey">
+        <id     column="id"         property="id"/>
+        <result column="video_id"   property="videoId"/>
+        <result column="source_id"  property="sourceId"/>
+        <result column="key_data"   property="keyData"/>
+        <result column="key_iv"     property="keyIv"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <insert id="insertVideoKey" parameterType="com.ruoyi.chigua.domain.VideoKey"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO video_keys (video_id, source_id, key_data, key_iv, created_at)
+        VALUES (#{videoId}, #{sourceId}, #{keyData}, #{keyIv}, NOW())
+        ON DUPLICATE KEY UPDATE
+            source_id = VALUES(source_id),
+            key_data  = VALUES(key_data),
+            key_iv    = VALUES(key_iv)
+    </insert>
+
+    <select id="selectByVideoId" resultMap="VideoKeyResult">
+        SELECT id, video_id, source_id, key_data, key_iv, created_at
+        FROM video_keys
+        WHERE video_id = #{videoId}
+        LIMIT 1
+    </select>
+
+    <select id="selectBySourceId" resultMap="VideoKeyResult">
+        SELECT id, video_id, source_id, key_data, key_iv, created_at
+        FROM video_keys
+        WHERE source_id = #{sourceId}
+        LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.CategoryMapper">
+    
+    <resultMap type="Category" id="CategoryResult">
+        <id     property="id"               column="id"               />
+        <result property="name"             column="name"             />
+        <result property="description"      column="description"      />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="status"           column="status"           />
+        <result property="adDisplayMode"    column="ad_display_mode"  />
+        <result property="adInterval"       column="ad_interval"      />
+        <result property="isCollection"     column="is_collection"    />
+        <result property="isRecommended"    column="is_recommended"   />
+        <result property="isShort"          column="is_short"         />
+        <result property="isPagination"     column="is_pagination"   />
+        <result property="isUserGroup"      column="is_user_group"    />
+        <result property="isTelegram"       column="is_telegram"      />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+    </resultMap>
+
+    <sql id="selectCategoryVo">
+        select id, name, description, sort_order, status, ad_display_mode, ad_interval, is_collection, is_recommended, is_short, is_pagination, is_user_group, is_telegram, created_at, updated_at from categories
+    </sql>
+
+    <select id="selectCategoryList" parameterType="Category" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        <where>  
+            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="description != null and description != ''"> and description like concat('%', #{description}, '%')</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="isCollection != null"> and is_collection = #{isCollection}</if>
+            <if test="isRecommended != null"> and is_recommended = #{isRecommended}</if>
+            <if test="isShort != null"> and is_short = #{isShort}</if>
+            <if test="isUserGroup != null"> and is_user_group = #{isUserGroup}</if>
+            <if test="isTelegram != null"> and is_telegram = #{isTelegram}</if>
+        </where>
+        order by sort_order desc, id desc
+    </select>
+    
+    <select id="selectCategoryById" parameterType="Long" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="checkCategoryNameUnique" parameterType="String" resultType="Category">
+        select id, name, description, sort_order, status, ad_display_mode, ad_interval, is_collection, is_recommended, is_short, is_pagination, created_at, updated_at 
+        from categories 
+        where name = #{name}
+    </select>
+
+    <select id="checkCategoryExistVideo" parameterType="Long" resultType="int">
+        select 0
+    </select>
+        
+    <insert id="insertCategory" parameterType="Category" useGeneratedKeys="true" keyProperty="id">
+        insert into categories
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="description != null">description,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            <if test="adDisplayMode != null">ad_display_mode,</if>
+            <if test="adInterval != null">ad_interval,</if>
+            <if test="isCollection != null">is_collection,</if>
+            <if test="isRecommended != null">is_recommended,</if>
+            <if test="isShort != null">is_short,</if>
+            <if test="isPagination != null">is_pagination,</if>
+            <if test="isUserGroup != null">is_user_group,</if>
+            <if test="isTelegram != null">is_telegram,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            <if test="adDisplayMode != null">#{adDisplayMode},</if>
+            <if test="adInterval != null">#{adInterval},</if>
+            <if test="isCollection != null">#{isCollection},</if>
+            <if test="isRecommended != null">#{isRecommended},</if>
+            <if test="isShort != null">#{isShort},</if>
+            <if test="isPagination != null">#{isPagination},</if>
+            <if test="isUserGroup != null">#{isUserGroup},</if>
+            <if test="isTelegram != null">#{isTelegram},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCategory" parameterType="Category">
+        update categories
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="adDisplayMode != null">ad_display_mode = #{adDisplayMode},</if>
+            <if test="adInterval != null">ad_interval = #{adInterval},</if>
+            <if test="isCollection != null">is_collection = #{isCollection},</if>
+            <if test="isRecommended != null">is_recommended = #{isRecommended},</if>
+            <if test="isShort != null">is_short = #{isShort},</if>
+            <if test="isPagination != null">is_pagination = #{isPagination},</if>
+            <if test="isUserGroup != null">is_user_group = #{isUserGroup},</if>
+            <if test="isTelegram != null">is_telegram = #{isTelegram},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCategoryById" parameterType="Long">
+        delete from categories where id = #{id}
+    </delete>
+
+    <delete id="deleteCategoryByIds" parameterType="String">
+        delete from categories where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper> 

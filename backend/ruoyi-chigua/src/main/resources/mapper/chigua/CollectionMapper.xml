@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.CollectionMapper">
+    
+    <resultMap type="ChiguaCollection" id="CollectionResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="coverImage"    column="cover_image"    />
+        <result property="author"    column="author"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="viewCount"    column="view_count"    />
+        <result property="videoCount"    column="video_count"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectCollectionVo">
+        select id, title, description, cover_image, author, category_id, view_count, video_count, sort_order, status, created_at, updated_at from collections
+    </sql>
+
+    <select id="selectCollectionList" parameterType="ChiguaCollection" resultMap="CollectionResult">
+        <include refid="selectCollectionVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="author != null  and author != ''"> and author like concat('%', #{author}, '%')</if>
+            <if test="categoryId != null  and categoryId != ''"> and FIND_IN_SET(#{categoryId}, category_id)</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+        order by sort_order desc, created_at desc
+    </select>
+    
+    <select id="selectCollectionById" parameterType="Long" resultMap="CollectionResult">
+        <include refid="selectCollectionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCollection" parameterType="ChiguaCollection" useGeneratedKeys="true" keyProperty="id">
+        insert into collections
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="coverImage != null">cover_image,</if>
+            <if test="author != null">author,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="viewCount != null">view_count,</if>
+            <if test="videoCount != null">video_count,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="status != null">status,</if>
+            created_at,
+            updated_at
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="coverImage != null">#{coverImage},</if>
+            <if test="author != null">#{author},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="viewCount != null">#{viewCount},</if>
+            <if test="videoCount != null">#{videoCount},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="status != null">#{status},</if>
+            now(),
+            now()
+         </trim>
+    </insert>
+
+    <update id="updateCollection" parameterType="ChiguaCollection">
+        update collections
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="coverImage != null">cover_image = #{coverImage},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+            <if test="videoCount != null">video_count = #{videoCount},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            updated_at = now()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCollectionById" parameterType="Long">
+        delete from collections where id = #{id}
+    </delete>
+
+    <delete id="deleteCollectionByIds" parameterType="String">
+        delete from collections where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询合集中的视频列表 -->
+    <select id="selectVideosByCollectionId" parameterType="Long" resultMap="com.ruoyi.chigua.mapper.VideoMapper.VideoResult">
+        select v.*, vc.sort_order as sortOrder
+        from videos v
+        inner join video_collections vc on v.id = vc.video_id
+        where vc.collection_id = #{collectionId}
+        order by vc.sort_order asc, vc.created_at asc
+    </select>
+
+    <!-- 查询不在指定合集中的视频列表 -->
+    <select id="selectVideosNotInCollection" resultMap="com.ruoyi.chigua.mapper.VideoMapper.VideoResult">
+        select v.*
+        from videos v
+        where v.status = 1
+        and v.id not in (
+            select vc.video_id 
+            from video_collections vc 
+            where vc.collection_id = #{collectionId}
+        )
+        <if test="video.title != null and video.title != ''">
+            and v.title like concat('%', #{video.title}, '%')
+        </if>
+        <if test="video.author != null and video.author != ''">
+            and v.author like concat('%', #{video.author}, '%')
+        </if>
+        <if test="video.categoryId != null">
+            and v.id in (
+                select vctr.video_id 
+                from video_category_tag_relations vctr 
+                where vctr.category_id = #{video.categoryId} 
+                and vctr.relation_type = 1
+            )
+        </if>
+        order by v.created_at desc
+    </select>
+
+    <!-- 查询合集的分类列表 -->
+    <select id="selectCategoriesByCollectionId" parameterType="Long" resultType="Category">
+        select c.*
+        from categories c
+        where c.id in (
+            select SUBSTRING_INDEX(SUBSTRING_INDEX(col.category_id, ',', numbers.n), ',', -1) as category_id
+            from collections col
+            cross join (
+                select 1 n union all select 2 union all select 3 union all select 4 union all select 5
+                union all select 6 union all select 7 union all select 8 union all select 9 union all select 10
+            ) numbers
+            where col.id = #{collectionId}
+            and CHAR_LENGTH(col.category_id) - CHAR_LENGTH(REPLACE(col.category_id, ',', '')) >= numbers.n - 1
+        )
+        and c.status = 1
+        order by c.sort_order desc
+    </select>
+
+    <!-- 更新合集视频数量 -->
+    <update id="updateCollectionVideoCount" parameterType="Long">
+        update collections 
+        set video_count = (
+            select count(*) 
+            from video_collections 
+            where collection_id = #{collectionId}
+        ),
+        updated_at = now()
+        where id = #{collectionId}
+    </update>
+
+    <!-- 更新合集观看次数 -->
+    <update id="updateCollectionViewCount">
+        update collections 
+        set view_count = view_count + #{increment},
+        updated_at = now()
+        where id = #{collectionId}
+    </update>
+
+    <!-- 查询所有分类列表（只返回合集分类） -->
+    <select id="selectAllCategories" resultType="Category">
+        select id, name, description, sort_order, status, is_collection, created_at, updated_at
+        from categories
+        where status = 1 and is_collection = 1
+        order by sort_order desc, created_at desc
+    </select>
+
+</mapper> 

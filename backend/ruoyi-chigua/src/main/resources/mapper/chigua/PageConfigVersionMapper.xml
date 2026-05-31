@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.PageConfigVersionMapper">
+    
+    <resultMap type="PageConfigVersion" id="PageConfigVersionResult">
+        <id     property="versionId"      column="version_id"      />
+        <result property="versionHash"    column="version_hash"    />
+        <result property="updateTime"     column="update_time"     />
+    </resultMap>
+
+    <sql id="selectPageConfigVersionVo">
+        select version_id, version_hash, update_time from page_config_version
+    </sql>
+
+    <select id="selectLatestVersion" resultMap="PageConfigVersionResult">
+        <include refid="selectPageConfigVersionVo"/>
+        order by version_id desc limit 1
+    </select>
+        
+    <insert id="insertPageConfigVersion" parameterType="PageConfigVersion" useGeneratedKeys="true" keyProperty="versionId">
+        insert into page_config_version(version_hash, update_time)
+        values (#{versionHash}, #{updateTime})
+    </insert>
+
+    <insert id="updateConfigVersion">
+        insert into page_config_version(version_hash, update_time)
+        values (MD5(CONCAT('config_update_', unix_timestamp())), sysdate())
+    </insert>
+
+</mapper>

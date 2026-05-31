@@ -1,0 +1,110 @@
+/* 移动端底部悬浮 APP 引流胶囊按钮 */
+.mobile-app-cta {
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 90px);
+  z-index: 1000;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 14px 7px 7px;
+  max-width: calc(100vw - 24px);
+
+  border-radius: 999px;
+  background: linear-gradient(95deg, #ff8a00 0%, #ff2d6f 55%, #e30086 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  user-select: none;
+  cursor: pointer;
+
+  box-shadow:
+    0 7px 20px rgba(255, 45, 111, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  opacity: 0;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease;
+  will-change: transform, opacity;
+}
+
+.mobile-app-cta--in {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.mobile-app-cta:active {
+  transform: translate(-50%, 1px) scale(0.985);
+}
+
+/* 左侧圆形 51 LOGO（紫粉渐变 + 白边） */
+.mobile-app-cta__logo {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 30% 30%, #ffb3e0 0%, #c14bff 50%, #7a14ff 100%);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.mobile-app-cta__logo-text {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.mobile-app-cta__text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+
+/* 右上角关闭按钮 */
+.mobile-app-cta__close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.mobile-app-cta__close:active {
+  transform: scale(0.92);
+}
+
+/* 仅在移动端尺寸下显示；同时避免短视频沉浸式模式被遮挡（由组件 props 控制隐藏） */
+@media (min-width: 768px) {
+  .mobile-app-cta { display: none; }
+}
+
+/* 短视频沉浸式模式下隐藏（body 上有 .short-video-mode 时） */
+body.short-video-mode .mobile-app-cta {
+  display: none;
+}

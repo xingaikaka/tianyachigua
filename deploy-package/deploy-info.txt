@@ -1,0 +1,11 @@
+天涯吃瓜项目 - 部署包信息
+构建时间: 2025-08-22 22:57:24
+构建主机: leedeMacBook-Pro.local
+Git分支: master
+Git提交: a70ae28
+
+文件列表:
+-rw-r--r--@ 1 lee  staff   3.1M Aug 22 22:57 chigua-web-prod.tar.gz
+-rw-r--r--@ 1 lee  staff     0B Aug 22 22:57 deploy-info.txt
+-rw-r--r--@ 1 lee  staff    90M Aug 22 22:57 ruoyi-admin.jar
+-rw-r--r--@ 1 lee  staff   3.9M Aug 22 22:57 vue-admin-prod.tar.gz

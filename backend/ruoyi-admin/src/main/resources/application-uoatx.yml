@@ -1,0 +1,19 @@
+# uoatx.cc 泛域名SEO配置
+# 部署服务器: 47.76.76.210
+
+chigua:
+  domains:
+    site: https://sigma.uoatx.cc
+    api-domain: https://sigma.uoatx.cc
+    site-alternatives:
+      - https://sigma.uoatx.cc
+      - https://uoatx.cc
+
+  seo:
+    sitemap-enabled: true
+    robots-enabled: true
+
+ppvod:
+  default:
+    domain: https://sigma.uoatx.cc
+    pic-domain: https://tycgimage1.org

@@ -1,0 +1,64 @@
+{
+  "name": "chigua-web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/device": "^7.0.2",
+    "@capacitor/network": "^7.0.2",
+    "@capacitor/splash-screen": "^7.0.3",
+    "@capacitor/status-bar": "^7.0.3",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^17.2.1",
+    "hls.js": "^1.6.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.12.0",
+    "react-masonry-css": "^1.0.16",
+    "react-router-dom": "^6.30.1",
+    "react-scripts": "5.0.1",
+    "swiper": "^11.2.10",
+    "web-vitals": "^2.1.4",
+    "yet-another-react-lightbox": "^3.25.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "build:prod": "NODE_ENV=production react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "react-scripts start",
+    "prod": "npm run build:prod",
+    "env:check": "node -e \"const log=(msg='')=>process.stdout.write(msg+'\\n'); log('🔍 环境变量检查:'); log('REACT_APP_IMAGE_ENCRYPTION_KEY:' + (process.env.REACT_APP_IMAGE_ENCRYPTION_KEY ? '***已配置***' : '❌ 未配置')); log('REACT_APP_API_BASE_URL:' + (process.env.REACT_APP_API_BASE_URL || '未设置'));\"",
+    "console:check": "grep -r \"console\\.\" src/ || echo '✅ 没有发现console语句'",
+    "deploy:check": "npm run env:check && npm run console:check && echo '✅ React前台构建配置已就绪'"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6"
+  }
+}

@@ -1,0 +1,273 @@
+/* 富文本内容样式 */
+.rich-text-content {
+  line-height: 1.6;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* 富文本标题样式 */
+.rich-text-content h1,
+.rich-text-content h2,
+.rich-text-content h3,
+.rich-text-content h4,
+.rich-text-content h5,
+.rich-text-content h6 {
+  margin: 16px 0 8px 0;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.rich-text-content h1 { font-size: 1.8em; }
+.rich-text-content h2 { font-size: 1.6em; }
+.rich-text-content h3 { font-size: 1.4em; }
+.rich-text-content h4 { font-size: 1.2em; }
+.rich-text-content h5 { font-size: 1.1em; }
+.rich-text-content h6 { font-size: 1em; }
+
+/* Quill 字号类映射（确保后台编辑器设置的字号在前端生效） */
+.rich-text-content .ql-size-small { font-size: 0.75em !important; }
+.rich-text-content .ql-size-large { font-size: 1.5em !important; }
+.rich-text-content .ql-size-huge { font-size: 2.5em !important; }
+
+/* 富文本段落样式 */
+.rich-text-content p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* 富文本列表样式 */
+.rich-text-content ul,
+.rich-text-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.rich-text-content li {
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+/* 富文本链接样式 */
+.rich-text-content a {
+  color: #1ABC9C;
+  text-decoration: underline;
+}
+
+.rich-text-content a:hover {
+  color: #16A085;
+  text-decoration: none;
+}
+
+/* 富文本强调样式 */
+.rich-text-content strong,
+.rich-text-content b {
+  font-weight: bold;
+}
+
+.rich-text-content em,
+.rich-text-content i {
+  font-style: italic;
+}
+
+.rich-text-content u {
+  text-decoration: underline;
+}
+
+/* 富文本引用样式 */
+.rich-text-content blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 4px solid #1ABC9C;
+  background-color: rgba(26, 188, 156, 0.1);
+  border-radius: 0 4px 4px 0;
+}
+
+/* 富文本代码样式 */
+.rich-text-content code {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.rich-text-content pre {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.rich-text-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* 富文本图片样式 */
+.rich-text-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+/* 富文本视频样式 */
+.rich-text-content video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+/* 富文本表格样式 */
+.rich-text-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.rich-text-content th,
+.rich-text-content td {
+  border: 1px solid rgba(188, 188, 188, 0.3);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.rich-text-content th {
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: bold;
+}
+
+/* 富文本分割线样式 */
+.rich-text-content hr {
+  border: none;
+  border-top: 1px solid rgba(188, 188, 188, 0.3);
+  margin: 16px 0;
+}
+
+/* 富文本对齐样式 */
+.rich-text-content .ql-align-center {
+  text-align: center;
+}
+
+.rich-text-content .ql-align-right {
+  text-align: right;
+}
+
+.rich-text-content .ql-align-justify {
+  text-align: justify;
+}
+
+/* 富文本缩进样式 */
+.rich-text-content .ql-indent-1 { padding-left: 3em; }
+.rich-text-content .ql-indent-2 { padding-left: 6em; }
+.rich-text-content .ql-indent-3 { padding-left: 9em; }
+.rich-text-content .ql-indent-4 { padding-left: 12em; }
+.rich-text-content .ql-indent-5 { padding-left: 15em; }
+.rich-text-content .ql-indent-6 { padding-left: 18em; }
+.rich-text-content .ql-indent-7 { padding-left: 21em; }
+.rich-text-content .ql-indent-8 { padding-left: 24em; }
+
+/* 动画效果 - 已禁用页面切换动画 */
+.animate-fadeIn {
+  /* animation: fadeIn 0.5s ease-out; */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animate-slideInUp {
+  /* animation: slideInUp 0.4s ease-out; */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 组件加载平滑过渡 - 已禁用 */
+.component-container {
+  /* transition: all 0.3s ease-in-out; */
+}
+
+/* 保留动画定义但不使用 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 热门推荐组件特定样式 */
+.hot-recommended {
+  transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.hot-recommended.loading {
+  opacity: 0.8;
+}
+
+.hot-recommended.loaded {
+  opacity: 1;
+}
+
+/* 分享功能发光动画 */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+/* 分享按钮样式增强 */
+.share-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.share-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.share-button:active {
+  transform: scale(0.98);
+}
+
+/* 发光文字效果 */
+.glow-text-orange {
+  color: #FFFFFF;
+  text-shadow: 
+    0 0 10px rgba(245, 158, 11, 0.8),
+    0 0 20px rgba(245, 158, 11, 0.6),
+    0 0 30px rgba(245, 158, 11, 0.4),
+    0 0 40px rgba(245, 158, 11, 0.2);
+}
+
+.glow-text-purple {
+  color: #FFFFFF;
+  text-shadow: 
+    0 0 10px rgba(139, 92, 246, 0.8),
+    0 0 20px rgba(139, 92, 246, 0.6),
+    0 0 30px rgba(139, 92, 246, 0.4),
+    0 0 40px rgba(139, 92, 246, 0.2);
+}

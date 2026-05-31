@@ -1,0 +1,27 @@
+# tycg1.com 单域名SEO配置
+# 部署服务器: 47.76.76.210
+
+chigua:
+  # 域名配置
+  domains:
+    # 站点域名（用于视频页面链接和SEO）
+    site: https://tycg1.com
+    # API域名（用于站点地图访问）
+    api-domain: https://tycg1.com
+    # 备用域名
+    site-alternatives:
+      - https://tycg1.com
+      - https://www.tycg1.com
+    # 注意：图片域名(main/domain/pic-domain)继承 application-chigua-prod.yml
+    # 必须使用 tycgimage1.org (Cloudflare R2存储)，不要覆盖！
+  
+  # SEO配置 - 启用所有SEO功能
+  seo:
+    sitemap-enabled: true
+    robots-enabled: true
+
+# ppvod集成配置（tycg1.com）
+ppvod:
+  default:
+    domain: https://tycg1.com
+    pic-domain: https://tycgimage1.org

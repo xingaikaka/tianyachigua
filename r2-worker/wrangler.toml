@@ -1,0 +1,31 @@
+name = "chigua-r2-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[[r2_buckets]]
+binding = "CHIGUA_MEDIA"
+bucket_name = "51chigua"
+preview_bucket_name = "51chigua"
+
+[vars]
+ENVIRONMENT = "production"
+# 内容安全配置
+CONTENT_SECURITY_ENABLED = "true"
+SIGNATURE_SECRET = "VbJBrVDVrzICYlkQgDzBVyuhOoKsWpr0BSpJAERif7Y="
+ALLOWED_DOMAINS = "localhost,127.0.0.1,chigua-r2-worker.xingaikaka.workers.dev,direct"
+ALLOWED_ORIGINS = "*"
+MAX_FILE_SIZE = "100000000"
+ALLOWED_FILE_TYPES = "image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,text/plain,application/x-mpegURL,application/vnd.apple.mpegurl,video/mp2t"
+ACCESS_TIME_WINDOW = "3600"
+# 图片加密配置（32字符以上的强密钥）
+IMAGE_ENCRYPTION_KEY = "DR4jiK+U+Z6QwyuVxp//Cl3Zl543bl1xiQrfH6hnLc4="
+
+# ===== 边缘缓存配置 =====
+# 是否启用边缘缓存（推荐：true）
+ENABLE_EDGE_CACHE = "true"  # v2: 修复decrypt=true显示问题
+# 缓存有效期（秒）- 默认1小时
+CACHE_TTL = "3600"
+# 最大缓存文件大小（字节）- 10MB
+MAX_CACHE_SIZE = "10485760"
+# 排除缓存的路径模式（逗号分隔）
+CACHE_EXCLUDE_PATTERNS = "temp/*,draft/*,preview/*"

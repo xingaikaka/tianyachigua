@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.RedgifsVideoMapper">
+    
+    <resultMap type="com.ruoyi.chigua.domain.RedgifsVideo" id="RedGifsVideoResult">
+        <result property="id"    column="id"    />
+        <result property="gifId"    column="gif_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="duration"    column="duration"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="resolution"    column="resolution"    />
+        <result property="hasAudio"    column="has_audio"    />
+        <result property="likes"    column="likes"    />
+        <result property="views"    column="views"    />
+        <result property="verified"    column="verified"    />
+        <result property="tags"    column="tags"    />
+        <result property="sexuality"    column="sexuality"    />
+        <result property="niches"    column="niches"    />
+        <result property="hdUrl"    column="hd_url"    />
+        <result property="sdUrl"    column="sd_url"    />
+        <result property="posterUrl"    column="poster_url"    />
+        <result property="thumbnailUrl"    column="thumbnail_url"    />
+        <result property="redgifsUrl"    column="redgifs_url"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="status"    column="status"    />
+        <result property="syncStatus"    column="sync_status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectRedGifsVideoVo">
+        select id, gif_id, user_id, title, description, duration, width, height, resolution, 
+               has_audio, likes, views, verified, tags, sexuality, niches, hd_url, sd_url, 
+               poster_url, thumbnail_url, redgifs_url, create_date, status, sync_status, 
+               created_at, updated_at
+        from redgifs_videos
+    </sql>
+
+    <select id="selectRedGifsVideoList" parameterType="com.ruoyi.chigua.domain.RedgifsVideo" resultMap="RedGifsVideoResult">
+        <include refid="selectRedGifsVideoVo"/>
+        <where>  
+            <if test="gifId != null  and gifId != ''"> and gif_id = #{gifId}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="verified != null "> and verified = #{verified}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="syncStatus != null "> and sync_status = #{syncStatus}</if>
+        </where>
+        order by create_date desc, created_at desc
+    </select>
+    
+    <select id="selectRedGifsVideoById" parameterType="Long" resultMap="RedGifsVideoResult">
+        <include refid="selectRedGifsVideoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectRedGifsVideoListByUserId" parameterType="Long" resultMap="RedGifsVideoResult">
+        <include refid="selectRedGifsVideoVo"/>
+        where user_id = #{userId} and status = 1
+        order by create_date desc, id desc
+    </select>
+
+        
+    <insert id="insertRedGifsVideo" parameterType="com.ruoyi.chigua.domain.RedgifsVideo" useGeneratedKeys="true" keyProperty="id">
+        insert into redgifs_videos
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gifId != null and gifId != ''">gif_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="duration != null">duration,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="resolution != null">resolution,</if>
+            <if test="hasAudio != null">has_audio,</if>
+            <if test="likes != null">likes,</if>
+            <if test="views != null">views,</if>
+            <if test="verified != null">verified,</if>
+            <if test="tags != null">tags,</if>
+            <if test="sexuality != null">sexuality,</if>
+            <if test="niches != null">niches,</if>
+            <if test="hdUrl != null">hd_url,</if>
+            <if test="sdUrl != null">sd_url,</if>
+            <if test="posterUrl != null">poster_url,</if>
+            <if test="thumbnailUrl != null">thumbnail_url,</if>
+            <if test="redgifsUrl != null">redgifs_url,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="status != null">status,</if>
+            <if test="syncStatus != null">sync_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gifId != null and gifId != ''">#{gifId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="resolution != null">#{resolution},</if>
+            <if test="hasAudio != null">#{hasAudio},</if>
+            <if test="likes != null">#{likes},</if>
+            <if test="views != null">#{views},</if>
+            <if test="verified != null">#{verified},</if>
+            <if test="tags != null">#{tags},</if>
+            <if test="sexuality != null">#{sexuality},</if>
+            <if test="niches != null">#{niches},</if>
+            <if test="hdUrl != null">#{hdUrl},</if>
+            <if test="sdUrl != null">#{sdUrl},</if>
+            <if test="posterUrl != null">#{posterUrl},</if>
+            <if test="thumbnailUrl != null">#{thumbnailUrl},</if>
+            <if test="redgifsUrl != null">#{redgifsUrl},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="syncStatus != null">#{syncStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRedGifsVideo" parameterType="com.ruoyi.chigua.domain.RedgifsVideo">
+        update redgifs_videos
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gifId != null and gifId != ''">gif_id = #{gifId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="resolution != null">resolution = #{resolution},</if>
+            <if test="hasAudio != null">has_audio = #{hasAudio},</if>
+            <if test="likes != null">likes = #{likes},</if>
+            <if test="views != null">views = #{views},</if>
+            <if test="verified != null">verified = #{verified},</if>
+            <if test="tags != null">tags = #{tags},</if>
+            <if test="sexuality != null">sexuality = #{sexuality},</if>
+            <if test="niches != null">niches = #{niches},</if>
+            <if test="hdUrl != null">hd_url = #{hdUrl},</if>
+            <if test="sdUrl != null">sd_url = #{sdUrl},</if>
+            <if test="posterUrl != null">poster_url = #{posterUrl},</if>
+            <if test="thumbnailUrl != null">thumbnail_url = #{thumbnailUrl},</if>
+            <if test="redgifsUrl != null">redgifs_url = #{redgifsUrl},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="syncStatus != null">sync_status = #{syncStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRedGifsVideoById" parameterType="Long">
+        delete from redgifs_videos where id = #{id}
+    </delete>
+
+    <delete id="deleteRedGifsVideoByIds" parameterType="Long">
+        delete from redgifs_videos where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据gifId查询视频信息 -->
+    <select id="selectRedGifsVideoByGifId" parameterType="String" resultMap="RedGifsVideoResult">
+        <include refid="selectRedGifsVideoVo"/>
+        where gif_id = #{gifId}
+    </select>
+
+    <!-- 批量查询视频是否存在 -->
+    <select id="selectRedGifsVideosByGifIds" resultMap="RedGifsVideoResult">
+        <include refid="selectRedGifsVideoVo"/>
+        where gif_id in
+        <foreach collection="gifIds" item="gifId" open="(" separator="," close=")">
+            #{gifId}
+        </foreach>
+    </select>
+
+    <!-- 更新视频同步状态 -->
+    <update id="updateRedGifsVideoSyncStatus">
+        update redgifs_videos
+        set sync_status = #{syncStatus},
+            update_time = now()
+        where gif_id = #{gifId}
+    </update>
+
+</mapper>

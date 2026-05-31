@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.RedgifsUserMapper">
+    
+    <resultMap type="com.ruoyi.chigua.domain.RedgifsUser" id="RedGifsUserResult">
+        <id     property="id"               column="id"               />
+        <result property="username"         column="username"         />
+        <result property="name"             column="name"             />
+        <result property="description"      column="description"      />
+        <result property="profileImageUrl"  column="profile_image_url"/>
+        <result property="followers"        column="followers"        />
+        <result property="following"        column="following"        />
+        <result property="gifsCount"        column="gifs_count"       />
+        <result property="publishedGifsCount" column="published_gifs_count"/>
+        <result property="views"            column="views"            />
+        <result property="verified"         column="verified"         />
+        <result property="profileUrl"       column="profile_url"      />
+        <result property="creationTime"     column="creation_time"    />
+        <result property="status"           column="status"           />
+        <result property="recommended"      column="recommended"      />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="syncStatus"       column="sync_status"      />
+        <result property="lastSyncAt"       column="last_sync_at"     />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+    </resultMap>
+
+    <sql id="selectRedGifsUserVo">
+        select id, username, name, description, profile_image_url, followers, following, gifs_count, published_gifs_count, views, verified, profile_url, creation_time, status, recommended, sort_order, sync_status, last_sync_at, created_at, updated_at from redgifs_users
+    </sql>
+
+    <select id="selectRedGifsUserList" parameterType="com.ruoyi.chigua.domain.RedgifsUser" resultMap="RedGifsUserResult">
+        <include refid="selectRedGifsUserVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="verified != null "> and verified = #{verified}</if>
+            <if test="recommended != null "> and recommended = #{recommended}</if>
+        </where>
+        <choose>
+            <when test="sortColumn != null and sortColumn == 'sortOrder'">
+                order by sort_order
+                <choose>
+                    <when test="sortDirection != null and (sortDirection == 'desc' or sortDirection == 'descending')">desc</when>
+                    <otherwise>asc</otherwise>
+                </choose>
+                , created_at desc
+            </when>
+            <when test="sortColumn != null and sortColumn == 'createdAt'">
+                order by created_at
+                <choose>
+                    <when test="sortDirection != null and (sortDirection == 'desc' or sortDirection == 'descending')">desc</when>
+                    <otherwise>asc</otherwise>
+                </choose>
+                , id asc
+            </when>
+            <otherwise>
+                order by
+                    CASE WHEN recommended = 1 THEN 0 ELSE 1 END ASC,
+                    sort_order ASC,
+                    followers DESC,
+                    views DESC,
+                    id ASC
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="countRedGifsUserList" parameterType="com.ruoyi.chigua.domain.RedgifsUser" resultType="long">
+        SELECT COUNT(*) FROM redgifs_users
+        <where>
+            <if test="username != null and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="verified != null"> and verified = #{verified}</if>
+            <if test="recommended != null"> and recommended = #{recommended}</if>
+        </where>
+    </select>
+
+    <select id="selectRedGifsUserById" parameterType="Long" resultMap="RedGifsUserResult">
+        <include refid="selectRedGifsUserVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectRedGifsUserByUsername" parameterType="String" resultMap="RedGifsUserResult">
+        <include refid="selectRedGifsUserVo"/>
+        where username = #{username}
+    </select>
+
+    <select id="selectRedGifsUsersByUsernames" resultMap="RedGifsUserResult">
+        <include refid="selectRedGifsUserVo"/>
+        where username in
+        <foreach item="username" collection="usernames" open="(" separator="," close=")">
+            #{username}
+        </foreach>
+    </select>
+
+    <select id="selectVideosByUserId" parameterType="Long" resultType="com.ruoyi.chigua.domain.RedgifsVideo">
+        select id, gif_id, user_id, title, description, duration, width, height, resolution, has_audio, likes, views, verified, tags, sexuality, niches, hd_url, sd_url, poster_url, thumbnail_url, redgifs_url, create_date, status, created_at, updated_at
+        from redgifs_videos
+        where user_id = #{userId} and status = 1
+        order by create_date desc, id desc
+    </select>
+
+    <insert id="insertRedGifsUser" parameterType="com.ruoyi.chigua.domain.RedgifsUser" useGeneratedKeys="true" keyProperty="id">
+        insert into redgifs_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="name != null">name,</if>
+            <if test="description != null">description,</if>
+            <if test="profileImageUrl != null">profile_image_url,</if>
+            <if test="followers != null">followers,</if>
+            <if test="following != null">following,</if>
+            <if test="gifsCount != null">gifs_count,</if>
+            <if test="publishedGifsCount != null">published_gifs_count,</if>
+            <if test="views != null">views,</if>
+            <if test="verified != null">verified,</if>
+            <if test="profileUrl != null">profile_url,</if>
+            <if test="creationTime != null">creation_time,</if>
+            <if test="status != null">status,</if>
+            <if test="recommended != null">recommended,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="syncStatus != null">sync_status,</if>
+            <if test="lastSyncAt != null">last_sync_at,</if>
+            created_at,
+            updated_at
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="name != null">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="profileImageUrl != null">#{profileImageUrl},</if>
+            <if test="followers != null">#{followers},</if>
+            <if test="following != null">#{following},</if>
+            <if test="gifsCount != null">#{gifsCount},</if>
+            <if test="publishedGifsCount != null">#{publishedGifsCount},</if>
+            <if test="views != null">#{views},</if>
+            <if test="verified != null">#{verified},</if>
+            <if test="profileUrl != null">#{profileUrl},</if>
+            <if test="creationTime != null">#{creationTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="recommended != null">#{recommended},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="syncStatus != null">#{syncStatus},</if>
+            <if test="lastSyncAt != null">#{lastSyncAt},</if>
+            now(),
+            now()
+        </trim>
+    </insert>
+
+    <update id="updateRedGifsUser" parameterType="com.ruoyi.chigua.domain.RedgifsUser">
+        update redgifs_users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="profileImageUrl != null">profile_image_url = #{profileImageUrl},</if>
+            <if test="followers != null">followers = #{followers},</if>
+            <if test="following != null">following = #{following},</if>
+            <if test="gifsCount != null">gifs_count = #{gifsCount},</if>
+            <if test="publishedGifsCount != null">published_gifs_count = #{publishedGifsCount},</if>
+            <if test="views != null">views = #{views},</if>
+            <if test="verified != null">verified = #{verified},</if>
+            <if test="profileUrl != null">profile_url = #{profileUrl},</if>
+            <if test="creationTime != null">creation_time = #{creationTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="recommended != null">recommended = #{recommended},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="syncStatus != null">sync_status = #{syncStatus},</if>
+            <if test="lastSyncAt != null">last_sync_at = #{lastSyncAt},</if>
+            updated_at = now()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateProfileImageUrl">
+        update redgifs_users
+        set profile_image_url = #{profileImageUrl},
+            updated_at = now()
+        where id = #{userId}
+    </update>
+
+    <update id="updateRedGifsUserSyncStatus">
+        update redgifs_users
+        set sync_status = #{syncStatus},
+            last_sync_at = #{lastSyncAt},
+            updated_at = now()
+        where username = #{username}
+    </update>
+
+    <delete id="deleteRedGifsUserById" parameterType="Long">
+        delete from redgifs_users where id = #{id}
+    </delete>
+
+    <delete id="deleteRedGifsUserByIds" parameterType="Long">
+        delete from redgifs_users where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.SeoKeywordMapper">
+
+    <resultMap id="SeoKeywordResult" type="com.ruoyi.chigua.domain.SeoKeyword">
+        <id property="id" column="id"/>
+        <result property="keyword" column="keyword"/>
+        <result property="seoTitle" column="seo_title"/>
+        <result property="seoDescription" column="seo_description"/>
+        <result property="status" column="status"/>
+        <result property="priority" column="priority"/>
+        <result property="searchCount" column="search_count"/>
+        <result property="clickCount" column="click_count"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="SeoKeywordResult">
+        SELECT * FROM seo_keywords WHERE id = #{id}
+    </select>
+
+    <!-- 根据关键词内容查询 -->
+    <select id="selectByKeyword" resultMap="SeoKeywordResult">
+        SELECT * FROM seo_keywords WHERE keyword = #{keyword} AND status = 1
+    </select>
+
+    <!-- 查询热门关键词 -->
+    <select id="selectHotKeywords" resultMap="SeoKeywordResult">
+        SELECT * FROM seo_keywords 
+        WHERE status = 1 
+        ORDER BY search_count DESC, click_count DESC, id DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询随机关键词 -->
+    <select id="selectRandomKeywords" resultMap="SeoKeywordResult">
+        SELECT * FROM seo_keywords 
+        WHERE status = 1 
+        ORDER BY RAND() 
+        LIMIT #{limit}
+    </select>
+
+    <!-- 查询所有启用的关键词（用于sitemap） -->
+    <select id="selectAllActive" resultMap="SeoKeywordResult">
+        SELECT * FROM seo_keywords 
+        WHERE status = 1 
+        ORDER BY id ASC
+    </select>
+
+    <!-- 分页查询启用的关键词 ID（用于 sitemap 分片，只取 id 列，避免全表加载） -->
+    <select id="selectActiveForSitemap" resultMap="SeoKeywordResult">
+        SELECT id FROM seo_keywords 
+        WHERE status = 1 
+        ORDER BY id ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 增加搜索次数 -->
+    <update id="incrementSearchCount">
+        UPDATE seo_keywords 
+        SET search_count = search_count + 1 
+        WHERE id = #{id}
+    </update>
+
+    <!-- 增加点击次数 -->
+    <update id="incrementClickCount">
+        UPDATE seo_keywords 
+        SET click_count = click_count + 1 
+        WHERE id = #{id}
+    </update>
+
+    <!-- 插入关键词 -->
+    <insert id="insertSeoKeyword" parameterType="com.ruoyi.chigua.domain.SeoKeyword" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO seo_keywords (
+            keyword,
+            seo_title,
+            seo_description,
+            status,
+            priority,
+            search_count,
+            click_count,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{keyword},
+            #{seoTitle},
+            #{seoDescription},
+            #{status},
+            #{priority},
+            #{searchCount},
+            #{clickCount},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <!-- 批量插入关键词 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO seo_keywords (
+            keyword,
+            seo_title,
+            seo_description,
+            status,
+            priority,
+            search_count,
+            click_count,
+            created_at,
+            updated_at
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.keyword},
+                #{item.seoTitle},
+                #{item.seoDescription},
+                #{item.status},
+                #{item.priority},
+                #{item.searchCount},
+                #{item.clickCount},
+                NOW(),
+                NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新关键词 -->
+    <update id="updateSeoKeyword" parameterType="com.ruoyi.chigua.domain.SeoKeyword">
+        UPDATE seo_keywords
+        <set>
+            <if test="keyword != null and keyword != ''">keyword = #{keyword},</if>
+            <if test="seoTitle != null">seo_title = #{seoTitle},</if>
+            <if test="seoDescription != null">seo_description = #{seoDescription},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="searchCount != null">search_count = #{searchCount},</if>
+            <if test="clickCount != null">click_count = #{clickCount},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除关键词 -->
+    <delete id="deleteById">
+        DELETE FROM seo_keywords WHERE id = #{id}
+    </delete>
+
+    <!-- 统计总数 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM seo_keywords
+    </select>
+
+    <!-- 统计启用数量 -->
+    <select id="countActive" resultType="int">
+        SELECT COUNT(*) FROM seo_keywords WHERE status = 1
+    </select>
+
+</mapper>
+

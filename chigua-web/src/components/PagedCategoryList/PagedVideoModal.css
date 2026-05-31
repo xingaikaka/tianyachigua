@@ -1,0 +1,424 @@
+/* 模态框遮罩层 */
+.paged-video-modal-overlay {
+  position: fixed !important;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483647 !important;
+  padding: 20px;
+  overflow-y: auto;
+  isolation: isolate;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: manipulation;
+}
+
+/* 模态框容器 */
+.paged-video-modal-container {
+  position: relative !important;
+  width: 100%;
+  max-width: 850px;
+  max-height: 92vh;
+  background: #1a1a1a;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: auto;
+  z-index: 2147483646 !important;
+}
+
+/* 关闭按钮 - 已隐藏 */
+.paged-video-close-button {
+  display: none !important;
+}
+
+/* 视频内容区域 */
+.paged-video-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* 视频包装器 */
+.paged-video-wrapper {
+  width: 100%;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-height: 60vh;
+  background: #000;
+}
+
+.paged-video-inner-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+}
+
+/* 视频元素 */
+.paged-lightbox-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+
+/* 加载动画 */
+.paged-video-loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: paged-video-spin 0.8s linear infinite;
+}
+
+@keyframes paged-video-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 加载遮罩 */
+.paged-video-loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+/* 错误遮罩 */
+.paged-video-error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 3;
+  padding: 20px;
+}
+
+.paged-video-error-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  color: #ffb3b3;
+  text-align: center;
+}
+
+.paged-video-error-retry {
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.paged-video-error-retry:hover {
+  background: #45a049;
+}
+
+/* 信息区域 */
+.paged-video-info {
+  width: 100%;
+  padding: 16px 20px;
+  background: #1a1a1a;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* 快进/倒退控制 */
+.paged-video-seek-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paged-seek-control-group {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.paged-seek-button {
+  flex: 1;
+  padding: 10px 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-width: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.paged-seek-button:last-child {
+  border-right: none;
+}
+
+.paged-seek-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.paged-seek-button-active {
+  background: #ff6b9d !important;
+  color: #fff !important;
+}
+
+.paged-seek-button-active:hover {
+  background: #ff5a8a !important;
+}
+
+/* 标题 */
+.paged-video-info-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* 标签容器 */
+.paged-video-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 标签 */
+.paged-video-info-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 400;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.paged-video-info-tag:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 可点击标签 */
+.paged-video-info-tag-clickable {
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.12s;
+}
+
+.paged-video-info-tag-clickable:hover {
+  background: rgba(255, 107, 107, 0.25);
+  border-color: rgba(255, 107, 107, 0.6);
+  color: #ff9999;
+  transform: translateY(-1px);
+}
+
+.paged-video-info-tag-clickable:active {
+  transform: scale(0.95);
+  background: rgba(255, 107, 107, 0.4);
+}
+
+/* 全屏模式 */
+.paged-lightbox-video:fullscreen,
+.paged-lightbox-video:-webkit-full-screen,
+.paged-lightbox-video:-moz-full-screen,
+.paged-lightbox-video:-ms-fullscreen {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+  .paged-video-modal-overlay {
+    padding: 0;
+    align-items: center; /* 垂直居中显示 */
+    justify-content: center; /* 水平居中显示 */
+  }
+
+  .paged-video-modal-container {
+    max-width: 100%;
+    width: 100%;
+  max-height: 100vh;
+    max-height: 100dvh; /* 动态视口高度 */
+    border-radius: 12px; /* 保留圆角，不全屏铺满 */
+    margin: 16px; /* 留出边距 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* 关闭按钮 - 考虑安全区域 */
+  .paged-video-close-button {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .paged-video-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  /* 视频区域 - 适配竖屏 */
+  .paged-video-wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 50vh;
+    background: #000;
+    flex-shrink: 0;
+}
+
+  /* 信息区域 - 可滚动 */
+  .paged-video-info {
+    flex: 1;
+    padding: 12px 16px;
+    padding-bottom: 16px;
+    max-height: 35vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 快进控制 - 紧凑布局 */
+  .paged-video-seek-controls {
+    gap: 6px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  .paged-seek-control-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .paged-seek-button {
+    padding: 8px 4px;
+    font-size: 10px;
+    min-height: 36px;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .paged-seek-button:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* 标题 */
+  .paged-video-info-title {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* 标签 */
+  .paged-video-info-tags {
+    gap: 6px;
+  }
+
+  .paged-video-info-tag {
+    padding: 4px 8px;
+    font-size: 11px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 加载和错误提示 */
+  .paged-video-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .paged-video-error-overlay {
+    padding: 16px;
+  }
+
+  .paged-video-error-title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .paged-video-error-retry {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+}
+
+/* 移动端横屏适配 */
+@media (max-width: 767px) and (orientation: landscape) {
+  .paged-video-modal-container {
+    flex-direction: row;
+  }
+
+  .paged-video-wrapper {
+    width: 60%;
+    max-height: 100vh;
+    aspect-ratio: 16 / 9;
+  }
+
+  .paged-video-info {
+    width: 40%;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .paged-video-close-button {
+    top: 8px;
+    right: 8px;
+  }
+}
+
+/* 中等屏幕适配 */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .paged-video-modal-overlay {
+    padding: 12px;
+  }
+
+  .paged-video-modal-container {
+    max-width: 90%;
+    max-height: 92vh;
+  }
+
+  .paged-video-wrapper {
+    max-height: 55vh;
+  }
+}

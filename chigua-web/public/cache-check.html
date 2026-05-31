@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>缓存检查工具</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .highlight { background: #fff3cd; padding: 5px; margin: 5px 0; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .clear-btn { background: #dc3545; }
+        .clear-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+    <h1>🔍 页面配置缓存检查工具</h1>
+    
+    <button onclick="checkCache()">检查当前缓存</button>
+    <button onclick="clearCache()" class="clear-btn">清除所有缓存</button>
+    <button onclick="forceRefresh()">强制刷新配置</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function checkCache() {
+            const result = document.getElementById('result');
+            let html = '<div class="result"><h3>📊 缓存检查结果</h3>';
+            
+            try {
+                // 检查 page_configs
+                const pageConfigs = localStorage.getItem('page_configs');
+                if (pageConfigs) {
+                    const parsed = JSON.parse(pageConfigs);
+                    html += '<h4>✅ 找到 page_configs 缓存</h4>';
+                    html += '<p><strong>版本:</strong> ' + (parsed.version || '未知') + '</p>';
+                    html += '<p><strong>时间戳:</strong> ' + new Date(parsed.timestamp).toLocaleString() + '</p>';
+                    html += '<p><strong>配置数量:</strong> ' + Object.keys(parsed.data || {}).length + '</p>';
+                    
+                    if (parsed.data && parsed.data.detail_site_address) {
+                        html += '<div class="highlight"><strong>🎯 发现 detail_site_address:</strong><br>';
+                        html += '<pre style="white-space: pre-wrap; word-break: break-word;">' + 
+                               parsed.data.detail_site_address.substring(0, 500) + 
+                               (parsed.data.detail_site_address.length > 500 ? '...' : '') + '</pre></div>';
+                    } else {
+                        html += '<p>❌ 没有找到 detail_site_address 配置</p>';
+                    }
+                } else {
+                    html += '<p>❌ 没有找到 page_configs 缓存</p>';
+                }
+                
+                // 检查版本
+                const version = localStorage.getItem('page_config_version');
+                html += '<p><strong>配置版本:</strong> ' + (version || '未设置') + '</p>';
+                
+                // 检查其他相关缓存
+                const allKeys = Object.keys(localStorage);
+                const relevantKeys = allKeys.filter(key => key.includes('page') || key.includes('config') || key.includes('chigua'));
+                html += '<h4>📝 所有相关缓存键:</h4>';
+                html += '<ul>' + relevantKeys.map(key => '<li>' + key + '</li>').join('') + '</ul>';
+                
+            } catch (error) {
+                html += '<p style="color: red;">❌ 检查缓存时出错: ' + error.message + '</p>';
+            }
+            
+            html += '</div>';
+            result.innerHTML = html;
+        }
+        
+        function clearCache() {
+            try {
+                localStorage.removeItem('page_configs');
+                localStorage.removeItem('page_config_version');
+                
+                // 清除所有相关缓存
+                const allKeys = Object.keys(localStorage);
+                const relevantKeys = allKeys.filter(key => key.includes('page') || key.includes('config'));
+                relevantKeys.forEach(key => localStorage.removeItem(key));
+                
+                document.getElementById('result').innerHTML = 
+                    '<div class="result" style="background: #d4edda;"><h3>✅ 缓存已清除</h3><p>请刷新页面查看效果</p></div>';
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<div class="result" style="background: #f8d7da;"><h3>❌ 清除缓存失败</h3><p>' + error.message + '</p></div>';
+            }
+        }
+        
+        function forceRefresh() {
+            clearCache();
+            fetch('/web/api/pageconfig/all?t=' + Date.now())
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = 
+                        '<div class="result" style="background: #d1ecf1;"><h3>🔄 强制刷新完成</h3><p>API返回: ' + data.msg + '</p></div>';
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = 
+                        '<div class="result" style="background: #f8d7da;"><h3>❌ API调用失败</h3><p>' + error.message + '</p></div>';
+                });
+        }
+        
+        // 页面加载时自动检查
+        window.onload = checkCache;
+    </script>
+</body>
+</html>

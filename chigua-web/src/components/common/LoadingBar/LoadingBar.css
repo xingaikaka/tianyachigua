@@ -1,0 +1,43 @@
+/* 顶部加载进度条 */
+.loading-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 9999;
+  background-color: transparent;
+}
+
+.loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .loading-bar-container {
+    height: 2px;
+  }
+}
+
+/* 减少动画对性能的影响 */
+@media (prefers-reduced-motion: reduce) {
+  .loading-bar {
+    animation: none;
+    background: #4f46e5;
+  }
+}

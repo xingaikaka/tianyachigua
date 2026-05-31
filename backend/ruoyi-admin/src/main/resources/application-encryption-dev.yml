@@ -1,0 +1,36 @@
+# 数据加密配置 - 开发环境
+data:
+  encryption:
+    # 开发环境启用加密（保持一致性）
+    enabled: true
+    
+    # 加密密钥（开发环境使用默认值）
+    secret:
+      key: chigua-web-secret-dev-2024
+    
+    # 加密算法配置
+    algorithm:
+      aes: AES/CBC/PKCS5Padding
+      hmac: HmacSHA256
+    
+    # 性能配置（开发环境）
+    performance:
+      cache-enabled: false  # 开发环境关闭缓存
+      cache-ttl: 60
+      max-cache-size: 100
+    
+    # 安全配置（开发环境更宽松）
+    security:
+      timestamp-tolerance: 600000  # 10分钟
+      max-retries: 5
+    
+    # 调试配置（开发环境启用）
+    debug:
+      enabled: true
+      performance-log: true
+
+# 日志配置（开发环境详细日志）
+logging:
+  level:
+    com.ruoyi.framework.aspectj.DataEncryptionAspect: DEBUG
+    com.ruoyi.common.utils.DataEncryptionUtil: DEBUG

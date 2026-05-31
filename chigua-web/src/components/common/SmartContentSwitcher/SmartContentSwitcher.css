@@ -1,0 +1,44 @@
+/* 智能内容切换器样式 */
+.smart-content-switcher {
+  min-height: 100vh;
+  transition: all 0.2s ease-out;
+}
+
+.smart-content-switcher .content-container {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.15s ease-out;
+}
+
+/* 切换过渡状态 */
+.smart-content-switcher.transitioning .content-container {
+  opacity: 0.95;
+  transform: translateY(5px);
+}
+
+/* 平滑的内容切换动画 */
+@keyframes contentFadeIn {
+  from {
+    opacity: 0.9;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.smart-content-switcher .content-container {
+  animation: contentFadeIn 0.2s ease-out;
+}
+
+/* 确保过渡期间不会有布局跳动 */
+.smart-content-switcher.transitioning {
+  min-height: calc(100vh - 100px);
+}
+
+/* 加载状态的平滑过渡 */
+.content-loading {
+  opacity: 0.8;
+  transition: opacity 0.15s ease-out;
+}

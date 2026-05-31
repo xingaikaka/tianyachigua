@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoTranscodeMapper">
+
+    <resultMap type="VideoTranscode" id="VideoTranscodeResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="videoType"    column="video_type"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="price"    column="price"    />
+        <result property="coinPrice"    column="coin_price"    />
+        <result property="pointsPrice"    column="points_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="discountCoinPrice"    column="discount_coin_price"    />
+        <result property="discountStartAt"    column="discount_start_at"    />
+        <result property="discountEndAt"    column="discount_end_at"    />
+        <result property="creatorRevenueRate"    column="creator_revenue_rate"    />
+        <result property="requiredVipLevel"    column="required_vip_level"    />
+        <result property="isVipOnly"    column="is_vip_only"    />
+        <result property="isPremiumOnly"    column="is_premium_only"    />
+        <result property="transcodeId"    column="transcode_id"    />
+        <result property="md5"    column="md5"    />
+        <result property="shareid"    column="shareid"    />
+        <result property="orgfile"    column="orgfile"    />
+        <result property="rpath"    column="rpath"    />
+        <result property="thumbnails"    column="thumbnails"    />
+        <result property="coverImage"    column="cover_image"    />
+        <result property="contentType"    column="content_type"    />
+        <result property="isFeatured"    column="is_featured"    />
+        <result property="isEditorChoice"    column="is_editor_choice"    />
+        <result property="isHot"    column="is_hot"    />
+        <result property="isNew"    column="is_new"    />
+        <result property="isExclusive"    column="is_exclusive"    />
+        <result property="isTrending"    column="is_trending"    />
+        <result property="isPrivate"    column="is_private"    />
+        <result property="isAdult"    column="is_adult"    />
+        <result property="isUsed"    column="is_used"    />
+        <result property="resolution"    column="resolution"    />
+        <result property="domain"    column="domain"    />
+        <result property="picdomain"    column="picdomain"    />
+        <result property="mp4domain"    column="mp4domain"    />
+        <result property="path"    column="path"    />
+        <result property="suffix"    column="suffix"    />
+        <result property="bitrate"    column="bitrate"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="duration"    column="duration"    />
+        <result property="fps"    column="fps"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="viewsCount"    column="views_count"    />
+        <result property="likesCount"    column="likes_count"    />
+        <result property="dislikeCount"    column="dislike_count"    />
+        <result property="favoriteCount"    column="favorite_count"    />
+        <result property="shareCount"    column="share_count"    />
+        <result property="downloadCount"    column="download_count"    />
+        <result property="purchaseCount"    column="purchase_count"    />
+        <result property="totalRevenue"    column="total_revenue"    />
+        <result property="dailyViewLimit"    column="daily_view_limit"    />
+        <result property="commentsCount"    column="comments_count"    />
+        <result property="freePreviewDuration"    column="free_preview_duration"    />
+        <result property="allowPreview"    column="allow_preview"    />
+        <result property="ageRating"    column="age_rating"    />
+        <result property="quality"    column="quality"    />
+        <result property="allowComments"    column="allow_comments"    />
+        <result property="allowDownloads"    column="allow_downloads"    />
+        <result property="allowedCountries"    column="allowed_countries"    />
+        <result property="blockedCountries"    column="blocked_countries"    />
+        <result property="language"    column="language"    />
+        <result property="subtitles"    column="subtitles"    />
+        <result property="transcodeBegin"    column="transcode_begin"    />
+        <result property="transcodeEnd"    column="transcode_end"    />
+        <result property="transcodeResult"    column="transcode_result"    />
+        <result property="outputFormats"    column="output_formats"    />
+        <result property="infoHash"    column="info_hash"    />
+        <result property="slug"    column="slug"    />
+        <result property="metaTitle"    column="meta_title"    />
+        <result property="metaDescription"    column="meta_description"    />
+        <result property="metaKeywords"    column="meta_keywords"    />
+        <result property="publishedAt"    column="published_at"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="deletedAt"    column="deleted_at"    />
+    </resultMap>
+
+    <sql id="selectVideoTranscodeVo">
+        select id, uid, video_type, title, description, price, coin_price, points_price, 
+               discount_price, discount_coin_price, discount_start_at, discount_end_at, 
+               creator_revenue_rate, required_vip_level, is_vip_only, is_premium_only,
+               transcode_id, md5, shareid, orgfile, rpath, thumbnails, cover_image, 
+               content_type, is_featured, is_editor_choice, is_hot, is_new, is_exclusive, 
+               is_trending, is_private, is_adult, resolution, domain, picdomain, mp4domain, 
+               path, suffix, bitrate, file_size, duration, fps, width, height, 
+               views_count, likes_count, dislike_count, favorite_count, share_count, 
+               download_count, purchase_count, total_revenue, daily_view_limit, 
+               comments_count, free_preview_duration, allow_preview, age_rating, 
+               quality, allow_comments, allow_downloads, allowed_countries, 
+               blocked_countries, language, subtitles, transcode_begin, transcode_end, 
+               transcode_result, output_formats, info_hash, slug, meta_title, 
+               meta_description, meta_keywords, published_at, status, created_at, 
+               updated_at, deleted_at 
+        from video_transcodes
+    </sql>
+
+    <select id="selectVideoTranscodeList" parameterType="VideoTranscode" resultMap="VideoTranscodeResult">
+        <include refid="selectVideoTranscodeVo"/>
+        <where>
+            <if test="uid != null and uid != ''"> and uid = #{uid}</if>
+            <if test="videoType != null and videoType != ''"> and video_type = #{videoType}</if>
+            <if test="title != null and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="contentType != null and contentType != ''"> and content_type = #{contentType}</if>
+            <if test="transcodeId != null  and transcodeId != ''"> and transcode_id = #{transcodeId}</if>
+            <if test="md5 != null  and md5 != ''"> and md5 = #{md5}</if>
+            <if test="shareid != null  and shareid != ''"> and shareid = #{shareid}</if>
+            <if test="orgfile != null  and orgfile != ''"> and orgfile like concat('%', #{orgfile}, '%')</if>
+            <if test="domain != null  and domain != ''"> and domain = #{domain}</if>
+            <if test="resolution != null  and resolution != ''"> and resolution = #{resolution}</if>
+            <if test="quality != null  and quality != ''"> and quality = #{quality}</if>
+            <if test="transcodeResult != null  and transcodeResult != ''"> and transcode_result = #{transcodeResult}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="isFeatured != null"> and is_featured = #{isFeatured}</if>
+            <if test="isHot != null"> and is_hot = #{isHot}</if>
+            <if test="isNew != null"> and is_new = #{isNew}</if>
+            <if test="isTrending != null"> and is_trending = #{isTrending}</if>
+            <if test="isVipOnly != null"> and is_vip_only = #{isVipOnly}</if>
+            <if test="isPremiumOnly != null"> and is_premium_only = #{isPremiumOnly}</if>
+        </where>
+        order by created_at desc
+    </select>
+
+    <select id="selectVideoTranscodeById" parameterType="Long" resultMap="VideoTranscodeResult">
+        <include refid="selectVideoTranscodeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectVideoTranscodeByTranscodeId" parameterType="String" resultMap="VideoTranscodeResult">
+        <include refid="selectVideoTranscodeVo"/>
+        where transcode_id = #{transcodeId}
+    </select>
+
+    <insert id="insertVideoTranscode" parameterType="VideoTranscode" useGeneratedKeys="true" keyProperty="id">
+        insert into video_transcodes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid != null and uid != ''">uid,</if>
+            <if test="videoType != null and videoType != ''">video_type,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="price != null">price,</if>
+            <if test="coinPrice != null">coin_price,</if>
+            <if test="pointsPrice != null">points_price,</if>
+            <if test="discountPrice != null">discount_price,</if>
+            <if test="discountCoinPrice != null">discount_coin_price,</if>
+            <if test="discountStartAt != null">discount_start_at,</if>
+            <if test="discountEndAt != null">discount_end_at,</if>
+            <if test="creatorRevenueRate != null">creator_revenue_rate,</if>
+            <if test="requiredVipLevel != null">required_vip_level,</if>
+            <if test="isVipOnly != null">is_vip_only,</if>
+            <if test="isPremiumOnly != null">is_premium_only,</if>
+            <if test="transcodeId != null and transcodeId != ''">transcode_id,</if>
+            <if test="md5 != null and md5 != ''">md5,</if>
+            <if test="shareid != null and shareid != ''">shareid,</if>
+            <if test="orgfile != null and orgfile != ''">orgfile,</if>
+            <if test="rpath != null and rpath != ''">rpath,</if>
+            <if test="thumbnails != null">thumbnails,</if>
+            <if test="coverImage != null and coverImage != ''">cover_image,</if>
+            <if test="contentType != null and contentType != ''">content_type,</if>
+            <if test="isFeatured != null">is_featured,</if>
+            <if test="isEditorChoice != null">is_editor_choice,</if>
+            <if test="isHot != null">is_hot,</if>
+            <if test="isNew != null">is_new,</if>
+            <if test="isExclusive != null">is_exclusive,</if>
+            <if test="isTrending != null">is_trending,</if>
+            <if test="isPrivate != null">is_private,</if>
+            <if test="isAdult != null">is_adult,</if>
+            <if test="resolution != null and resolution != ''">resolution,</if>
+            <if test="domain != null and domain != ''">domain,</if>
+            <if test="picdomain != null and picdomain != ''">picdomain,</if>
+            <if test="mp4domain != null and mp4domain != ''">mp4domain,</if>
+            <if test="path != null and path != ''">path,</if>
+            <if test="suffix != null and suffix != ''">suffix,</if>
+            <if test="bitrate != null">bitrate,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="duration != null">duration,</if>
+            <if test="fps != null">fps,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="viewsCount != null">views_count,</if>
+            <if test="likesCount != null">likes_count,</if>
+            <if test="dislikeCount != null">dislike_count,</if>
+            <if test="favoriteCount != null">favorite_count,</if>
+            <if test="shareCount != null">share_count,</if>
+            <if test="downloadCount != null">download_count,</if>
+            <if test="purchaseCount != null">purchase_count,</if>
+            <if test="totalRevenue != null">total_revenue,</if>
+            <if test="dailyViewLimit != null">daily_view_limit,</if>
+            <if test="commentsCount != null">comments_count,</if>
+            <if test="freePreviewDuration != null">free_preview_duration,</if>
+            <if test="allowPreview != null">allow_preview,</if>
+            <if test="ageRating != null">age_rating,</if>
+            <if test="quality != null and quality != ''">quality,</if>
+            <if test="allowComments != null">allow_comments,</if>
+            <if test="allowDownloads != null">allow_downloads,</if>
+            <if test="allowedCountries != null">allowed_countries,</if>
+            <if test="blockedCountries != null">blocked_countries,</if>
+            <if test="language != null and language != ''">language,</if>
+            <if test="subtitles != null">subtitles,</if>
+            <if test="transcodeBegin != null">transcode_begin,</if>
+            <if test="transcodeEnd != null">transcode_end,</if>
+            <if test="transcodeResult != null and transcodeResult != ''">transcode_result,</if>
+            <if test="outputFormats != null">output_formats,</if>
+            <if test="infoHash != null and infoHash != ''">info_hash,</if>
+            <if test="slug != null and slug != ''">slug,</if>
+            <if test="metaTitle != null and metaTitle != ''">meta_title,</if>
+            <if test="metaDescription != null">meta_description,</if>
+            <if test="metaKeywords != null">meta_keywords,</if>
+            <if test="publishedAt != null">published_at,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid != null and uid != ''">#{uid},</if>
+            <if test="videoType != null and videoType != ''">#{videoType},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="price != null">#{price},</if>
+            <if test="coinPrice != null">#{coinPrice},</if>
+            <if test="pointsPrice != null">#{pointsPrice},</if>
+            <if test="discountPrice != null">#{discountPrice},</if>
+            <if test="discountCoinPrice != null">#{discountCoinPrice},</if>
+            <if test="discountStartAt != null">#{discountStartAt},</if>
+            <if test="discountEndAt != null">#{discountEndAt},</if>
+            <if test="creatorRevenueRate != null">#{creatorRevenueRate},</if>
+            <if test="requiredVipLevel != null">#{requiredVipLevel},</if>
+            <if test="isVipOnly != null">#{isVipOnly},</if>
+            <if test="isPremiumOnly != null">#{isPremiumOnly},</if>
+            <if test="transcodeId != null and transcodeId != ''">#{transcodeId},</if>
+            <if test="md5 != null and md5 != ''">#{md5},</if>
+            <if test="shareid != null and shareid != ''">#{shareid},</if>
+            <if test="orgfile != null and orgfile != ''">#{orgfile},</if>
+            <if test="rpath != null and rpath != ''">#{rpath},</if>
+            <if test="thumbnails != null">#{thumbnails},</if>
+            <if test="coverImage != null and coverImage != ''">#{coverImage},</if>
+            <if test="contentType != null and contentType != ''">#{contentType},</if>
+            <if test="isFeatured != null">#{isFeatured},</if>
+            <if test="isEditorChoice != null">#{isEditorChoice},</if>
+            <if test="isHot != null">#{isHot},</if>
+            <if test="isNew != null">#{isNew},</if>
+            <if test="isExclusive != null">#{isExclusive},</if>
+            <if test="isTrending != null">#{isTrending},</if>
+            <if test="isPrivate != null">#{isPrivate},</if>
+            <if test="isAdult != null">#{isAdult},</if>
+            <if test="resolution != null and resolution != ''">#{resolution},</if>
+            <if test="domain != null and domain != ''">#{domain},</if>
+            <if test="picdomain != null and picdomain != ''">#{picdomain},</if>
+            <if test="mp4domain != null and mp4domain != ''">#{mp4domain},</if>
+            <if test="path != null and path != ''">#{path},</if>
+            <if test="suffix != null and suffix != ''">#{suffix},</if>
+            <if test="bitrate != null">#{bitrate},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="fps != null">#{fps},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="viewsCount != null">#{viewsCount},</if>
+            <if test="likesCount != null">#{likesCount},</if>
+            <if test="dislikeCount != null">#{dislikeCount},</if>
+            <if test="favoriteCount != null">#{favoriteCount},</if>
+            <if test="shareCount != null">#{shareCount},</if>
+            <if test="downloadCount != null">#{downloadCount},</if>
+            <if test="purchaseCount != null">#{purchaseCount},</if>
+            <if test="totalRevenue != null">#{totalRevenue},</if>
+            <if test="dailyViewLimit != null">#{dailyViewLimit},</if>
+            <if test="commentsCount != null">#{commentsCount},</if>
+            <if test="freePreviewDuration != null">#{freePreviewDuration},</if>
+            <if test="allowPreview != null">#{allowPreview},</if>
+            <if test="ageRating != null">#{ageRating},</if>
+            <if test="quality != null and quality != ''">#{quality},</if>
+            <if test="allowComments != null">#{allowComments},</if>
+            <if test="allowDownloads != null">#{allowDownloads},</if>
+            <if test="allowedCountries != null">#{allowedCountries},</if>
+            <if test="blockedCountries != null">#{blockedCountries},</if>
+            <if test="language != null and language != ''">#{language},</if>
+            <if test="subtitles != null">#{subtitles},</if>
+            <if test="transcodeBegin != null">#{transcodeBegin},</if>
+            <if test="transcodeEnd != null">#{transcodeEnd},</if>
+            <if test="transcodeResult != null and transcodeResult != ''">#{transcodeResult},</if>
+            <if test="outputFormats != null">#{outputFormats},</if>
+            <if test="infoHash != null and infoHash != ''">#{infoHash},</if>
+            <if test="slug != null and slug != ''">#{slug},</if>
+            <if test="metaTitle != null and metaTitle != ''">#{metaTitle},</if>
+            <if test="metaDescription != null">#{metaDescription},</if>
+            <if test="metaKeywords != null">#{metaKeywords},</if>
+            <if test="publishedAt != null">#{publishedAt},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateVideoTranscode" parameterType="VideoTranscode">
+        update video_transcodes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null and uid != ''">uid = #{uid},</if>
+            <if test="videoType != null and videoType != ''">video_type = #{videoType},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="coinPrice != null">coin_price = #{coinPrice},</if>
+            <if test="pointsPrice != null">points_price = #{pointsPrice},</if>
+            <if test="discountPrice != null">discount_price = #{discountPrice},</if>
+            <if test="discountCoinPrice != null">discount_coin_price = #{discountCoinPrice},</if>
+            <if test="discountStartAt != null">discount_start_at = #{discountStartAt},</if>
+            <if test="discountEndAt != null">discount_end_at = #{discountEndAt},</if>
+            <if test="creatorRevenueRate != null">creator_revenue_rate = #{creatorRevenueRate},</if>
+            <if test="requiredVipLevel != null">required_vip_level = #{requiredVipLevel},</if>
+            <if test="isVipOnly != null">is_vip_only = #{isVipOnly},</if>
+            <if test="isPremiumOnly != null">is_premium_only = #{isPremiumOnly},</if>
+            <if test="transcodeId != null and transcodeId != ''">transcode_id = #{transcodeId},</if>
+            <if test="md5 != null and md5 != ''">md5 = #{md5},</if>
+            <if test="shareid != null and shareid != ''">shareid = #{shareid},</if>
+            <if test="orgfile != null and orgfile != ''">orgfile = #{orgfile},</if>
+            <if test="rpath != null and rpath != ''">rpath = #{rpath},</if>
+            <if test="thumbnails != null">thumbnails = #{thumbnails},</if>
+            <if test="coverImage != null and coverImage != ''">cover_image = #{coverImage},</if>
+            <if test="contentType != null and contentType != ''">content_type = #{contentType},</if>
+            <if test="isFeatured != null">is_featured = #{isFeatured},</if>
+            <if test="isEditorChoice != null">is_editor_choice = #{isEditorChoice},</if>
+            <if test="isHot != null">is_hot = #{isHot},</if>
+            <if test="isNew != null">is_new = #{isNew},</if>
+            <if test="isExclusive != null">is_exclusive = #{isExclusive},</if>
+            <if test="isTrending != null">is_trending = #{isTrending},</if>
+            <if test="isPrivate != null">is_private = #{isPrivate},</if>
+            <if test="isAdult != null">is_adult = #{isAdult},</if>
+            <if test="resolution != null and resolution != ''">resolution = #{resolution},</if>
+            <if test="domain != null and domain != ''">domain = #{domain},</if>
+            <if test="picdomain != null and picdomain != ''">picdomain = #{picdomain},</if>
+            <if test="mp4domain != null and mp4domain != ''">mp4domain = #{mp4domain},</if>
+            <if test="path != null and path != ''">path = #{path},</if>
+            <if test="suffix != null and suffix != ''">suffix = #{suffix},</if>
+            <if test="bitrate != null">bitrate = #{bitrate},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="fps != null">fps = #{fps},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="viewsCount != null">views_count = #{viewsCount},</if>
+            <if test="likesCount != null">likes_count = #{likesCount},</if>
+            <if test="dislikeCount != null">dislike_count = #{dislikeCount},</if>
+            <if test="favoriteCount != null">favorite_count = #{favoriteCount},</if>
+            <if test="shareCount != null">share_count = #{shareCount},</if>
+            <if test="downloadCount != null">download_count = #{downloadCount},</if>
+            <if test="purchaseCount != null">purchase_count = #{purchaseCount},</if>
+            <if test="totalRevenue != null">total_revenue = #{totalRevenue},</if>
+            <if test="dailyViewLimit != null">daily_view_limit = #{dailyViewLimit},</if>
+            <if test="commentsCount != null">comments_count = #{commentsCount},</if>
+            <if test="freePreviewDuration != null">free_preview_duration = #{freePreviewDuration},</if>
+            <if test="allowPreview != null">allow_preview = #{allowPreview},</if>
+            <if test="ageRating != null">age_rating = #{ageRating},</if>
+            <if test="quality != null and quality != ''">quality = #{quality},</if>
+            <if test="allowComments != null">allow_comments = #{allowComments},</if>
+            <if test="allowDownloads != null">allow_downloads = #{allowDownloads},</if>
+            <if test="allowedCountries != null">allowed_countries = #{allowedCountries},</if>
+            <if test="blockedCountries != null">blocked_countries = #{blockedCountries},</if>
+            <if test="language != null and language != ''">language = #{language},</if>
+            <if test="subtitles != null">subtitles = #{subtitles},</if>
+            <if test="transcodeBegin != null">transcode_begin = #{transcodeBegin},</if>
+            <if test="transcodeEnd != null">transcode_end = #{transcodeEnd},</if>
+            <if test="transcodeResult != null and transcodeResult != ''">transcode_result = #{transcodeResult},</if>
+            <if test="outputFormats != null">output_formats = #{outputFormats},</if>
+            <if test="infoHash != null and infoHash != ''">info_hash = #{infoHash},</if>
+            <if test="slug != null and slug != ''">slug = #{slug},</if>
+            <if test="metaTitle != null and metaTitle != ''">meta_title = #{metaTitle},</if>
+            <if test="metaDescription != null">meta_description = #{metaDescription},</if>
+            <if test="metaKeywords != null">meta_keywords = #{metaKeywords},</if>
+            <if test="publishedAt != null">published_at = #{publishedAt},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            updated_at = NOW(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVideoTranscodeById" parameterType="Long">
+        delete from video_transcodes where id = #{id}
+    </delete>
+
+    <delete id="deleteVideoTranscodeByIds" parameterType="String">
+        delete from video_transcodes where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectUnusedTranscodes" parameterType="VideoTranscode" resultMap="VideoTranscodeResult">
+        SELECT vt.*, 0 as is_used
+        FROM video_transcodes vt 
+        <where>
+            NOT EXISTS (
+                SELECT 1 FROM videos v 
+                WHERE v.transcode_id = vt.id 
+                  AND v.transcode_id IS NOT NULL
+            )
+            <if test="uid != null and uid != ''"> and vt.uid = #{uid}</if>
+            <if test="videoType != null and videoType != ''"> and vt.video_type = #{videoType}</if>
+            <if test="status != null and status != ''"> and vt.status = #{status}</if>
+            <if test="transcodeResult != null and transcodeResult != ''"> and vt.transcode_result = #{transcodeResult}</if>
+            <if test="orgfile != null and orgfile != ''"> and vt.orgfile LIKE CONCAT('%', #{orgfile}, '%')</if>
+            <if test="resolution != null and resolution != ''"> and vt.resolution LIKE CONCAT('%', #{resolution}, '%')</if>
+        </where>
+        order by vt.created_at desc
+    </select>
+
+    <select id="selectAllTranscodesWithUsageStatus" parameterType="VideoTranscode" resultMap="VideoTranscodeResult">
+        SELECT vt.*, 
+               CASE WHEN EXISTS (
+                   SELECT 1 FROM videos v 
+                   WHERE v.transcode_id = vt.id 
+                     AND v.transcode_id IS NOT NULL
+               ) THEN 1 ELSE 0 END as is_used
+        FROM video_transcodes vt 
+        <where>
+            <if test="uid != null and uid != ''"> and vt.uid = #{uid}</if>
+            <if test="videoType != null and videoType != ''"> and vt.video_type = #{videoType}</if>
+            <if test="status != null and status != ''"> and vt.status = #{status}</if>
+            <if test="transcodeResult != null and transcodeResult != ''"> and vt.transcode_result = #{transcodeResult}</if>
+            <if test="orgfile != null and orgfile != ''"> and vt.orgfile LIKE CONCAT('%', #{orgfile}, '%')</if>
+            <if test="resolution != null and resolution != ''"> and vt.resolution LIKE CONCAT('%', #{resolution}, '%')</if>
+        </where>
+        order by vt.created_at desc
+    </select>
+
+    <update id="markTranscodeAsUsed">
+        <!-- 注释：此方法现在仅作日志记录用途，实际使用状态通过videos表关联查询 -->
+        <!-- 更新时间作为使用标记 -->
+        update video_transcodes 
+        set updated_at = NOW()
+        where transcode_id = #{transcodeId}
+    </update>
+
+    <!-- 测试查询：检查关联关系 -->
+    <select id="testAssociationQuery" resultType="java.util.Map">
+        SELECT 
+            'database_info' as table_name,
+            DATABASE() as database_name,
+            @@hostname as host_name,
+            USER() as user_name
+        
+        UNION ALL
+        
+        SELECT 
+            'video_transcodes' as table_name,
+            COUNT(*) as total_count,
+            COUNT(CASE WHEN transcode_result = 'ok' THEN 1 END) as ok_count,
+            ''
+        FROM video_transcodes
+        
+        UNION ALL
+        
+        SELECT 
+            'videos' as table_name,
+            COUNT(*) as total_count,
+            COUNT(CASE WHEN transcode_id IS NOT NULL AND transcode_id != '' THEN 1 END) as with_transcode_id,
+            ''
+        FROM videos
+        
+        UNION ALL
+        
+        SELECT 
+            'sample_videos_transcode_ids' as table_name,
+            '' as col1,
+            '' as col2,
+            GROUP_CONCAT(DISTINCT transcode_id LIMIT 3) as sample_ids
+        FROM videos 
+        WHERE transcode_id IS NOT NULL AND transcode_id != ''
+        LIMIT 1
+    </select>
+
+</mapper> 

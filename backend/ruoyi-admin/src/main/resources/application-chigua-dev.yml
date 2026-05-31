@@ -1,0 +1,76 @@
+# Chigua模块配置 - 开发环境
+chigua:
+  # SEO配置（泛域名环境也启用Telegram站点地图，sitemap URL会跟随请求Host动态生成）
+  seo:
+    sitemap-enabled: true
+    robots-enabled: true
+
+  # R2存储配置（开发环境）
+  r2:
+    # 开发环境R2端点
+    endpoint: https://74dcb623526e1925a35e0991a0940f16.r2.cloudflarestorage.com
+    # 开发环境访问密钥
+    access-key-id: 658000187d42a249eb90c19063a7e425
+    secret-access-key: 85206d150bb2c88eca883b864f41f925e750f9eb264fc92c91e91bfac585cf7e
+    # 开发环境存储桶
+    bucket-name: 51chigua
+    # 图片加密配置（开发环境也启用以保持一致性）
+    image-encryption:
+      enabled: true
+      key: DR4jiK+U+Z6QwyuVxp//Cl3Zl543bl1xiQrfH6hnLc4=
+
+  # 域名配置（顶层域名配置，由ChiguaProperties.DomainConfig读取）
+  domains:
+    # 开发环境主域名（用于站点地图和SEO，指向实际视频页面域名）
+    site: https://api.rklzu.cc
+    # 站点备用域名列表（用于站点地图轮换，分散风险）
+    # 注意：所有域名都指向同一个实际视频页面（api.rklzu.cc），只是用于轮换策略
+    site-alternatives:
+      - https://api.rklzu.cc
+    # API域名（用于站点地图API访问，指向泛域名，因为泛域名有Nginx代理到后端Java）
+    # 开发环境可以使用 localhost:8080 或实际的泛域名
+    api-domain: http://localhost:8080
+    # 图片资源域名（R2存储）
+    main: https://tycgimage1.org
+    # 备用域名
+    fallback: https://74dcb623526e1925a35e0991a0940f16.r2.cloudflarestorage.com
+
+  # URL服务配置（开发环境）
+  url:
+    signature-secret: VbJBrVDVrzICYlkQgDzBVyuhOoKsWpr0BSpJAERif7Y=
+    signature-enabled: true  # 开发环境也启用签名保持一致
+    fallback-enabled: true
+    
+    # 开发环境签名URL有效期配置（更长时间便于调试）
+    expires:
+      default: 86400    # 24小时
+      short: 3600       # 1小时
+      long: 172800      # 48小时
+    
+    # 开发环境下载次数限制（更宽松）
+    download-limits:
+      video: 10
+      stream: 50
+      default: 20
+    
+    # 文件类型保护配置
+    file-types:
+      protected: 
+        - mp4, webm, avi, mov, wmv, flv, webm, mkv, m3u8, ts
+      public:
+        - jpg, jpeg, png, gif, webp, svg, ico, bmp, tiff
+
+  # 资源路径配置
+  paths:
+    video-prefix: /videos
+    image-prefix: /images
+    thumbnail-prefix: /thumbnails
+
+# ppvod集成配置（开发环境）
+ppvod:
+  default:
+    domain: https://tycgimage1.org
+    pic-domain: https://tycgimage1.org
+  url:
+    check-enabled: false  # 开发环境关闭检查
+    check-timeout: 5000

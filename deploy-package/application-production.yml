@@ -1,0 +1,85 @@
+# 生产环境专用配置
+# 这个文件会被打包到JAR中，提供生产环境的默认配置
+
+spring:
+  profiles:
+    active: prod
+    include: encryption-prod,chigua-prod
+  
+  # 生产环境数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    # 使用环境变量，如果没有则使用默认值
+    url: ${DB_URL:jdbc:mysql://hk-cdb-e8w1o5ur.sql.tencentcdb.com:23484/chigua?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:chigua001}
+    
+    druid:
+      # 连接池配置
+      initialSize: 10
+      minIdle: 20
+      maxActive: 50
+      maxWait: 60000
+      connectTimeout: 30000
+      socketTimeout: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      maxEvictableIdleTimeMillis: 900000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+
+  # Redis配置
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    database: ${REDIS_DATABASE:0}
+    password: ${REDIS_PASSWORD:}
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 5
+        max-idle: 20
+        max-active: 50
+        max-wait: -1ms
+
+# 服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${CONTEXT_PATH:/}
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 2000
+    threads:
+      max: 1000
+      min-spare: 200
+
+# 日志配置
+logging:
+  level:
+    com.ruoyi: info
+    org.springframework: warn
+    org.mybatis: warn
+    com.alibaba.druid: warn
+    root: info
+  file:
+    path: ${LOG_PATH:./logs}
+
+# Swagger配置（生产环境关闭）
+swagger:
+  enabled: false
+
+# 项目配置
+ruoyi:
+  profile: ${UPLOAD_PATH:./uploadPath}
+  addressEnabled: false
+  captchaType: math
+
+# Token配置
+token:
+  header: Authorization
+  secret: ${JWT_SECRET:abcdefghijklmnopqrstuvwxyz}
+  expireTime: ${JWT_EXPIRE_TIME:30}

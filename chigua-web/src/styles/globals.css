@@ -1,0 +1,28 @@
+/* 移动端菜单滚动条样式 */
+.mobile-menu-scrollbar {
+  /* 对于 Webkit 浏览器 (Chrome, Safari, Edge) */
+  scrollbar-width: thin;
+  scrollbar-color: #555555 #191919;
+}
+
+.mobile-menu-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mobile-menu-scrollbar::-webkit-scrollbar-track {
+  background: #191919;
+  border-radius: 4px;
+}
+
+.mobile-menu-scrollbar::-webkit-scrollbar-thumb {
+  background: #555555;
+  border-radius: 4px;
+}
+
+.mobile-menu-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}
+
+.mobile-menu-scrollbar::-webkit-scrollbar-corner {
+  background: #191919;
+}

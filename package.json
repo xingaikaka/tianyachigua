@@ -1,0 +1,36 @@
+{
+  "name": "chigua-video-project",
+  "version": "1.0.0",
+  "description": "天涯吃瓜视频项目 - 完整解决方案",
+  "scripts": {
+    "config:check": "bash config-check.sh",
+    "deploy:prod": "bash deploy-production.sh",
+    "setup:env": "cd chigua-web && node create-env.js",
+    "build:all": "bash build-all-enhanced.sh",
+    "backend:build": "cd backend && mvn clean package -Dmaven.test.skip=true",
+    "frontend:build": "cd frontend && npm run build:prod",
+    "chigua-web:build": "cd chigua-web && npm run build",
+    "test:config": "npm run config:check",
+    "help": "echo 'Available commands:' && echo '  npm run config:check  - 检查配置一致性' && echo '  npm run deploy:prod   - 部署到生产环境' && echo '  npm run setup:env     - 设置环境变量' && echo '  npm run build:all     - 构建所有项目' && echo '  npm run test:config   - 测试配置'"
+  },
+  "keywords": [
+    "chigua",
+    "video",
+    "react",
+    "vue",
+    "spring-boot",
+    "fullstack"
+  ],
+  "author": "天涯吃瓜团队",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/chigua-video-project.git"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

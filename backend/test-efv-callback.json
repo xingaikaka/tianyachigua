@@ -1,0 +1,64 @@
+{
+  "poster2": {
+    "url": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/poster.jpg",
+    "height": 773,
+    "width": 540
+  },
+  "count": 23,
+  "retry": false,
+  "autoPublish": false,
+  "director": ["古桥一浩"],
+  "writer": ["古桥一浩"],
+  "stars": [
+    "三宅健太", "宫野真守", "樱井孝宏",
+    "伊藤静", "梶裕贵", "绵贯龙之介",
+    "濑户麻沙美", "早见沙织", "滨野大辉",
+    "柳田淳一", "铃木玲子", "石冢运升",
+    "中井和哉", "天崎滉平", "菅原慎介",
+    "町山芹菜"
+  ],
+  "country": ["日本"],
+  "tags": ["剧情", "喜剧", "战争", "动画"],
+  "screenshots": [
+    "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/0.jpg",
+    "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/2.jpg",
+    "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/1.jpg",
+    "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/3.jpg"
+  ],
+  "_id": "61ffbfbb9b36dd00c878b4a1",
+  "originalname": "窈窕淑女前篇：红绪，花样的17岁",
+  "status": "finished",
+  "path": "./movies/Haikara-san ga Toru the movie.mkv",
+  "category": "日本动漫",
+  "size": "5497612960",
+  "createAt": "2022-02-16T09:25:49.733Z",
+  "m3u8paths": [
+    {
+      "_id": "6200c8949dc15a00c15be7db",
+      "hd": 640,
+      "path": "./public/videos/202202/07/61ffbfbb9b36dd00c878b4a1/8f89fb/index.m3u8"
+    },
+    {
+      "_id": "6200cc499dc15a00c15be809",
+      "hd": 1280,
+      "path": "./public/videos/202202/07/61ffbfbb9b36dd00c878b4a1/08cad8/index.m3u8"
+    }
+  ],
+  "thirdm3u8": [],
+  "__v": 1,
+  "height": 1080,
+  "width": 1920,
+  "duration": "97分钟",
+  "moviepath": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1",
+  "gif": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/1.gif",
+  "previewvideo": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/preview.mp4",
+  "poster": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/cover.jpg",
+  "firstScreen": "/videos/202202/07/61ffbfbb9b36dd00c878b4a1/first.jpg",
+  "aka": "",
+  "banben": "HD",
+  "language": "日语",
+  "originaltitle": "劇場版 はいからさんが通る 前編 ～紅緒、花の17歳～",
+  "rate": 7.5,
+  "summary": "根据70年代大受欢迎的少女漫画《窈窕淑女》改编的剧场版动画，《窈窕淑女》的题目字面意思出自诗经：\"窈窕淑女，君子好逑\"。大和和纪的《窈窕淑女》是1977年的少女漫画优秀杰作，曾经红极一时。讲述了一个关...",
+  "year": 2017
+}

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.VideoImageMapper">
+    
+    <resultMap type="VideoImage" id="VideoImageResult">
+        <id     property="id"               column="id"               />
+        <result property="videoId"          column="video_id"         />
+        <result property="title"            column="title"            />
+        <result property="description"      column="description"      />
+        <result property="imageUrl"         column="image_url"        />
+        <result property="fileSize"         column="file_size"        />
+        <result property="width"            column="width"            />
+        <result property="height"           column="height"           />
+        <result property="altText"          column="alt_text"         />
+        <result property="sortOrder"        column="sort_order"       />
+        <result property="isPrimary"        column="is_primary"       />
+        <result property="status"           column="status"           />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+        <result property="videoTitle"       column="video_title"      />
+    </resultMap>
+
+    <sql id="selectVideoImageVo">
+        select vi.id, vi.video_id, vi.title, vi.description, vi.image_url, vi.file_size, 
+               vi.width, vi.height, vi.alt_text, vi.sort_order, vi.is_primary, vi.status, 
+               vi.created_at, vi.updated_at, v.title as video_title
+        from video_images vi
+        left join videos v on vi.video_id = v.id
+    </sql>
+
+    <!-- 查询视频图片列表 -->
+    <select id="selectVideoImageList" parameterType="VideoImage" resultMap="VideoImageResult">
+        <include refid="selectVideoImageVo"/>
+        <where>  
+            <if test="videoId != null"> and vi.video_id = #{videoId}</if>
+            <if test="title != null and title != ''"> and vi.title like concat('%', #{title}, '%')</if>
+            <if test="isPrimary != null"> and vi.is_primary = #{isPrimary}</if>
+            <if test="status != null"> and vi.status = #{status}</if>
+        </where>
+        order by vi.sort_order desc, vi.id asc
+    </select>
+
+    <!-- 根据视频ID查询图片列表 -->
+    <select id="selectVideoImagesByVideoId" parameterType="Long" resultMap="VideoImageResult">
+        <include refid="selectVideoImageVo"/>
+        where vi.video_id = #{videoId}
+        order by vi.sort_order desc, vi.id asc
+    </select>
+    
+    <!-- 根据ID查询视频图片 -->
+    <select id="selectVideoImageById" parameterType="Long" resultMap="VideoImageResult">
+        <include refid="selectVideoImageVo"/>
+        where vi.id = #{id}
+    </select>
+
+    <!-- 查询视频的主图 -->
+    <select id="selectPrimaryImageByVideoId" parameterType="Long" resultMap="VideoImageResult">
+        <include refid="selectVideoImageVo"/>
+        where vi.video_id = #{videoId} and vi.is_primary = 1 and vi.status = 1
+        limit 1
+    </select>
+
+    <!-- 统计视频图片数量 -->
+    <select id="countImagesByVideoId" parameterType="Long" resultType="int">
+        select count(*) from video_images where video_id = #{videoId} and status = 1
+    </select>
+
+    <!-- 检查图片URL是否已存在 -->
+    <select id="checkImageUrlExists" resultMap="VideoImageResult">
+        select id, video_id, title, image_url from video_images
+        where image_url = #{imageUrl} and video_id = #{videoId}
+        <if test="excludeId != null"> and id != #{excludeId}</if>
+        limit 1
+    </select>
+        
+    <!-- 新增视频图片 -->
+    <insert id="insertVideoImage" parameterType="VideoImage" useGeneratedKeys="true" keyProperty="id">
+        insert into video_images
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">video_id,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="width != null">width,</if>
+            <if test="height != null">height,</if>
+            <if test="altText != null">alt_text,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="isPrimary != null">is_primary,</if>
+            <if test="status != null">status,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="videoId != null">#{videoId},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="imageUrl != null and imageUrl != ''">#{imageUrl},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="width != null">#{width},</if>
+            <if test="height != null">#{height},</if>
+            <if test="altText != null">#{altText},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="isPrimary != null">#{isPrimary},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <!-- 修改视频图片 -->
+    <update id="updateVideoImage" parameterType="VideoImage">
+        update video_images
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="altText != null">alt_text = #{altText},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="isPrimary != null">is_primary = #{isPrimary},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!-- 设置主图（先取消其他主图状态，再设置当前图片为主图） -->
+    <update id="setPrimaryImage">
+        <!-- 先取消该视频的所有主图状态 -->
+        update video_images set is_primary = 0 where video_id = #{videoId};
+        <!-- 设置指定图片为主图 -->
+        update video_images set is_primary = 1 where id = #{imageId} and video_id = #{videoId}
+    </update>
+
+    <!-- 取消视频的所有主图状态 -->
+    <update id="clearPrimaryImages" parameterType="Long">
+        update video_images set is_primary = 0 where video_id = #{videoId}
+    </update>
+
+    <!-- 批量更新图片排序 -->
+    <update id="batchUpdateImageSort" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update video_images set sort_order = #{item.sortOrder} where id = #{item.id}
+        </foreach>
+    </update>
+
+    <!-- 删除视频图片 -->
+    <delete id="deleteVideoImageById" parameterType="Long">
+        delete from video_images where id = #{id}
+    </delete>
+
+    <!-- 批量删除视频图片 -->
+    <delete id="deleteVideoImageByIds" parameterType="String">
+        delete from video_images where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 根据视频ID删除所有图片 -->
+    <delete id="deleteVideoImagesByVideoId" parameterType="Long">
+        delete from video_images where video_id = #{videoId}
+    </delete>
+
+</mapper> 

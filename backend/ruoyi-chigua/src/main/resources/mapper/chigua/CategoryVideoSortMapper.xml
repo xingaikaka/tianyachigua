@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.CategoryVideoSortMapper">
+    
+    <resultMap type="CategoryVideoSort" id="CategoryVideoSortResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="categoryName"    column="category_name"    />
+    </resultMap>
+
+    <resultMap type="CategoryVideoSort" id="CategoryVideoSortWithVideoResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="videoId"    column="video_id"    />
+        <result property="sortOrder"    column="sort_order"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="categoryName"    column="category_name"    />
+        <association property="video" javaType="Video">
+            <result property="id" column="v_id"/>
+            <result property="title" column="v_title"/>
+            <result property="coverImage" column="v_cover_image"/>
+            <result property="publishedAt" column="v_published_at"/>
+            <result property="sortOrder" column="v_sort_order"/>
+            <result property="viewCount" column="v_view_count"/>
+            <result property="status" column="v_status"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectCategoryVideoSortVo">
+        select id, category_id, video_id, sort_order, created_at, updated_at from category_video_sort
+    </sql>
+
+    <select id="selectCategoryVideoSortList" parameterType="CategoryVideoSort" resultMap="CategoryVideoSortResult">
+        <include refid="selectCategoryVideoSortVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="videoId != null "> and video_id = #{videoId}</if>
+            <if test="sortOrder != null "> and sort_order = #{sortOrder}</if>
+        </where>
+        order by category_id, sort_order desc
+    </select>
+    
+    <select id="selectCategoryVideoSortById" parameterType="Long" resultMap="CategoryVideoSortResult">
+        <include refid="selectCategoryVideoSortVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectSortedVideosByCategory" parameterType="Long" resultMap="CategoryVideoSortWithVideoResult">
+        select cvs.id, cvs.category_id, cvs.video_id, cvs.sort_order, cvs.created_at, cvs.updated_at,
+               c.name as category_name,
+               v.id as v_id, v.title as v_title, v.cover_image as v_cover_image, 
+               v.published_at as v_published_at, v.sort_order as v_sort_order, 
+               v.view_count as v_view_count, v.status as v_status
+        from category_video_sort cvs
+        left join categories c on cvs.category_id = c.id
+        left join videos v on cvs.video_id = v.id
+        where cvs.category_id = #{categoryId} and v.status = 1
+        order by cvs.sort_order desc, v.published_at desc
+    </select>
+
+    <select id="countByCategoryId" parameterType="Long" resultType="int">
+        select count(*) from category_video_sort where category_id = #{categoryId}
+    </select>
+
+    <select id="countDefaultSortVideosByCategory" resultType="int">
+        select count(distinct v.id)
+        from videos v
+        inner join video_category_tag_relations vctr on v.id = vctr.video_id
+        where vctr.category_id = #{categoryId} 
+          and vctr.relation_type = 1 
+          and v.status = 1
+          <if test="excludeIds != null and excludeIds.size() > 0">
+            and v.id not in
+            <foreach collection="excludeIds" item="id" open="(" separator="," close=")">
+              #{id}
+            </foreach>
+          </if>
+    </select>
+
+    <select id="selectManualSortVideosByCategory" resultType="com.ruoyi.chigua.domain.Video">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size, 
+               v.author, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language
+        from videos v
+        inner join category_video_sort cvs on v.id = cvs.video_id
+        where cvs.category_id = #{categoryId} and v.status = 1
+        order by cvs.sort_order desc, v.published_at desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectDefaultSortVideosByCategory" resultType="com.ruoyi.chigua.domain.Video">
+        select v.id, v.title, v.subtitle, v.description, v.video_content, v.cover_image, v.duration, v.file_size, 
+               v.author, v.category_id, v.view_count, v.comment_count, v.like_count, v.share_count,
+               v.sort_order, v.is_recommended, v.is_hot, v.status, v.published_at, v.last_edited_at,
+               v.created_at, v.updated_at,
+               v.transcode_id, v.md5, v.shareid, v.orgfile, v.rpath, v.domain, v.path, v.suffix,
+               v.resolution, v.bitrate, v.fps, v.width, v.height, v.transcode_status, v.thumbnails, v.output_formats,
+               v.slug, v.meta_title, v.meta_description, v.meta_keywords,
+               v.video_type, v.quality, v.is_featured, v.allow_comments, v.language
+        from videos v
+        inner join video_category_tag_relations vctr on v.id = vctr.video_id
+        where vctr.category_id = #{categoryId} 
+          and vctr.relation_type = 1 
+          and v.status = 1
+          <if test="excludeIds != null and excludeIds.size() > 0">
+            and v.id not in
+            <foreach collection="excludeIds" item="id" open="(" separator="," close=")">
+              #{id}
+            </foreach>
+          </if>
+        order by v.sort_order desc, v.published_at desc, v.created_at desc
+        limit #{offset}, #{limit}
+    </select>
+        
+    <insert id="insertCategoryVideoSort" parameterType="CategoryVideoSort" useGeneratedKeys="true" keyProperty="id">
+        insert into category_video_sort
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">category_id,</if>
+            <if test="videoId != null">video_id,</if>
+            <if test="sortOrder != null">sort_order,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="videoId != null">#{videoId},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCategoryVideoSort" parameterType="CategoryVideoSort">
+        update category_video_sort
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="videoId != null">video_id = #{videoId},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCategoryVideoSortById" parameterType="Long">
+        delete from category_video_sort where id = #{id}
+    </delete>
+
+    <delete id="deleteCategoryVideoSortByIds" parameterType="String">
+        delete from category_video_sort where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByCategoryId" parameterType="Long">
+        delete from category_video_sort where category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteByCategoryIdAndVideoId">
+        delete from category_video_sort where category_id = #{categoryId} and video_id = #{videoId}
+    </delete>
+
+    <insert id="batchInsertCategoryVideoSort" parameterType="java.util.List">
+        insert into category_video_sort (category_id, video_id, sort_order)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.categoryId}, #{item.videoId}, #{item.sortOrder})
+        </foreach>
+    </insert>
+
+</mapper>

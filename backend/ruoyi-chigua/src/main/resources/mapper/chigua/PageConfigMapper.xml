@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.PageConfigMapper">
+    
+    <resultMap type="PageConfig" id="PageConfigResult">
+        <id     property="configId"        column="config_id"        />
+        <result property="configKey"       column="config_key"       />
+        <result property="configName"      column="config_name"      />
+        <result property="configType"      column="config_type"      />
+        <result property="richContent"     column="rich_content"     />
+        <result property="basicContent"    column="basic_content"    />
+        <result property="jumpUrl"         column="jump_url"         />
+        <result property="configCategory"  column="config_category"  />
+        <result property="status"          column="status"           />
+        <result property="sortOrder"       column="sort_order"       />
+        <result property="createBy"        column="create_by"        />
+        <result property="createTime"      column="create_time"      />
+        <result property="updateBy"        column="update_by"        />
+        <result property="updateTime"      column="update_time"      />
+        <result property="remark"          column="remark"           />
+    </resultMap>
+
+    <sql id="selectPageConfigVo">
+        select config_id, config_key, config_name, config_type, rich_content, basic_content, jump_url,
+               config_category, status, sort_order, create_by, create_time, update_by, update_time, remark 
+        from page_config
+    </sql>
+
+    <select id="selectPageConfigList" parameterType="PageConfig" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        <where>  
+            <if test="configKey != null and configKey != ''"> and config_key like concat('%', #{configKey}, '%')</if>
+            <if test="configName != null and configName != ''"> and config_name like concat('%', #{configName}, '%')</if>
+            <if test="configType != null and configType != ''"> and config_type = #{configType}</if>
+            <if test="configCategory != null and configCategory != ''"> and config_category = #{configCategory}</if>
+            <if test="status != null and status != ''"> and status = #{status}</if>
+        </where>
+        order by config_category, sort_order, config_id
+    </select>
+    
+    <select id="selectPageConfigById" parameterType="Long" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where config_id = #{configId}
+    </select>
+
+    <select id="selectPageConfigByKey" parameterType="String" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where config_key = #{configKey} and status = '0'
+    </select>
+
+    <select id="selectPageConfigListByType" parameterType="String" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where config_type = #{configType} and status = '0'
+        order by sort_order, config_id
+    </select>
+
+    <select id="selectPageConfigListByCategory" parameterType="String" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where config_category = #{configCategory} and status = '0'
+        order by sort_order, config_id
+    </select>
+
+    <select id="selectAllActivePageConfigs" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where status = '0'
+        order by config_category, sort_order, config_id
+    </select>
+
+    <select id="checkConfigKeyUnique" parameterType="String" resultMap="PageConfigResult">
+        <include refid="selectPageConfigVo"/>
+        where config_key = #{configKey}
+    </select>
+        
+    <insert id="insertPageConfig" parameterType="PageConfig" useGeneratedKeys="true" keyProperty="configId">
+        insert into page_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="configKey != null and configKey != ''">config_key,</if>
+            <if test="configName != null and configName != ''">config_name,</if>
+            <if test="configType != null and configType != ''">config_type,</if>
+            <if test="richContent != null">rich_content,</if>
+            <if test="basicContent != null">basic_content,</if>
+            <if test="jumpUrl != null">jump_url,</if>
+            <if test="configCategory != null and configCategory != ''">config_category,</if>
+            <if test="status != null">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+            create_time
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="configKey != null and configKey != ''">#{configKey},</if>
+            <if test="configName != null and configName != ''">#{configName},</if>
+            <if test="configType != null and configType != ''">#{configType},</if>
+            <if test="richContent != null">#{richContent},</if>
+            <if test="basicContent != null">#{basicContent},</if>
+            <if test="jumpUrl != null">#{jumpUrl},</if>
+            <if test="configCategory != null and configCategory != ''">#{configCategory},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+            sysdate()
+         </trim>
+    </insert>
+
+    <update id="updatePageConfig" parameterType="PageConfig">
+        update page_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="configKey != null and configKey != ''">config_key = #{configKey},</if>
+            <if test="configName != null and configName != ''">config_name = #{configName},</if>
+            <if test="configType != null and configType != ''">config_type = #{configType},</if>
+            <if test="richContent != null">rich_content = #{richContent},</if>
+            <if test="basicContent != null">basic_content = #{basicContent},</if>
+            <if test="jumpUrl != null">jump_url = #{jumpUrl},</if>
+            <if test="configCategory != null and configCategory != ''">config_category = #{configCategory},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </trim>
+        where config_id = #{configId}
+    </update>
+
+    <delete id="deletePageConfigById" parameterType="Long">
+        delete from page_config where config_id = #{configId}
+    </delete>
+
+    <delete id="deletePageConfigByIds" parameterType="String">
+        delete from page_config where config_id in 
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+            #{configId}
+        </foreach>
+    </delete>
+
+</mapper>

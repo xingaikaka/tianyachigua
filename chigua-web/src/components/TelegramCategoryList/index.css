@@ -1,0 +1,273 @@
+/* ═══════════════════════════════════════════════════
+   Telegram 模式 - 分类列表
+═══════════════════════════════════════════════════ */
+
+@keyframes swipeDownHint {
+  from { transform: translateY(0); }
+  to   { transform: translateY(5px); }
+}
+
+.tg-list { width: 100%; padding: 0; }
+
+/* 加载 */
+.tg-list-loading {
+  min-height: 60vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 16px; color: #bcbcbc; font-size: 16px;
+}
+.tg-list-spinner {
+  width: 48px; height: 48px;
+  border: 3px solid rgba(255,255,255,0.2);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: tg-spin 0.9s linear infinite;
+}
+@keyframes tg-spin { to { transform: rotate(360deg); } }
+
+/* 空状态 */
+.tg-list-empty {
+  min-height: 40vh;
+  display: flex; align-items: center; justify-content: center;
+  color: #888; font-size: 15px;
+}
+
+/* ── 移动端单列列表 ── */
+.tg-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 16px;
+}
+
+/* ═══════════════════════════════════════════════════
+   卡片
+═══════════════════════════════════════════════════ */
+.tg-card {
+  background: #1e1e1e;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+  width: 100%;
+  display: inline-block;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.tg-card:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+  border-color: rgba(255,255,255,0.16);
+}
+
+/* caption */
+.tg-card-caption {
+  padding: 10px 12px 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ddd;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 媒体区域 */
+.tg-card-media {
+  width: calc(100% - 12px);
+  margin: 0 6px 6px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* 底部 */
+.tg-card-footer { padding: 5px 14px 9px; }
+.tg-card-author { font-size: 11px; color: #777; }
+
+/* ═══════════════════════════════════════════════════
+   通用媒体单元格
+═══════════════════════════════════════════════════ */
+.tg-cell {
+  overflow: hidden;
+  position: relative;
+  background: #111;
+  display: block;
+}
+
+.tg-cell-media {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tg-cell-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+/* 视频单元格 */
+.tg-video-cell { cursor: pointer; }
+
+/* 左上角时长标签 */
+.tg-duration-badge {
+  position: absolute;
+  top: 7px; left: 8px;
+  background: rgba(0,0,0,0.62);
+  color: #fff;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  z-index: 4;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+}
+
+/* ── PC 端3列瀑布流，卡片自然高度 ── */
+.tg-pc-card-grid {
+  columns: 3;
+  column-gap: 8px;
+  max-width: 860px;
+  margin: 12px auto 0;
+  padding: 0 12px 24px;
+}
+.tg-pc-card-grid .tg-card {
+  break-inside: avoid;
+  margin-bottom: 8px;
+}
+
+/* ── PC 端卡片内媒体：每行 2 个，高度自适应 ── */
+.tg-uniform-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  width: 100%;
+  padding: 2px;
+  box-sizing: border-box;
+}
+.tg-uniform-cell {
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  position: relative;
+  min-width: 0;
+}
+/* 最后一项单独成行时自动占满全行 */
+.tg-uniform-cell:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+.tg-uniform-cell .tg-cell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.tg-uniform-cell .tg-cell-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 推荐角标（右上角，仅星形图标，与用户组头像角标同款） */
+.tg-recommend-badge {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 20px; height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #7c3aed;
+  color: #fff;
+  border-radius: 50%;
+  z-index: 5;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* 中央播放按钮 */
+.tg-play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3; pointer-events: none;
+  opacity: 0.88;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.tg-video-cell:hover .tg-play-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* 图片单元格 hover */
+.tg-image-cell::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.15s;
+  pointer-events: none;
+}
+.tg-image-cell:hover::after { background: rgba(255,255,255,0.07); }
+
+/* ═══════════════════════════════════════════════════
+   马赛克布局
+═══════════════════════════════════════════════════ */
+
+/* ── 1 个：全宽，图片/封面完整显示，不裁切 ── */
+.tg-mosaic-1 .tg-cell { width: 100%; max-height: none; height: auto; }
+.tg-mosaic-1 .tg-cell-media { height: auto; object-fit: unset; }
+
+/* ── 2 个：左右各 50%，固定高度 ── */
+.tg-mosaic-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.tg-mosaic-2 .tg-cell { aspect-ratio: 3 / 4; }
+
+/* ── 3 个：左大 + 右两小 ── */
+.tg-mosaic-3 {
+  display: flex; gap: 2px;
+}
+.tg-mosaic-3-left { flex: 0 0 62%; }
+.tg-mosaic-3-left .tg-cell { height: 100%; aspect-ratio: unset; min-height: 200px; }
+.tg-mosaic-3-right {
+  flex: 1;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.tg-mosaic-3-right .tg-cell { flex: 1; min-height: 0; }
+
+/* ── 4 个：2×2 ── */
+.tg-mosaic-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.tg-mosaic-4 .tg-cell { aspect-ratio: 1 / 1; }
+
+/* ── 5 个：上2 + 下3 ── */
+.tg-mosaic-5 { display: flex; flex-direction: column; gap: 2px; }
+.tg-mosaic-5-top {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+}
+.tg-mosaic-5-top .tg-cell { aspect-ratio: 16 / 9; }
+.tg-mosaic-5-bottom {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px;
+}
+.tg-mosaic-5-bottom .tg-cell { aspect-ratio: 1 / 1; }
+
+/* ── 6+ 个：3 列网格 ── */
+.tg-mosaic-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+.tg-mosaic-grid-cell {
+  aspect-ratio: 1 / 1;
+  overflow: hidden; position: relative;
+}
+.tg-mosaic-grid-cell .tg-cell { width: 100%; height: 100%; }
+
+
+/* ═══════════════════════════════════════════════════
+   分页
+═══════════════════════════════════════════════════ */
+.tg-list-pagination {
+  display: flex; justify-content: center;
+  padding: 20px 16px 40px;
+}

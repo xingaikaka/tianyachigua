@@ -1,0 +1,12 @@
+/* 内容路由器样式 */
+.content-router {
+  min-height: 100vh;
+  background-color: #2C2A2A;
+  position: relative;
+  z-index: 1;
+}
+
+.content-container {
+  opacity: 1;
+  /* 移除所有过渡和动画效果 */
+}

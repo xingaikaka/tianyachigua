@@ -1,0 +1,19 @@
+{
+  "name": "chigua-r2-worker",
+  "version": "1.0.0",
+  "description": "Chigua R2 Worker for video management",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["cloudflare", "worker", "r2", "video"],
+  "author": "Chigua Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241218.0",
+    "typescript": "^5.0.0",
+    "wrangler": "^4.25.0"
+  }
+} 

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.chigua.mapper.TagMapper">
+    
+    <resultMap type="Tag" id="TagResult">
+        <id     property="id"               column="id"               />
+        <result property="name"             column="name"             />
+        <result property="color"            column="color"            />
+        <result property="usageCount"       column="usage_count"      />
+        <result property="status"           column="status"           />
+        <result property="isHot"            column="is_hot"           />
+        <result property="createdAt"        column="created_at"       />
+        <result property="updatedAt"        column="updated_at"       />
+    </resultMap>
+
+    <sql id="selectTagVo">
+        select id, name, color, usage_count, status, is_hot, created_at, updated_at from tags
+    </sql>
+
+    <select id="selectTagList" parameterType="Tag" resultMap="TagResult">
+        <include refid="selectTagVo"/>
+        <where>  
+            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="color != null and color != ''"> and color = #{color}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="isHot != null"> and is_hot = #{isHot}</if>
+        </where>
+        order by usage_count desc, id desc
+    </select>
+    
+    <select id="selectTagById" parameterType="Long" resultMap="TagResult">
+        <include refid="selectTagVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="checkTagNameUnique" parameterType="String" resultMap="TagResult">
+        <include refid="selectTagVo"/>
+        where name = #{name}
+    </select>
+
+    <select id="checkTagExistUsage" parameterType="Long" resultType="int">
+        select usage_count from tags where id = #{id}
+    </select>
+        
+    <insert id="insertTag" parameterType="Tag" useGeneratedKeys="true" keyProperty="id">
+        insert into tags
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="color != null">color,</if>
+            <if test="usageCount != null">usage_count,</if>
+            <if test="status != null">status,</if>
+            <if test="isHot != null">is_hot,</if>
+         </trim>
+         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="color != null">#{color},</if>
+            <if test="usageCount != null">#{usageCount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isHot != null">#{isHot},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTag" parameterType="Tag">
+        update tags
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="usageCount != null">usage_count = #{usageCount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isHot != null">is_hot = #{isHot},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTagById" parameterType="Long">
+        delete from tags where id = #{id}
+    </delete>
+
+    <delete id="deleteTagByIds" parameterType="String">
+        delete from tags where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 增加单个标签使用次数 -->
+    <update id="incrementTagUsageCount">
+        update tags 
+        set usage_count = usage_count + #{increment}, 
+            updated_at = CURRENT_TIMESTAMP 
+        where id = #{id}
+    </update>
+
+    <!-- 批量更新标签使用次数 -->
+    <update id="batchUpdateTagUsageCount">
+        update tags 
+        set usage_count = GREATEST(0, usage_count + #{increment}), 
+            updated_at = CURRENT_TIMESTAMP 
+        where id in 
+        <foreach item="tagId" collection="tagIds" open="(" separator="," close=")">
+            #{tagId}
+        </foreach>
+    </update>
+
+</mapper> 

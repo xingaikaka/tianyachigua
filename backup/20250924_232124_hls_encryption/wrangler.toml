@@ -1,0 +1,25 @@
+name = "chigua-r2-worker"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[[r2_buckets]]
+binding = "CHIGUA_MEDIA"
+bucket_name = "51chigua"
+preview_bucket_name = "51chigua"
+
+[vars]
+ENVIRONMENT = "production"
+# 内容安全配置
+CONTENT_SECURITY_ENABLED = "true"
+SIGNATURE_SECRET = "VbJBrVDVrzICYlkQgDzBVyuhOoKsWpr0BSpJAERif7Y="
+ALLOWED_DOMAINS = "localhost,127.0.0.1,chigua-r2-worker.xingaikaka.workers.dev,direct"
+ALLOWED_ORIGINS = "*"
+MAX_FILE_SIZE = "100000000"
+ALLOWED_FILE_TYPES = "image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,text/plain,application/x-mpegURL,application/vnd.apple.mpegurl,video/mp2t"
+ACCESS_TIME_WINDOW = "3600"
+# 图片加密配置（32字符以上的强密钥）
+IMAGE_ENCRYPTION_KEY = "DR4jiK+U+Z6QwyuVxp//Cl3Zl543bl1xiQrfH6hnLc4="
+# HLS 分片加密配置
+SEGMENT_ENCRYPTION_ENABLED = "true"
+SEGMENT_ENCRYPTION_SALT = "chigua-hls-salt"
+SEGMENT_ENCRYPTION_ALGORITHM = "AES-CTR"

@@ -1,0 +1,18 @@
+# tycg8.com 单域名SEO配置
+# 用于Google Search优化
+
+chigua:
+  # 域名配置
+  domains:
+    # 站点域名（用于视频页面链接和SEO）
+    site: https://tycg8.com
+    # API域名（用于站点地图访问）
+    api-domain: https://tycg8.com
+    # 注意：图片域名(main/domain/pic-domain)继承 application-chigua-prod.yml
+    # 必须使用 tycgimage1.org (Cloudflare R2存储)，不要覆盖！
+  
+  # SEO配置 - 启用所有SEO功能
+  seo:
+    sitemap-enabled: true
+    robots-enabled: true
+

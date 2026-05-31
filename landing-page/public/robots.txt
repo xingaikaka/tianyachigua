@@ -1,0 +1,6 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow:
+
+Sitemap: https://tycg7.com/sitemap.xml
+Sitemap: https://tycg7.com/sitemap-google.xml

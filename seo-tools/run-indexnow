@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# 包装脚本：自动激活 venv 后调用 indexnow.py
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ ! -d "$DIR/venv" ]; then
+  echo "→ 首次运行: 创建 venv 并安装依赖..."
+  python3 -m venv "$DIR/venv"
+  "$DIR/venv/bin/pip" install -q --upgrade pip
+  "$DIR/venv/bin/pip" install -q -r "$DIR/requirements.txt"
+fi
+exec "$DIR/venv/bin/python" "$DIR/indexnow.py" "$@"

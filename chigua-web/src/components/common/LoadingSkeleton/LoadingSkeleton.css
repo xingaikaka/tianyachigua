@@ -1,0 +1,93 @@
+/* 骨架屏基础样式 */
+.skeleton {
+  background: linear-gradient(90deg, #3a3a3a 25%, #4a4a4a 50%, #3a3a3a 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite ease-in-out;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 视频详情页骨架屏样式 */
+.video-detail-skeleton {
+  min-height: 100vh;
+  background-color: #2C2A2A;
+}
+
+.skeleton-title {
+  height: 48px;
+  width: 80%;
+  margin-bottom: 24px;
+}
+
+.skeleton-video-content {
+  height: 400px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.skeleton-stat {
+  height: 24px;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.skeleton-text-line {
+  height: 20px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.skeleton-text-line.short {
+  width: 60%;
+}
+
+.skeleton-recommendations {
+  height: 300px;
+  width: 100%;
+}
+
+/* 视频列表骨架屏样式 */
+.video-list-skeleton {
+  min-height: 100vh;
+  background-color: #2C2A2A;
+}
+
+.skeleton-video-card {
+  height: 280px;
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  .skeleton-title {
+    height: 36px;
+    margin-bottom: 16px;
+  }
+  
+  .skeleton-video-content {
+    height: 200px;
+    margin-bottom: 24px;
+  }
+  
+  .skeleton-video-card {
+    height: 200px;
+    margin-bottom: 24px;
+  }
+}
+
+/* 减少动画在性能较差设备上的影响 */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: #3a3a3a;
+  }
+}
