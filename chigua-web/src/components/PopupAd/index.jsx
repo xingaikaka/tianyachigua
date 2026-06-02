@@ -40,7 +40,7 @@ const PopupAd = () => {
     paddingBottom: 'max(1rem, env(safe-area-inset-bottom, 0px))',
     paddingLeft: 'max(1rem, env(safe-area-inset-left, 0px))',
     overscrollBehavior: 'contain',
-    overflowY: 'auto',
+    overflow: 'hidden',
   };
 
   const popupPictureMobileScrollStyle = isMobile
@@ -75,6 +75,17 @@ const PopupAd = () => {
       }
     };
   }, []);
+
+  // 弹窗打开时锁定 body 滚动，关闭时恢复
+  useEffect(() => {
+    if (isVisible) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [isVisible]);
 
   const checkShouldShowPopup = () => {
     const currentPath = window.location.pathname;
@@ -385,9 +396,8 @@ const PopupAd = () => {
             style={{
               height: isMobile ? 'auto' : `${popupPictureHeightDesktop}px`,
               maxHeight: isMobile ? popupPictureMaxHMobile : undefined,
-              overflowY: 'auto',
+              overflow: 'hidden',
               backgroundColor: '#1a1a1a',
-              ...popupPictureMobileScrollStyle
             }}
           >
             <div style={{ overflow: 'hidden', lineHeight: 0 }}>
@@ -511,8 +521,7 @@ const PopupAd = () => {
             style={{
               height: isMobile ? 'auto' : `${popupPictureHeightDesktop}px`,
               maxHeight: isMobile ? popupPictureMaxHMobile : undefined,
-              overflowY: 'auto',
-              ...popupPictureMobileScrollStyle
+              overflow: 'hidden',
             }}
             onClick={handleAdClick}
           >
@@ -522,9 +531,13 @@ const PopupAd = () => {
                 src={currentAd.imageUrl}
                 alt={currentAd.title}
                 objectFit={isMobile ? 'contain' : 'cover'}
-                imageClassName={`w-full ${isMobile ? 'h-auto' : 'h-full'}`}
+                imageClassName="w-full"
                 imageStyle={{
+                  display: 'block',
+                  width: '100%',
+                  height: isMobile ? 'auto' : '100%',
                   maxHeight: isMobile ? popupPictureMaxHMobile : 'none',
+                  objectFit: isMobile ? 'contain' : 'cover',
                 }}
                 priority="high"
                 lazyLoad={false}

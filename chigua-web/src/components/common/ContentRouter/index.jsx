@@ -3,7 +3,7 @@ import { Routes, Route, useLocation, useParams, useNavigationType, useNavigate }
 import VideoList from '../../VideoList';
 import categoryService from '../../../services/categoryService';
 import apiCacheService from '../../../services/apiCacheService';
-import { useSiteConfig, usePageConfig } from '../../../hooks/usePageConfig';
+import { usePageConfig } from '../../../hooks/usePageConfig';
 import './ContentRouter.css';
 
 // 路由级 lazy 分包：按访问需求下载，减小首屏 main.js
@@ -33,7 +33,7 @@ const RouteFallback = () => (
 
 // 首页组件
 function HomePage() {
-  const { getSiteConfig } = useSiteConfig();
+  const { getConfig } = usePageConfig();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -56,12 +56,10 @@ function HomePage() {
     }
   }, []);
 
-  // SEO优化：首页确保"吃瓜"关键词突出显示
+  // SEO优化：首页确保"天涯"关键词突出显示
   useEffect(() => {
-    // 更新页面标题（确保包含"吃瓜"）
-    document.title = '吃瓜 - 每日吃瓜 | 每日更新最新最全的吃瓜资讯';
+    document.title = '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地';
 
-    // 更新meta description
     const updateMetaTag = (name, content, attribute = 'name') => {
       if (!content) return;
       let tag = document.querySelector(`meta[${attribute}="${name}"]`);
@@ -73,21 +71,18 @@ function HomePage() {
       tag.setAttribute('content', content);
     };
 
-    updateMetaTag('description', '每日吃瓜，实时更新网红、明星、主播、社会热点黑料与独家爆料，海量短视频、图文、吃瓜资讯一站直达，每天追最新瓜，就来每日吃瓜。');
-    updateMetaTag('keywords', '每日吃瓜,吃瓜网,网红黑料,明星黑料,主播黑料,娱乐黑料,热点爆料,独家爆料,网曝吃瓜');
+    updateMetaTag('description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。');
+    updateMetaTag('keywords', '天涯神帖,天涯神贴,天涯神帖合集,天涯社区,天涯论坛,天涯,天涯论坛入口,天涯社区入口,天涯新地址,天涯杂谈,娱乐八卦,情感天地,天涯爆料,天涯黑料,天涯热帖,明星黑料,热点爆料');
 
-    // 更新OG标签
-    updateMetaTag('og:title', '吃瓜 - 每日吃瓜 | 每日更新最新最全的吃瓜资讯', 'property');
-    updateMetaTag('og:description', '每日吃瓜，实时更新网红、明星、主播、社会热点黑料与独家爆料，海量短视频、图文、吃瓜资讯一站直达，每天追最新瓜，就来每日吃瓜。', 'property');
-    updateMetaTag('og:site_name', '每日吃瓜 - 吃瓜', 'property');
+    updateMetaTag('og:title', '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地', 'property');
+    updateMetaTag('og:description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。', 'property');
+    updateMetaTag('og:site_name', '天涯论坛', 'property');
 
-    // 更新Twitter标签
-    updateMetaTag('twitter:title', '吃瓜 - 每日吃瓜 | 每日更新最新最全的吃瓜资讯');
-    updateMetaTag('twitter:description', '每日吃瓜，实时更新网红、明星、主播、社会热点黑料与独家爆料，海量短视频、图文、吃瓜资讯一站直达，每天追最新瓜，就来每日吃瓜。');
+    updateMetaTag('twitter:title', '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地');
+    updateMetaTag('twitter:description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。');
 
     return () => {
-      // 清理函数：离开首页时恢复默认
-      document.title = '吃瓜 - 每日吃瓜 | 每日更新最新最全的吃瓜资讯';
+      document.title = '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地';
     };
   }, []);
 
@@ -134,7 +129,7 @@ function HomePage() {
               hyphens: 'auto'
             }}
           >
-            {getSiteConfig('site_name') || '天涯吃瓜'}
+            {getConfig('site_name') || '天涯吃瓜'}
           </h1>
           {/* 首页副标题：取项目名称的备注 */}
           <HomeSubtitle />
