@@ -58,7 +58,7 @@ function HomePage() {
 
   // SEO优化：首页确保"天涯"关键词突出显示
   useEffect(() => {
-    document.title = '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地';
+    document.title = '天涯吃瓜_天涯吃瓜网 | 每日吃瓜爆料_天涯黑料_娱乐八卦_实时热点';
 
     const updateMetaTag = (name, content, attribute = 'name') => {
       if (!content) return;
@@ -71,18 +71,18 @@ function HomePage() {
       tag.setAttribute('content', content);
     };
 
-    updateMetaTag('description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。');
-    updateMetaTag('keywords', '天涯神帖,天涯神贴,天涯神帖合集,天涯社区,天涯论坛,天涯,天涯论坛入口,天涯社区入口,天涯新地址,天涯杂谈,娱乐八卦,情感天地,天涯爆料,天涯黑料,天涯热帖,明星黑料,热点爆料');
+    updateMetaTag('description', '天涯吃瓜网，每日更新最新最全的吃瓜爆料！海量明星黑料、网红黑料、热点爆料视频一站直达，汇聚天涯神帖、天涯杂谈、娱乐八卦、情感天地等经典内容，实时吃瓜不断更！');
+    updateMetaTag('keywords', '天涯吃瓜,天涯吃瓜网,吃瓜爆料,每日吃瓜,实时吃瓜,吃瓜视频,吃瓜资讯,天涯黑料,网红黑料,明星黑料,热点爆料,独家爆料,天涯神帖,天涯神贴,天涯热帖,天涯杂谈,娱乐八卦,情感天地,天涯论坛,天涯社区');
 
-    updateMetaTag('og:title', '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地', 'property');
-    updateMetaTag('og:description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。', 'property');
-    updateMetaTag('og:site_name', '天涯论坛', 'property');
+    updateMetaTag('og:title', '天涯吃瓜_天涯吃瓜网 | 每日吃瓜爆料_天涯黑料_娱乐八卦_实时热点', 'property');
+    updateMetaTag('og:description', '天涯吃瓜网，每日更新最新最全的吃瓜爆料！海量明星黑料、网红黑料、热点爆料视频一站直达，汇聚天涯神帖、天涯杂谈、娱乐八卦、情感天地等经典内容，实时吃瓜不断更！', 'property');
+    updateMetaTag('og:site_name', '天涯吃瓜', 'property');
 
-    updateMetaTag('twitter:title', '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地');
-    updateMetaTag('twitter:description', '天涯社区、天涯论坛，全球华人网上家园，海量天涯神帖（天涯神贴）合集珍藏。汇聚天涯杂谈、娱乐八卦、情感天地等经典版块，明星黑料、热点爆料、独家资讯每日更新。');
+    updateMetaTag('twitter:title', '天涯吃瓜_天涯吃瓜网 | 每日吃瓜爆料_天涯黑料_娱乐八卦_实时热点');
+    updateMetaTag('twitter:description', '天涯吃瓜网，每日更新最新最全的吃瓜爆料！海量明星黑料、网红黑料、热点爆料视频一站直达，汇聚天涯神帖、天涯杂谈、娱乐八卦、情感天地等经典内容，实时吃瓜不断更！');
 
     return () => {
-      document.title = '天涯论坛 天涯神帖 | 天涯社区 天涯神贴合集 娱乐八卦 情感天地';
+      document.title = '天涯吃瓜_天涯吃瓜网 | 每日吃瓜爆料_天涯黑料_娱乐八卦_实时热点';
     };
   }, []);
 
