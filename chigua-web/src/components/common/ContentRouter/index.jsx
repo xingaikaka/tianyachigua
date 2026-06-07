@@ -58,7 +58,7 @@ function HomePage() {
 
   // SEO优化：首页确保"天涯"关键词突出显示
   useEffect(() => {
-    document.title = '吃瓜群_QQ吃瓜群_微信吃瓜群_免费吃瓜爆料群_吃瓜资源导航网_实时吃瓜群聊_海量瓜料交流群';
+    document.title = '福利导航_91福利导航_老司机福利导航_136福利导航_深夜福利导航_精品福利导航_免费福利视频导航大全';
 
     const updateMetaTag = (name, content, attribute = 'name') => {
       if (!content) return;
@@ -71,18 +71,18 @@ function HomePage() {
       tag.setAttribute('content', content);
     };
 
-    updateMetaTag('description', '加入我们的吃瓜爆料群，包括QQ吃瓜群、微信吃瓜群，免费获取最新吃瓜资源，实时参与瓜料交流，海量精彩内容尽在吃瓜资源导航网。');
-    updateMetaTag('keywords', 'qq免费吃瓜群,qq吃瓜群,qq吃瓜群号,吃瓜qq群,吃瓜qq资源群,吃瓜微信群,吃瓜爆料qq群,吃瓜网,吃瓜群,吃瓜资源分享群,微信吃瓜群,瓜群,吃瓜合集,吃瓜视频,吃瓜爆料,明星黑料,网红黑料');
+    updateMetaTag('description', '福利导航大全，汇聚91福利导航、136福利导航、老司机福利导航、深夜福利导航等精品导航站，免费获取海量福利视频资源，实时更新，福利导航在线一站直达。');
+    updateMetaTag('keywords', '福利导航,136福利导航,第一福利导航,91福利导航,福利导航大全,老司机福利导航,爱你啪福利导航,久久福利导航,深夜福利导航,福利导航在线,精品福利导航,500福利导航,夜趣福利导航,蓝色福利导航,欧美福利导航');
 
-    updateMetaTag('og:title', '吃瓜群_QQ吃瓜群_微信吃瓜群_免费吃瓜爆料群_吃瓜资源导航网_实时吃瓜群聊_海量瓜料交流群', 'property');
-    updateMetaTag('og:description', '加入我们的吃瓜爆料群，包括QQ吃瓜群、微信吃瓜群，免费获取最新吃瓜资源，实时参与瓜料交流，海量精彩内容尽在吃瓜资源导航网。', 'property');
-    updateMetaTag('og:site_name', '吃瓜网', 'property');
+    updateMetaTag('og:title', '福利导航_91福利导航_老司机福利导航_136福利导航_深夜福利导航_精品福利导航_免费福利视频导航大全', 'property');
+    updateMetaTag('og:description', '福利导航大全，汇聚91福利导航、136福利导航、老司机福利导航、深夜福利导航等精品导航站，免费获取海量福利视频资源，实时更新，福利导航在线一站直达。', 'property');
+    updateMetaTag('og:site_name', '福利导航', 'property');
 
-    updateMetaTag('twitter:title', '吃瓜群_QQ吃瓜群_微信吃瓜群_免费吃瓜爆料群_吃瓜资源导航网_实时吃瓜群聊_海量瓜料交流群');
-    updateMetaTag('twitter:description', '加入我们的吃瓜爆料群，包括QQ吃瓜群、微信吃瓜群，免费获取最新吃瓜资源，实时参与瓜料交流，海量精彩内容尽在吃瓜资源导航网。');
+    updateMetaTag('twitter:title', '福利导航_91福利导航_老司机福利导航_136福利导航_深夜福利导航_精品福利导航_免费福利视频导航大全');
+    updateMetaTag('twitter:description', '福利导航大全，汇聚91福利导航、136福利导航、老司机福利导航、深夜福利导航等精品导航站，免费获取海量福利视频资源，实时更新，福利导航在线一站直达。');
 
     return () => {
-      document.title = '吃瓜群_QQ吃瓜群_微信吃瓜群_免费吃瓜爆料群_吃瓜资源导航网_实时吃瓜群聊_海量瓜料交流群';
+      document.title = '福利导航_91福利导航_老司机福利导航_136福利导航_深夜福利导航_精品福利导航_免费福利视频导航大全';
     };
   }, []);
 
