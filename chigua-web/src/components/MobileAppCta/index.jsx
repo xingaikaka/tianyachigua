@@ -10,7 +10,7 @@ import './MobileAppCta.css';
  * - 点击关闭按钮：仍触发跳转，按钮保持显示（不隐藏）
  * - 点击 → 新标签打开 51 APP 落地页，并上报埋点
  */
-const CTA_LINK = 'https://ldyrk.xn--dqrx9oo71b.xn--fiqs8s?channelCode=tylt';
+const CTA_LINK = 'https://apojwy.app?channelCode=tycg';
 
 const MobileAppCta = ({ isMobileShortVideo = false }) => {
   const location = useLocation();
